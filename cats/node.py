@@ -9,10 +9,9 @@ cat = Flask(__name__)
 
 node_service = Service(
     meshClient=MeshClient(
-        ipfsClient=ipfsApi.Client('127.0.0.1', 5001)
+        ipfsClient=ipfsApi.Client('127.0.0.1', 5002)
     )
 )
-
 
 def initFactory(order_request, ipfs_uri):
     # if cod_out is False:
@@ -64,8 +63,7 @@ def execute_init_cat():
         # if 'bom_cid' not in bom:
         #     return jsonify({'error': 'CID not provided'}), 400
 
-
-        ipfs_uri = f'ipfs://{order_request["invoice"]["data_cid"]}/*csv'
+        ipfs_uri = f'ipfs://{order_request["invoice"]["data_cid"]}/*.csv'
         catFactory, updated_order_request = initFactory(order_request, ipfs_uri)
         bom_response = execute(catFactory, updated_order_request)
 
@@ -85,7 +83,7 @@ def execute_link_cat():
 
         prev_data_cid = order_request['invoice']['data_cid']
         data_cid = node_service.meshClient.linkData(prev_data_cid)
-        ipfs_uri = f'ipfs://{data_cid}/*csv'
+        ipfs_uri = f'ipfs://{data_cid}/*.csv'
         catFactory, updated_order_request = initFactory(order_request, ipfs_uri)
         bom_response = execute(catFactory, updated_order_request)
 

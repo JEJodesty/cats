@@ -59,11 +59,12 @@ class MeshClient(CoD):
         res = [i for i in dirs if subdir in i]
         return res[0].split(' - ')[0]
 
-    def get(self, cid: str, filepath: str, output: str = CATS_HOME):
+    def get(self, cid: str, filepath: str, output: str = CATS_HOME, cwd=None):
         subprocess.check_output(
             f"ipfs get {cid} --output {output}/{filepath}",
             stderr=subprocess.STDOUT,
-            shell=True
+            shell=True,
+            cwd=cwd
         )
         return filepath
 
@@ -108,20 +109,24 @@ class MeshClient(CoD):
         return car_bom_cid, bom_cid
 
     def getEnhancedBom(self, bom_json_cid: str):
-        self.get(bom_json_cid, 'bom.json')
-        bom = json.loads(open('bom.json', 'r').read())
+        # self.get(cid=bom_json_cid, filepath='bom.json', cwd=None)
+        # bom = json.loads(open('bom.json', 'r').read())
+        self.get(cid=bom_json_cid, output=self.CAT_HOME, filepath='bom.json', cwd=self.CAT_HOME)
+        bom = json.loads(open(f'{self.CAT_HOME}/bom.json', 'r').read())
         enhanced_bom = deepcopy(bom)
         enhanced_bom['bom_json_cid'] = bom_json_cid
 
-        self.get(bom['invoice_cid'], 'invoice.json')
-        enhanced_bom['invoice'] = json.loads(open('invoice.json', 'r').read())
+        self.get(cid=bom['invoice_cid'], output=self.CAT_HOME, filepath='invoice.json', cwd=self.CAT_HOME)
+        enhanced_bom['invoice'] = json.loads(open(f'{self.CAT_HOME}/invoice.json', 'r').read())
 
-        self.get(enhanced_bom['invoice']['order_cid'], 'order.json')
-        enhanced_bom['order'] = json.loads(open('order.json', 'r').read())
+        self.get(cid=enhanced_bom['invoice']['order_cid'],
+                 output=self.CAT_HOME, filepath='order.json', cwd=self.CAT_HOME)
+        enhanced_bom['order'] = json.loads(open(f'{self.CAT_HOME}/order.json', 'r').read())
 
         self.get(
-            enhanced_bom['order']['structure_cid'],
-            enhanced_bom['order']['structure_filepath']
+            cid=enhanced_bom['order']['structure_cid'], output=self.CAT_HOME,
+            filepath=enhanced_bom['order']['structure_filepath'],
+            cwd=self.CAT_HOME
         )
         return deepcopy(enhanced_bom), bom
 
@@ -139,6 +144,13 @@ class MeshClient(CoD):
     def cidDir(self, filepath: str):
         data = self.ipfsClient.add(filepath)
         data_dir = filepath.split('/')[-1]
+        # print('1')
+        # print(data)
+        # print('2')
+        # print(data_dir)
+        # print('3')
+        # print(list(filter(lambda x: x['Name'] == data_dir, data)))
+        # exit()
         if type(data) is list:
             data_json = list(filter(lambda x: x['Name'] == data_dir, data))[-1]
             data_cid = data_json['Hash']

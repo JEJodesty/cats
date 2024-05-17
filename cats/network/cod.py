@@ -1,9 +1,22 @@
 import json, glob, os, multiprocessing, shutil, subprocess, tempfile, time
-from pprint import pprint
+from datetime import datetime
+from pathlib import Path
+import re
+
+from cats import JOB_HOME
 
 
 class CoD:
-    def __init__(self): ...
+    def __init__(self):
+        self.JOB_HOME = JOB_HOME
+        self.CAT_HOME = self.JOB_HOME + f"""cat={
+            datetime.utcnow().isoformat()
+        }"""
+        Path(self.CAT_HOME).mkdir(parents=True, exist_ok=True)
+
+    def contains_substring(self, substring):
+        return lambda s: substring in s
+
     # checkStatusOfJob checks the status of a Bacalhau job
     def checkStatusOfJob(self, job_id: str) -> str:
         assert len(job_id) > 0
@@ -11,7 +24,7 @@ class CoD:
             ["bacalhau", "list", "--output", "json", "--id-filter", job_id],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            text=True,
+            text=True
         )
         r = self.parseJobStatus(p.stdout)
         if r == "":
@@ -24,60 +37,82 @@ class CoD:
         return r
 
     def ingress(self, input: str):
-        publisher = "s3://catstore3/boms/result-{date}-{jobID}/,opt=region=us-east-2"
-        cmd = f"bacalhau docker run -i {input} -p {publisher} --id-only --wait alpine -- sh -c"
-        # print(input)
-        # print(publisher)
-        # exit()
+        print("Ingress:")
+        cmd = f"bacalhau docker run --output ingress:/outputs -i {input} --id-only --wait alpine -- sh -c"
         cmd_list = cmd.split(' ') + ['cp -r /inputs/* /outputs/']
         submit = subprocess.run(
             cmd_list,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            cwd=self.JOB_HOME
         )
-        if submit.returncode != 0:
-            print("failed (%d) job: %s" % (submit.returncode, submit.stdout))
-        job_id = submit.stdout.strip()
-        print("job submitted: %s" % job_id)
-        return job_id
+        submit_job_id = submit.stdout.strip()
+        print("job submitted: %s" % submit_job_id)
+
+        if submit.returncode == 0:
+            get_result = subprocess.run(
+                f"bacalhau get {submit_job_id}".split(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd=self.CAT_HOME
+            )
+            get_result_list = get_result.stdout.splitlines()
+
+            get_result_job_id_text = list(
+                filter(self.contains_substring('have been written to...'), get_result_list)
+            ).pop()
+            get_result_job_id = re.findall(r"'(.*?)'", get_result_job_id_text).pop().replace("'", "")
+            get_result_job_dir = list(filter(self.contains_substring('job-'), get_result_list)).pop()
+            print("job submitted: %s" % get_result_job_id)
+            if get_result.returncode != 0:
+                print("failed (%d) job: %s" % (get_result.returncode, get_result_job_id))
+        else:
+            print("failed (%d) job: %s" % (submit.returncode, submit_job_id))
+
+        job_ingress_dir = get_result_job_dir + '/ingress'
+        return get_result_job_id
 
     def integrate(self, job_id: str):
-        cmd = f"bacalhau describe {job_id} --json".split(' ')
-        result = subprocess.run(cmd, stdout=subprocess.PIPE)
-        job_json = json.loads(result.stdout)
-        executions = job_json["State"]["Executions"]
-        execution = list(filter(lambda d: d['State'] in ['Completed'], executions)).pop()
-        ingress_bucket = execution['PublishedResults']['S3']['Bucket']
-        ingress_key = execution['PublishedResults']['S3']['Key'].rstrip('/')
-        ingress_s3_input = f"s3://{ingress_bucket}/{ingress_key}/outputs/"
-        return ingress_s3_input
+        print("Integrate:")
+        job_dir = '/job-' + job_id.split('-')[0]
+        return self.CAT_HOME + job_dir + '/ingress/outputs/'
 
-    def getEgressOutput(self, job_id: str):
-        cmd = f"bacalhau describe {job_id} --json".split(' ')
-        result = subprocess.run(cmd, stdout=subprocess.PIPE)
-        job_json = json.loads(result.stdout)
-        executions = job_json["State"]["Executions"]
-        execution = list(filter(lambda d: d['State'] in ['Completed'], executions)).pop()
-        data_cid = execution['PublishedResults']['CID']
-        return data_cid
-
-    def egress(self, integration_s3_output: str):
-        input = f"{integration_s3_output}/,opt=region=us-east-2"
-        cmd = f"bacalhau docker run -i {input} --id-only --wait alpine -- sh -c"
+    def egress(self, integration_output_cid: str):
+        print("Egress:")
+        cmd = f"bacalhau docker run --output egress:/outputs -i {integration_output_cid} --id-only --wait alpine -- sh -c"
         cmd_list = cmd.split(' ') + ['cp -r /inputs/* /outputs/']
         submit = subprocess.run(
             cmd_list,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
+            cwd=self.JOB_HOME
         )
-        if submit.returncode != 0:
-            print("failed (%d) job: %s" % (submit.returncode, submit.stdout))
-        job_id = submit.stdout.strip()
-        print("job submitted: %s" % job_id)
+        submit_job_id = submit.stdout.strip()
+        print("job submitted: %s" % submit_job_id)
 
-        return job_id
+        if submit.returncode == 0:
+            get_result = subprocess.run(
+                f"bacalhau get {submit_job_id}".split(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                cwd=self.CAT_HOME
+            )
+            get_result_list = get_result.stdout.splitlines()
+
+            get_result_job_id_text = list(filter(self.contains_substring('have been written to...'), get_result_list)).pop()
+            get_result_job_id = re.findall(r"'(.*?)'", get_result_job_id_text).pop().replace("'", "")
+            get_result_job_dir = list(filter(self.contains_substring('job-'), get_result_list)).pop()
+            if get_result.returncode != 0:
+                print("failed (%d) job: %s" % (get_result.returncode, get_result_job_id))
+        else:
+            print("failed (%d) job: %s" % (submit.returncode, submit_job_id))
+
+        job_egress_dir = get_result_job_dir + '/egress'
+        return submit_job_id, job_egress_dir
 
     # submitJob submits a job to the Bacalhau network
     def submitJob(self, cid: str) -> str:
@@ -91,7 +126,7 @@ class CoD:
                 "--wait=false",
                 "--input",
                 "ipfs://" + cid + ":/inputs/data.tar.gz",
-                "ghcr.io/bacalhau-project/examples/blockchain-etl:0.0.6",
+                "ghcr.io/bacalhau-project/examples/blockchain-etl:0.0.6"
             ],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

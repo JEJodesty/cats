@@ -4,11 +4,14 @@ requires = [
     "pytest==7.4.4",
     "ipfsApi==0.4.4",
     "ray[default, data]==2.7.1",
+    "pandas==2.1.4",
     "flask==3.0.0",
     "notebook",
     "tqdm",
     "ipywidgets",
-    "boto3==1.34.21"
+    "boto3==1.34.21",
+    "pyarrow==1.26.4",
+    "hdfs3==0.3.1"
 ]
 build-backend = "setuptools.build_meta"
 

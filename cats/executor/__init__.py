@@ -40,16 +40,19 @@ class Executor(Structure):
             'integration_output': self.integration_s3_output,
             'egress_job_id': self.egress_job_id
         }
-        self.enhanced_bom['invoice']['data_cid'] = self.service.meshClient.getEgressOutput(job_id=self.egress_job_id)
+        self.enhanced_bom['invoice']['data_cid'] = self.function.invoice_data_cid
         self.enhanced_bom['log_cid'] = self.service.ipfsClient.add_json(self.enhanced_bom['log'])
 
         del self.enhanced_bom['bom_json_cid']
         del self.enhanced_bom['init_data_cid']
+        #
+        # print(os.getcwd())
+        # exit()
 
-        os.remove("bom.json")
-        os.remove("invoice.json")
-        os.remove("order.json")
-        os.remove("bom.car")
-        os.remove("cat-action-plane-config")
+        # os.remove("bom.json")
+        # os.remove("invoice.json")
+        # os.remove("order.json")
+        # os.remove("bom.car")
+        # os.remove("cat-action-plane-config")
         return self.enhanced_bom, None
         # return self.invoiceCID

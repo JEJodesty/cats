@@ -5,9 +5,8 @@ import pandas as pd
 
 from cats import CATS_HOME
 from cats.service.utils import executeCMD
-import ipfsapi as ipfsApi
 from cats.network import MeshClient
-
+import ipfsapi as ipfsApi
 
 class Service:
     def __init__(self,
@@ -16,6 +15,7 @@ class Service:
         self.meshClient: MeshClient = meshClient
         self.ipfsClient: ipfsApi = self.meshClient.ipfsClient
         self.executeCMD = executeCMD
+        self.CAR_HOME = self.meshClient.CAT_HOME + '/bom.car'
 
         self.init_bom_json_cid = None
         self.bom_json_cid = None
@@ -38,6 +38,24 @@ class Service:
         self.processCID = None
         self.order = None
         self.process = None
+    #     self.start_ipfs_daemon
+    #
+    # def start_ipfs_daemon(self):
+    #     # Command to start the IPFS daemon
+    #     command = ['ipfs', 'daemon']
+    #
+    #     # Start the daemon
+    #     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #
+    #     # You can now handle the output or errors if necessary
+    #     stdout, stderr = process.communicate()
+    #
+    #     if process.returncode == 0:
+    #         print("IPFS daemon started successfully.")
+    #         print(stdout.decode())
+    #     else:
+    #         print("Failed to start IPFS daemon.")
+    #         print(stderr.decode())
 
     def cid_to_pandasDF(self, cid, download_dir, format='*.csv', read_dir='/outputs', parrent_dir=CATS_HOME):
         path = f'{parrent_dir}/{download_dir}'
@@ -56,9 +74,12 @@ class Service:
         return df
 
     def initBOMcar(self,
-        function_cid, init_data_cid, init_bom_filename='bom.car',
+        function_cid, init_data_cid, init_bom_filename=None,
         structure_cid=None, structure_filepath=None
     ):
+        if init_bom_filename is None:
+            init_bom_filename = self.CAR_HOME
+
         self.init_bom_car_cid, self.init_bom_json_cid = self.meshClient.initBOMcar(
             # structure_path=self.MeshClient.g,
             structure_cid=structure_cid,
