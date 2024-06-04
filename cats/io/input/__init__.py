@@ -1,12 +1,8 @@
 from cats.io.input.function import InfraFunction, Processor
-from cats.service import Service
-
 
 class Function(InfraFunction):
-    def __init__(self,
-        service: Service
-    ):
-        self.service: Service = service
+    def __init__(self, service):
+        self.service = service
         self.infraFunc = InfraFunction.__init__(self, self.service)
         self.orderCID: str = self.service.orderCID
         self.processCID = self.service.processCID

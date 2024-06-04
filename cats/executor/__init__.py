@@ -1,18 +1,21 @@
-import json, os
+import json
 from cats.io.input.structure import Structure
 from cats.io.input.function import Function
-from cats.service import Service
 
 
-class Executor(Structure):
+class Executor:
     def __init__(self,
-        service: Service
+        service
     ):
-        self.service: Service = service
+        self.service = service
+        self.CAT_HOME = self.service.CAT_HOME
+
         self.structure: Structure = Structure(self.service)
         self.function: Function = Function(self.service)
         self.bom_json_cid: str = self.service.bom_json_cid
-        self.enhanced_bom, self.bom = self.service.meshClient.getEnhancedBom(self.bom_json_cid)
+        self.enhanced_bom, self.bom = self.service.meshClient.getEnhancedBom(
+            self.bom_json_cid, self.service.DATA_HOME
+        )
         self.orderCID = None
         self.invoiceCID = None
 
@@ -20,9 +23,6 @@ class Executor(Structure):
         self.integration_s3_output = None
         self.egress_job_id = None
 
-        # self.order = None
-        # self.structure: Structure = self.order.structure
-        # self.function: Function = self.order.function
 
     def execute(self, enhanced_bom=None):
         if enhanced_bom is not None:

@@ -1,18 +1,30 @@
 import json, subprocess
 from copy import copy, deepcopy
+from pathlib import Path
 
-from cats import CATS_HOME
-from cats.network.aws import s3_client
 from cats.network.cod import CoD
 
 
 class MeshClient(CoD):
     def __init__(self, ipfsClient, filecoinClient=None, awsClient=None):
+        self.CATS_HOME = None
+        self.DATA_HOME = None
+        self.JOB_HOME = None
+        self.CACHE_HOME = None
+
+        self.INGRESS_HOME = None
+        self.INTEGRATION_HOME = None
+        self.INTEGRATION_INPUT_CACHE = None
+        self.INTEGRATION_INPUT_DATA_CACHE = None
+        self.EGRESS_HOME = None
+
+        self.CAT_HOME = None
+        self.CAR_HOME = None
         self.ipfsClient = ipfsClient
         self.filecoinClient = filecoinClient
         self.awsClient = awsClient
         self.context = ...
-        CoD.__init__(self)
+        CoD.__init__(self, INTEGRATION_CACHE_HOME=self.INTEGRATION_INPUT_CACHE, cidDir=self.cidDir)
 
     def initBOMjson(self,
         structure_cid: str, structure_filepath: str, function_cid: str, init_data_cid: str,
@@ -38,7 +50,6 @@ class MeshClient(CoD):
         invoice['order_cid'] = init_order_cid
         invoice_cid = self.ipfsClient.add_json(invoice)
 
-
         init_bom = {
             'invoice_cid': invoice_cid,
             'log_cid': None,
@@ -59,12 +70,14 @@ class MeshClient(CoD):
         res = [i for i in dirs if subdir in i]
         return res[0].split(' - ')[0]
 
-    def get(self, cid: str, filepath: str, output: str = CATS_HOME, cwd=None):
+    def get(self, cid: str, filepath: str, output: str = None):
+        if output is None:
+            output = self.CATS_HOME
         subprocess.check_output(
             f"ipfs get {cid} --output {output}/{filepath}",
             stderr=subprocess.STDOUT,
             shell=True,
-            cwd=cwd
+            cwd=output
         )
         return filepath
 
@@ -108,25 +121,26 @@ class MeshClient(CoD):
                     car_bom_cid = attrs['Hash']
         return car_bom_cid, bom_cid
 
-    def getEnhancedBom(self, bom_json_cid: str):
+    def getEnhancedBom(self, bom_json_cid: str, CAT_HOME: str):
         # self.get(cid=bom_json_cid, filepath='bom.json', cwd=None)
         # bom = json.loads(open('bom.json', 'r').read())
-        self.get(cid=bom_json_cid, output=self.CAT_HOME, filepath='bom.json', cwd=self.CAT_HOME)
-        bom = json.loads(open(f'{self.CAT_HOME}/bom.json', 'r').read())
+        # self.CAT_HOME = CAT_HOME
+        self.CAR_HOME = self.DATA_HOME + '/bom.car'
+        self.get(cid=bom_json_cid, output=self.DATA_HOME, filepath='bom.json')
+        bom = json.loads(open(f'{self.DATA_HOME}/bom.json', 'r').read())
         enhanced_bom = deepcopy(bom)
         enhanced_bom['bom_json_cid'] = bom_json_cid
 
-        self.get(cid=bom['invoice_cid'], output=self.CAT_HOME, filepath='invoice.json', cwd=self.CAT_HOME)
-        enhanced_bom['invoice'] = json.loads(open(f'{self.CAT_HOME}/invoice.json', 'r').read())
+        self.get(cid=bom['invoice_cid'], output=self.DATA_HOME, filepath='invoice.json')
+        enhanced_bom['invoice'] = json.loads(open(f'{self.DATA_HOME}/invoice.json', 'r').read())
 
         self.get(cid=enhanced_bom['invoice']['order_cid'],
-                 output=self.CAT_HOME, filepath='order.json', cwd=self.CAT_HOME)
-        enhanced_bom['order'] = json.loads(open(f'{self.CAT_HOME}/order.json', 'r').read())
+                 output=self.DATA_HOME, filepath='order.json')
+        enhanced_bom['order'] = json.loads(open(f'{self.DATA_HOME}/order.json', 'r').read())
 
         self.get(
-            cid=enhanced_bom['order']['structure_cid'], output=self.CAT_HOME,
-            filepath=enhanced_bom['order']['structure_filepath'],
-            cwd=self.CAT_HOME
+            cid=enhanced_bom['order']['structure_cid'], output=self.DATA_HOME,
+            filepath=enhanced_bom['order']['structure_filepath']
         )
         return deepcopy(enhanced_bom), bom
 
@@ -142,17 +156,19 @@ class MeshClient(CoD):
         return file_cid, file_name
 
     def cidDir(self, filepath: str):
-        data = self.ipfsClient.add(filepath)
-        data_dir = filepath.split('/')[-1]
+        data = self.ipfsClient.add(filepath, recursive=True)
+        # # data_dir = filepath.split('/')[-1]
+        # print('0')
+        # print(filepath)
         # print('1')
         # print(data)
-        # print('2')
-        # print(data_dir)
-        # print('3')
-        # print(list(filter(lambda x: x['Name'] == data_dir, data)))
+        # # print('2')
+        # # print(data_dir)
+        # # print('3')
+        # # print(list(filter(lambda x: x['Name'] == data_dir, data)))
         # exit()
         if type(data) is list:
-            data_json = list(filter(lambda x: x['Name'] == data_dir, data))[-1]
+            data_json = list(filter(lambda x: x['Name'] == 'outputs', data))[-1]
             data_cid = data_json['Hash']
             return data_cid
         else:

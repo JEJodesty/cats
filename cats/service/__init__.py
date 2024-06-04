@@ -1,21 +1,44 @@
 import glob, json, os, pickle, subprocess
 from copy import deepcopy
+from pathlib import Path
 from pprint import pprint
 import pandas as pd
 
-from cats import CATS_HOME
+from cats.factory import Factory
 from cats.service.utils import executeCMD
 from cats.network import MeshClient
 import ipfsapi as ipfsApi
 
+
 class Service:
     def __init__(self,
-        meshClient: MeshClient
+        meshClient: MeshClient,
+        CATS_HOME: str
     ):
         self.meshClient: MeshClient = meshClient
         self.ipfsClient: ipfsApi = self.meshClient.ipfsClient
         self.executeCMD = executeCMD
-        self.CAR_HOME = self.meshClient.CAT_HOME + '/bom.car'
+
+        self.CATS_HOME = self.meshClient.CATS_HOME = CATS_HOME
+        self.DATA_HOME = self.meshClient.DATA_HOME = self.CATS_HOME + '/data'
+        self.JOB_HOME = self.meshClient.JOB_HOME = self.DATA_HOME + '/jobs'
+        self.CACHE_HOME = self.meshClient.CACHE_HOME = self.DATA_HOME + "/cache"
+        self.PROCESSES_HOME = self.meshClient.CACHE_HOME = self.DATA_HOME + "/processes"
+        self.INTEGRATION_INPUT_CACHE = self.meshClient.INTEGRATION_INPUT_CACHE = \
+            f"{self.CACHE_HOME}/integration"
+        self.INTEGRATION_INPUT_DATA_CACHE = self.meshClient.INTEGRATION_INPUT_DATA_CACHE = \
+            f"{self.INTEGRATION_INPUT_CACHE}/outputs"
+        self.catStore()
+
+        self.CAT_HOME = None
+        self.INGRESS_HOME = None
+        self.INGRESS_DATA_HOME = None
+        self.INGRESS_EXIT_CODE = None
+        self.INGRESS_JOB_STATUS = None
+        self.INTEGRATION_HOME = None
+        self.EGRESS_HOME = None
+        self.EGRESS_EXIT_CODE = None
+        self.EGRESS_JOB_STATUS = None
 
         self.init_bom_json_cid = None
         self.bom_json_cid = None
@@ -38,8 +61,7 @@ class Service:
         self.processCID = None
         self.order = None
         self.process = None
-    #     self.start_ipfs_daemon
-    #
+
     # def start_ipfs_daemon(self):
     #     # Command to start the IPFS daemon
     #     command = ['ipfs', 'daemon']
@@ -57,7 +79,50 @@ class Service:
     #         print("Failed to start IPFS daemon.")
     #         print(stderr.decode())
 
-    def cid_to_pandasDF(self, cid, download_dir, format='*.csv', read_dir='/outputs', parrent_dir=CATS_HOME):
+    def catStore(self):
+        Path(self.DATA_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.JOB_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.CACHE_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.PROCESSES_HOME).mkdir(parents=True, exist_ok=True)
+
+    def initFactory(self, order_request, ipfs_uri):
+        self.initBOMcar(
+            structure_cid=order_request['order']['structure_cid'],
+            structure_filepath=order_request['order']['structure_filepath'],
+            function_cid=order_request['order']['function_cid'],
+            init_data_cid=ipfs_uri,
+            init_bom_filename=f"{self.DATA_HOME}/bom.car"
+        )
+        catFactory = Factory(self)
+        return catFactory, order_request
+
+    def execute(self, catFactory, order_request):
+        executor = catFactory.produce()
+        enhanced_bom, _ = executor.execute()
+
+        invoice = {}
+        enhanced_bom['invoice']['order_cid'] = self.ipfsClient.add_str(
+            json.dumps(order_request['order'])
+        )
+        invoice['invoice_cid'] = self.ipfsClient.add_str(
+            json.dumps(enhanced_bom['invoice'])
+        )
+        invoice['invoice'] = enhanced_bom['invoice']
+
+        bom = {
+            'log_cid': enhanced_bom['log_cid'],
+            'invoice_cid': invoice['invoice_cid']
+        }
+        bom_response = {
+            'bom': bom,
+            'bom_cid': self.ipfsClient.add_str(json.dumps(bom))
+        }
+        return bom_response
+
+    def cid_to_pandasDF(self, cid, download_dir, format='*.csv', read_dir='/outputs', parrent_dir=None):
+        if parrent_dir is None:
+            parrent_dir = self.CATS_HOME
+
         path = f'{parrent_dir}/{download_dir}'
         os.system(f"rm -rf {path}")
         self.meshClient.get(cid, download_dir, parrent_dir)
@@ -78,23 +143,25 @@ class Service:
         structure_cid=None, structure_filepath=None
     ):
         if init_bom_filename is None:
-            init_bom_filename = self.CAR_HOME
+            init_bom_filename = self.meshClient.CAR_HOME
 
         self.init_bom_car_cid, self.init_bom_json_cid = self.meshClient.initBOMcar(
-            # structure_path=self.MeshClient.g,
             structure_cid=structure_cid,
             structure_filepath=structure_filepath,
             function_cid=function_cid,
             init_data_cid=init_data_cid,
             init_bom_filename=init_bom_filename
         )
-        self.enhanced_bom, init_bom = self.meshClient.getEnhancedBom(bom_json_cid=self.init_bom_json_cid)
-
+        # self.CAT_HOME = self.JOB_HOME + f"""cat={datetime.utcnow().isoformat()}"""
+        # Path(self.CAT_HOME).mkdir(parents=True, exist_ok=True)
+        self.enhanced_bom, init_bom = self.meshClient.getEnhancedBom(
+            bom_json_cid=self.init_bom_json_cid,
+            CAT_HOME=self.CAT_HOME
+        )
         self.functionCID = self.enhanced_bom['order']['function_cid']
         function_dict = json.loads(self.meshClient.cat(self.functionCID))
         self.processCID = function_dict['process_cid']
         self.process = pickle.loads(self.meshClient.catObj(self.processCID))
-
         self.order_cid = self.enhanced_bom['invoice']['order_cid']
         self.init_bom_json_cid = self.enhanced_bom['bom_json_cid']
         self.bom_json_cid = self.init_bom_json_cid

@@ -1,10 +1,9 @@
 from cats.executor import Executor
-from cats.service import Service
 
 
 class Factory:
     def __init__(self,
-        service: Service,
+        service,
         order=None
     ):
         self.Executor = Executor(service=service)

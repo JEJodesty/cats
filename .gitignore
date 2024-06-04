@@ -24,3 +24,5 @@ cat-action-plane-config
 old/experiments/catMesh
 online
 requirements.txt
+data/cache/
+data/jobs/

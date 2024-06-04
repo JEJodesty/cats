@@ -1,118 +1,163 @@
-import json, glob, os, multiprocessing, shutil, subprocess, tempfile, time
-from datetime import datetime
-from pathlib import Path
-import re
+import json, glob, os, multiprocessing, shutil, subprocess, tempfile, time, re
 
-from cats import JOB_HOME
+from cats.utils import subproc_run
 
 
 class CoD:
-    def __init__(self):
-        self.JOB_HOME = JOB_HOME
-        self.CAT_HOME = self.JOB_HOME + f"""cat={
-            datetime.utcnow().isoformat()
-        }"""
-        Path(self.CAT_HOME).mkdir(parents=True, exist_ok=True)
+    def __init__(self, INTEGRATION_CACHE_HOME, cidDir):
+        # self.JOB_HOME = JOB_HOME
+        self.CAT_HOME = None
+        self.INTEGRATION_INPUT_CACHE = INTEGRATION_CACHE_HOME
+        self.ingress_job_id = None
+        self.ingressed_data_cid = None
+        # self.integrated_data_cid = None
+        self.cidDir = cidDir
 
     def contains_substring(self, substring):
         return lambda s: substring in s
 
+    def cidDirUponCompletion(self, directory_path, job_id, check_interval=1, timeout=None):
+        start_time = time.time()
+        while self.checkStatusOfJob_printless(job_id=job_id) != "Completed":
+            status = self.checkStatusOfJob(job_id=job_id)
+            if status != "":
+                print("job not completed: %s - %s" % (job_id, status))
+                exit()
+            # Check if timeout has been reached
+            if timeout and (time.time() - start_time) > timeout:
+                print(f"Timeout reached. Directory '{directory_path}' is still empty.")
+                exit()
+            time.sleep(check_interval)
+
+        data_dir_cid = self.cidDir(directory_path)
+        print("job output CIDed: %s" % data_dir_cid)
+        return data_dir_cid
+
+    def describeJob(self, job_id):
+        cmd = f"bacalhau describe --json {job_id}"
+        print(cmd)
+        job_result = subproc_run(cmd)
+        job_dict = json.loads(job_result.stdout)
+        return job_dict
+
+    def getJobState(self, job_id):
+        return self.describeJob(job_id)['State']
+
+    def getJobExecutions(self, job_id):
+        return self.describeJob(job_id)['State']['Executions']
+
+    def getPublishedURI(self, job_id):
+        key_to_find = 'State'
+        value_to_find = 'Completed'
+        matching_execution = next(
+            (d for d in self.getJobExecutions(job_id) if d.get(key_to_find) == value_to_find), None
+        )
+        return matching_execution['PublishedResults']
+
+    def waitForJobCompletion(self, job_id, check_interval=1, timeout=None):
+        start_time = time.time()
+        while self.checkStatusOfJob_printless(job_id=job_id) != "Completed":
+            status = self.checkStatusOfJob_printless(job_id)
+            if status == "":
+                print("job status is empty! %s" % job_id)
+            elif status != "":
+                print("job not completed: %s - %s" % (job_id, status))
+            # Check if timeout has been reached
+            if timeout and (time.time() - start_time) > timeout:
+                print(f"Job Still Processing: %s - %s" % (job_id, status))
+                return status
+            time.sleep(check_interval)
+        print("job completed: %s" % job_id)
+        return self.checkStatusOfJob_printless(job_id)
+
+    def checkStatusOfJob_printless(self, job_id: str) -> str:
+        assert len(job_id) > 0
+        cmd = f"bacalhau list --output json --id-filter {job_id}"
+        p = subproc_run(cmd)
+        r = self.parseJobStatus(p.stdout)
+        return r
+
     # checkStatusOfJob checks the status of a Bacalhau job
     def checkStatusOfJob(self, job_id: str) -> str:
-        assert len(job_id) > 0
-        p = subprocess.run(
-            ["bacalhau", "list", "--output", "json", "--id-filter", job_id],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True
-        )
-        r = self.parseJobStatus(p.stdout)
+        r = self.checkStatusOfJob_printless(job_id)
         if r == "":
             print("job status is empty! %s" % job_id)
         elif r == "Completed":
             print("job completed: %s" % job_id)
         else:
             print("job not completed: %s - %s" % (job_id, r))
-
         return r
 
-    def ingress(self, input: str):
+    def getCIDedResults(self, job_id: str, log_mode: str = "json", download_timeout_secs: str = "5m0s"):
+        output_dir = self.CACHE_HOME
+        # job_result.stdout
+        cmd = f"bacalhau get {job_id} --output-dir {output_dir} --download-timeout-secs {download_timeout_secs}"
+        print(cmd)
+        job_result = subproc_run(cmd)
+        print(job_result.stdout)
+        job_dict = json.loads(job_result.stdout)
+        return job_dict
+
+    def codSubmit(self, cmd):
+        submit = subproc_run(cmd)
+        submit_job_id = submit.stdout.split('\n')[0]
+        print("job submitted: %s" % submit_job_id)
+        print()
+        return submit_job_id
+
+    def ingress(self, input_dir: str):
         print("Ingress:")
-        cmd = f"bacalhau docker run --output ingress:/outputs -i {input} --id-only --wait alpine -- sh -c"
-        cmd_list = cmd.split(' ') + ['cp -r /inputs/* /outputs/']
-        submit = subprocess.run(
-            cmd_list,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            cwd=self.JOB_HOME
-        )
-        submit_job_id = submit.stdout.strip()
-        print("job submitted: %s" % submit_job_id)
+        cmd = f"""
+        bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
+        """
+        print(cmd)
+        return self.codSubmit(cmd)
 
-        if submit.returncode == 0:
-            get_result = subprocess.run(
-                f"bacalhau get {submit_job_id}".split(),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=self.CAT_HOME
-            )
-            get_result_list = get_result.stdout.splitlines()
-
-            get_result_job_id_text = list(
-                filter(self.contains_substring('have been written to...'), get_result_list)
-            ).pop()
-            get_result_job_id = re.findall(r"'(.*?)'", get_result_job_id_text).pop().replace("'", "")
-            get_result_job_dir = list(filter(self.contains_substring('job-'), get_result_list)).pop()
-            print("job submitted: %s" % get_result_job_id)
-            if get_result.returncode != 0:
-                print("failed (%d) job: %s" % (get_result.returncode, get_result_job_id))
-        else:
-            print("failed (%d) job: %s" % (submit.returncode, submit_job_id))
-
-        job_ingress_dir = get_result_job_dir + '/ingress'
-        return get_result_job_id
-
-    def integrate(self, job_id: str):
-        print("Integrate:")
-        job_dir = '/job-' + job_id.split('-')[0]
-        return self.CAT_HOME + job_dir + '/ingress/outputs/'
-
-    def egress(self, integration_output_cid: str):
+    def egress(self, input_dir: str):
         print("Egress:")
-        cmd = f"bacalhau docker run --output egress:/outputs -i {integration_output_cid} --id-only --wait alpine -- sh -c"
-        cmd_list = cmd.split(' ') + ['cp -r /inputs/* /outputs/']
-        submit = subprocess.run(
-            cmd_list,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            cwd=self.JOB_HOME
-        )
-        submit_job_id = submit.stdout.strip()
-        print("job submitted: %s" % submit_job_id)
+        cmd = f"""
+        bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /outputs/'
+        """
+        print(cmd)
+        return self.codSubmit(cmd)
 
-        if submit.returncode == 0:
-            get_result = subprocess.run(
-                f"bacalhau get {submit_job_id}".split(),
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=self.CAT_HOME
-            )
-            get_result_list = get_result.stdout.splitlines()
+    def integration(self, input_dir: str, output_dir: str = None, download=False):
+        print("Integration:")
+        if download is True:
+            download = "--download"
+        cmd = f"""
+        bacalhau docker run --id-only --wait {download} -i {input_dir} --output-dir {output_dir} \
+        alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
+        """
+        print(cmd)
+        return self.codSubmit(cmd)
 
-            get_result_job_id_text = list(filter(self.contains_substring('have been written to...'), get_result_list)).pop()
-            get_result_job_id = re.findall(r"'(.*?)'", get_result_job_id_text).pop().replace("'", "")
-            get_result_job_dir = list(filter(self.contains_substring('job-'), get_result_list)).pop()
-            if get_result.returncode != 0:
-                print("failed (%d) job: %s" % (get_result.returncode, get_result_job_id))
-        else:
-            print("failed (%d) job: %s" % (submit.returncode, submit_job_id))
 
-        job_egress_dir = get_result_job_dir + '/egress'
-        return submit_job_id, job_egress_dir
+    def integrationDownload(self, input_dir: str, output_dir: str = None):
+        if output_dir is None:
+            output_dir: str = self.INTEGRATION_INPUT_CACHE
+        return self.integration(input_dir=input_dir, output_dir=output_dir, download=True)
+
+    # def ingress(self, input_dir: str, output_dir: str):
+    #     print("Ingress:")
+    #     cmd = f"""
+    #     bacalhau docker run --id-only --wait --download -i {input_dir} --output-dir {output_dir} \
+    #     alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
+    #     """
+    #     print(cmd)
+    #     submit = subprocess.run(
+    #         cmd,
+    #         stdout=subprocess.PIPE,
+    #         stderr=subprocess.PIPE,
+    #         shell=True,
+    #         text=True
+    #     )
+    #     submit_job_id = submit.stdout.split('\n')[0]
+    #     print("job submitted: %s" % submit_job_id)
+    #     print()
+    #     return submit_job_id
+
+
 
     # submitJob submits a job to the Bacalhau network
     def submitJob(self, cid: str) -> str:

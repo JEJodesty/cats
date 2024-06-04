@@ -1,4 +1,3 @@
-import pickle
 from typing import Dict
 import numpy as np
 import ray
@@ -9,6 +8,7 @@ def function_0(batch: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
     vec_b = batch["petal width (cm)"]
     batch["petal area (cm^2)"] = vec_a * vec_b
     return batch
+
 
 def function_1(batch: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
     vec_a = batch["petal length (cm)"]
@@ -27,6 +27,7 @@ def process_0(input, output):
     ds_out.write_csv(output)
     ray.shutdown()
     return ds_out
+
 
 def process_1(input, output):
     ray.init()
