@@ -1,7 +1,5 @@
 import json, subprocess
 from copy import copy, deepcopy
-from pathlib import Path
-
 from cats.network.cod import CoD
 
 
@@ -24,7 +22,7 @@ class MeshClient(CoD):
         self.filecoinClient = filecoinClient
         self.awsClient = awsClient
         self.context = ...
-        CoD.__init__(self, INTEGRATION_CACHE_HOME=self.INTEGRATION_INPUT_CACHE, cidDir=self.cidDir)
+        CoD.__init__(self, INTEGRATION_INPUT_CACHE=self.INTEGRATION_INPUT_CACHE, cidDir=self.cidDir)
 
     def initBOMjson(self,
         structure_cid: str, structure_filepath: str, function_cid: str, init_data_cid: str,

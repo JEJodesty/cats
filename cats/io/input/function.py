@@ -41,12 +41,13 @@ class IO:
 class Processor:
     def __init__(self, service):
         self.service = service
-        self.processCID = self.service.processCID
+        self.ingress_subproc_cid = self.service.ingress_subproc_cid
+        self.integration_subproc_cid = self.service.integration_subproc_cid
+        self.egress_subproc_cid = self.service.egress_subproc_cid
 
-        self.process = self.service.process
-        self.ingress = self.service.meshClient.ingress
-        self.integration = self.service.meshClient.integrationDownload
-        self.egress = self.service.meshClient.egress
+        self.ingress_subproc = self.service.ingress_subproc
+        self.integration_subproc = self.service.integration_subproc
+        self.egress_subproc = self.service.egress_subproc
 
         self.ingress_input_data_cid = self.service.enhanced_bom['init_data_cid']
         # self.ingress_input_data_cid = self.service.enhanced_bom['invoice']['data_cid']
@@ -74,7 +75,7 @@ class Processor:
         self.invoice_data_cid = None
 
     def Ingress_SubProc(self):
-        self.ingress_job_id = self.ingress(input_dir=self.ingress_input_data_cid)
+        self.ingress_job_id = self.ingress_subproc(input_dir=self.ingress_input_data_cid)
         self.service.INGRESS_JOB_STATUS = self.service.meshClient.waitForJobCompletion(
             self.ingress_job_id, check_interval=1, timeout=None
         )
@@ -86,19 +87,19 @@ class Processor:
 
     def Integration_SubProc(self):
         self.service.INTEGRATION_HOME = self.service.meshClient.INTEGRATION_HOME + "/outputs"
-        self.integration(
+        self.service.meshClient.integration(
             self.service.INGRESS_DATA_HOME,
             self.service.INTEGRATION_INPUT_CACHE
         )
         wait_for_directory(self.service.INTEGRATION_INPUT_CACHE, check_interval=1)
-        self.process(self.service.INTEGRATION_INPUT_DATA_CACHE, self.service.INTEGRATION_HOME)
+        self.integration_subproc(self.service.INTEGRATION_INPUT_DATA_CACHE, self.service.INTEGRATION_HOME)
         wait_for_directory(self.service.INTEGRATION_HOME)
         self.integration_output = self.service.meshClient.cidDir(self.service.INTEGRATION_HOME)
         self.integration_output_ipfs = f'ipfs://{self.integration_output}/*.csv'
         return self.integration_output
 
     def Egress_SubProc(self):
-        self.egress_job_id = self.egress(input_dir=self.integration_output_ipfs)
+        self.egress_job_id = self.egress_subproc(input_dir=self.integration_output_ipfs)
         self.service.EGRESS_JOB_STATUS = self.service.meshClient.waitForJobCompletion(
             self.egress_job_id, check_interval=1, timeout=None
         )
@@ -147,12 +148,13 @@ class Function(InfraFunction):
         self.service.INGRESS_HOME = self.service.meshClient.INGRESS_HOME = f"{self.CAT_HOME}/ingress"
         self.service.INTEGRATION_HOME = self.service.meshClient.INTEGRATION_HOME = f"{self.CAT_HOME}/integration"
         self.service.EGRESS_HOME = self.service.meshClient.EGRESS_HOME = f"{self.CAT_HOME}/egress"
-        self.service.PROCESSES_HOME = self.service.meshClient.PROCESSES_HOME = f"{self.CAT_HOME}/process"
+        self.service.PROCESS_HOME = self.service.meshClient.PROCESS_HOME = f"{self.CAT_HOME}/process"
 
         Path(self.service.INGRESS_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.service.INTEGRATION_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.service.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
-        Path(self.service.PROCESSES_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.service.EGRESS_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.service.PROCESS_HOME).mkdir(parents=True, exist_ok=True)
 
     def execute(self):
         self.catStore()

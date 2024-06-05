@@ -23,7 +23,6 @@ class Executor:
         self.integration_s3_output = None
         self.egress_job_id = None
 
-
     def execute(self, enhanced_bom=None):
         if enhanced_bom is not None:
             self.enhanced_bom = enhanced_bom

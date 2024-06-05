@@ -62,18 +62,67 @@ def flatten_bom(bom_response, meshClient):
     return bom_response
 
 
-def linkProcess(cat_response, process_obj, meshClient):
+def create_order_request(
+    ingress_obj,
+    process_obj,
+    egress_obj,
+    data_dirpath,
+    structure_filepath,
+    meshClient,
+    JOB_HOME,
+    endpoint='http://127.0.0.1:5000/cat/node/execute'
+):
+    structure_cid, structure_name = meshClient.cidFile(structure_filepath)
+    function = {
+        'ingress_subproc_cid': meshClient.ipfsClient.add_pyobj(ingress_obj),
+        'integration_subproc_cid': meshClient.ipfsClient.add_pyobj(process_obj),
+        'egress_subproc_cid': meshClient.ipfsClient.add_pyobj(egress_obj),
+        'infrafunction_cid': None
+    }
+    invoice = {
+        "data_cid": meshClient.cidDir(data_dirpath)
+    }
+    order = {
+        "function_cid": meshClient.ipfsClient.add_str(json.dumps(function)),
+        "structure_cid": structure_cid,
+        "invoice_cid": meshClient.ipfsClient.add_str(json.dumps(invoice)),
+        "structure_filepath": structure_name,
+        "JOB_HOME": JOB_HOME,
+        "endpoint": endpoint
+    }
+    order_request = {
+        'order_cid': meshClient.ipfsClient.add_str(json.dumps(order))
+    }
+    return order_request
+
+
+def linkProcess(
+        cat_response,
+        meshClient,
+        ingress_subproc=None,
+        integration_subproc=None,
+        egress_subproc=None
+):
     flattened_bom = flatten_bom(cat_response, meshClient)
     flat_bom = deepcopy(flattened_bom['flat_bom'])
-
-    function = {
-        'process_cid': meshClient.ipfsClient.add_pyobj(process_obj),
-        'infrafunction': None
-    }
+    function_cids = flat_bom['invoice']['order']['flat']['function']
+    function = {'infrafunction_cid': None}
+    if ingress_subproc is not None:
+        function['ingress_subproc_cid'] = meshClient.ipfsClient.add_pyobj(ingress_subproc)
+    else:
+        function['ingress_subproc_cid'] = function_cids['ingress_subproc_cid']
+    if integration_subproc is not None:
+        function['integration_subproc_cid'] = meshClient.ipfsClient.add_pyobj(integration_subproc)
+    else:
+        function['integration_subproc_cid'] = function_cids['integration_subproc_cid']
+    if egress_subproc is not None:
+        function['egress_subproc_cid'] = meshClient.ipfsClient.add_pyobj(egress_subproc)
+    else:
+        function['egress_subproc_cid'] = function_cids['egress_subproc_cid']
+    new_function_cid = meshClient.ipfsClient.add_str(json.dumps(function))
 
     invoice = flat_bom['invoice']
     input_invoice = {'data_cid': invoice['data_cid']}
-    new_function_cid = meshClient.ipfsClient.add_str(json.dumps(function))
     new_invoice_cid = meshClient.ipfsClient.add_str(json.dumps(input_invoice))
 
     order = invoice['order']
@@ -140,34 +189,6 @@ def wait_for_directory_to_be_populated(directory_path, check_interval=1, timeout
 
         # Wait for the specified interval before checking again
         time.sleep(check_interval)
-
-
-def create_order_request(
-    process_obj, data_dirpath, structure_filepath,
-    meshClient,
-    JOB_HOME,
-    endpoint='http://127.0.0.1:5000/cat/node/execute'
-):
-    structure_cid, structure_name = meshClient.cidFile(structure_filepath)
-    function = {
-        'process_cid': meshClient.ipfsClient.add_pyobj(process_obj),
-        'infrafunction_cid': None
-    }
-    invoice = {
-        "data_cid": meshClient.cidDir(data_dirpath)
-    }
-    order = {
-        "function_cid": meshClient.ipfsClient.add_str(json.dumps(function)),
-        "structure_cid": structure_cid,
-        "invoice_cid": meshClient.ipfsClient.add_str(json.dumps(invoice)),
-        "structure_filepath": structure_name,
-        "JOB_HOME": JOB_HOME,
-        "endpoint": endpoint
-    }
-    order_request = {
-        'order_cid': meshClient.ipfsClient.add_str(json.dumps(order))
-    }
-    return order_request
 
 
 def flatten_bom(bom_response, meshClient):

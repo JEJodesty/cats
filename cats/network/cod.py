@@ -4,10 +4,10 @@ from cats.utils import subproc_run
 
 
 class CoD:
-    def __init__(self, INTEGRATION_CACHE_HOME, cidDir):
+    def __init__(self, INTEGRATION_INPUT_CACHE, cidDir):
         # self.JOB_HOME = JOB_HOME
         self.CAT_HOME = None
-        self.INTEGRATION_INPUT_CACHE = INTEGRATION_CACHE_HOME
+        self.INTEGRATION_INPUT_CACHE = INTEGRATION_INPUT_CACHE
         self.ingress_job_id = None
         self.ingressed_data_cid = None
         # self.integrated_data_cid = None
@@ -105,59 +105,20 @@ class CoD:
         print()
         return submit_job_id
 
-    def ingress(self, input_dir: str):
-        print("Ingress:")
-        cmd = f"""
-        bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
-        """
-        print(cmd)
-        return self.codSubmit(cmd)
-
-    def egress(self, input_dir: str):
-        print("Egress:")
-        cmd = f"""
-        bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /outputs/'
-        """
-        print(cmd)
-        return self.codSubmit(cmd)
-
-    def integration(self, input_dir: str, output_dir: str = None, download=False):
+    def integration(self, input_dir: str, output_dir: str = None, download: str = False):
         print("Integration:")
         if download is True:
             download = "--download"
+        else:
+            download = ""
+        if output_dir is None:
+            output_dir: str = self.INTEGRATION_INPUT_CACHE
         cmd = f"""
         bacalhau docker run --id-only --wait {download} -i {input_dir} --output-dir {output_dir} \
         alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
         """
         print(cmd)
         return self.codSubmit(cmd)
-
-
-    def integrationDownload(self, input_dir: str, output_dir: str = None):
-        if output_dir is None:
-            output_dir: str = self.INTEGRATION_INPUT_CACHE
-        return self.integration(input_dir=input_dir, output_dir=output_dir, download=True)
-
-    # def ingress(self, input_dir: str, output_dir: str):
-    #     print("Ingress:")
-    #     cmd = f"""
-    #     bacalhau docker run --id-only --wait --download -i {input_dir} --output-dir {output_dir} \
-    #     alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
-    #     """
-    #     print(cmd)
-    #     submit = subprocess.run(
-    #         cmd,
-    #         stdout=subprocess.PIPE,
-    #         stderr=subprocess.PIPE,
-    #         shell=True,
-    #         text=True
-    #     )
-    #     submit_job_id = submit.stdout.split('\n')[0]
-    #     print("job submitted: %s" % submit_job_id)
-    #     print()
-    #     return submit_job_id
-
-
 
     # submitJob submits a job to the Bacalhau network
     def submitJob(self, cid: str) -> str:

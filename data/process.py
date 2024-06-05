@@ -2,6 +2,26 @@ from typing import Dict
 import numpy as np
 import ray
 
+from cats.utils.cod import codSubmit
+
+
+def ingress(input_dir: str):
+    print("Ingress:")
+    cmd = f"""
+    bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
+    """
+    print(cmd)
+    return codSubmit(cmd)
+
+
+def egress(input_dir: str):
+    print("Egress:")
+    cmd = f"""
+    bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /outputs/'
+    """
+    print(cmd)
+    return codSubmit(cmd)
+
 
 def function_0(batch: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
     vec_a = batch["petal length (cm)"]
