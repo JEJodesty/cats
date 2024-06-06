@@ -34,7 +34,6 @@ def catSubmit(order_request, meshClient):
     post_cmd = post({'obj': order_request}, order["endpoint"])
     print(ppost({'obj': order_request}, order["endpoint"]))
     print()
-    print()
     response_str = subprocess.check_output(post_cmd, shell=True)
     output_bom = json.loads(response_str)
 
@@ -63,9 +62,10 @@ def flatten_bom(bom_response, meshClient):
 
 
 def create_order_request(
-    ingress_obj,
-    process_obj,
-    egress_obj,
+    ingress_subproc,
+    integrated_subproc,
+    egress_subproc,
+    integration_cache_subproc,
     data_dirpath,
     structure_filepath,
     meshClient,
@@ -74,10 +74,11 @@ def create_order_request(
 ):
     structure_cid, structure_name = meshClient.cidFile(structure_filepath)
     function = {
-        'ingress_subproc_cid': meshClient.ipfsClient.add_pyobj(ingress_obj),
-        'integration_subproc_cid': meshClient.ipfsClient.add_pyobj(process_obj),
-        'egress_subproc_cid': meshClient.ipfsClient.add_pyobj(egress_obj),
-        'infrafunction_cid': None
+        'ingress_subproc_cid': meshClient.ipfsClient.add_pyobj(ingress_subproc),
+        'integrated_subproc_cid': meshClient.ipfsClient.add_pyobj(integrated_subproc),
+        'egress_subproc_cid': meshClient.ipfsClient.add_pyobj(egress_subproc),
+        'integration_cache_subproc_cid': meshClient.ipfsClient.add_pyobj(integration_cache_subproc),
+        'infrafunction_subproc_cid': None
     }
     invoice = {
         "data_cid": meshClient.cidDir(data_dirpath)
@@ -100,25 +101,35 @@ def linkProcess(
         cat_response,
         meshClient,
         ingress_subproc=None,
-        integration_subproc=None,
-        egress_subproc=None
+        integrated_subproc=None,
+        egress_subproc=None,
+        integration_cache_subproc=None,
+        infrafunction_subproc=None
 ):
     flattened_bom = flatten_bom(cat_response, meshClient)
     flat_bom = deepcopy(flattened_bom['flat_bom'])
     function_cids = flat_bom['invoice']['order']['flat']['function']
-    function = {'infrafunction_cid': None}
+    function = {}
     if ingress_subproc is not None:
         function['ingress_subproc_cid'] = meshClient.ipfsClient.add_pyobj(ingress_subproc)
     else:
         function['ingress_subproc_cid'] = function_cids['ingress_subproc_cid']
-    if integration_subproc is not None:
-        function['integration_subproc_cid'] = meshClient.ipfsClient.add_pyobj(integration_subproc)
+    if integrated_subproc is not None:
+        function['integrated_subproc_cid'] = meshClient.ipfsClient.add_pyobj(integrated_subproc)
     else:
-        function['integration_subproc_cid'] = function_cids['integration_subproc_cid']
+        function['integrated_subproc_cid'] = function_cids['integrated_subproc_cid']
     if egress_subproc is not None:
         function['egress_subproc_cid'] = meshClient.ipfsClient.add_pyobj(egress_subproc)
     else:
         function['egress_subproc_cid'] = function_cids['egress_subproc_cid']
+    if integration_cache_subproc is not None:
+        function['integration_cache_subproc_cid'] = meshClient.ipfsClient.add_pyobj(integration_cache_subproc)
+    else:
+        function['integration_cache_subproc_cid'] = function_cids['integration_cache_subproc_cid']
+    if infrafunction_subproc is not None:
+        function['infrafunction_subproc_cid'] = meshClient.ipfsClient.add_pyobj(infrafunction_subproc)
+    else:
+        function['infrafunction_subproc_cid'] = function_cids['infrafunction_subproc_cid']
     new_function_cid = meshClient.ipfsClient.add_str(json.dumps(function))
 
     invoice = flat_bom['invoice']

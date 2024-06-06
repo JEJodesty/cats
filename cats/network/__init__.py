@@ -119,25 +119,24 @@ class MeshClient(CoD):
                     car_bom_cid = attrs['Hash']
         return car_bom_cid, bom_cid
 
-    def getEnhancedBom(self, bom_json_cid: str, CAT_HOME: str):
-        # self.get(cid=bom_json_cid, filepath='bom.json', cwd=None)
-        # bom = json.loads(open('bom.json', 'r').read())
-        # self.CAT_HOME = CAT_HOME
-        self.CAR_HOME = self.DATA_HOME + '/bom.car'
-        self.get(cid=bom_json_cid, output=self.DATA_HOME, filepath='bom.json')
-        bom = json.loads(open(f'{self.DATA_HOME}/bom.json', 'r').read())
+    def getEnhancedBom(self, bom_json_cid: str, DATA_HOME: str = None):
+        if DATA_HOME is None:
+            DATA_HOME = self.DATA_HOME
+        self.CAR_HOME = DATA_HOME + '/bom.car'
+        self.get(cid=bom_json_cid, output=DATA_HOME, filepath='bom.json')
+        bom = json.loads(open(f'{DATA_HOME}/bom.json', 'r').read())
         enhanced_bom = deepcopy(bom)
         enhanced_bom['bom_json_cid'] = bom_json_cid
 
-        self.get(cid=bom['invoice_cid'], output=self.DATA_HOME, filepath='invoice.json')
-        enhanced_bom['invoice'] = json.loads(open(f'{self.DATA_HOME}/invoice.json', 'r').read())
+        self.get(cid=bom['invoice_cid'], output=DATA_HOME, filepath='invoice.json')
+        enhanced_bom['invoice'] = json.loads(open(f'{DATA_HOME}/invoice.json', 'r').read())
 
         self.get(cid=enhanced_bom['invoice']['order_cid'],
-                 output=self.DATA_HOME, filepath='order.json')
-        enhanced_bom['order'] = json.loads(open(f'{self.DATA_HOME}/order.json', 'r').read())
+                 output=DATA_HOME, filepath='order.json')
+        enhanced_bom['order'] = json.loads(open(f'{DATA_HOME}/order.json', 'r').read())
 
         self.get(
-            cid=enhanced_bom['order']['structure_cid'], output=self.DATA_HOME,
+            cid=enhanced_bom['order']['structure_cid'], output=DATA_HOME,
             filepath=enhanced_bom['order']['structure_filepath']
         )
         return deepcopy(enhanced_bom), bom

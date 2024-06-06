@@ -42,12 +42,14 @@ class Processor:
     def __init__(self, service):
         self.service = service
         self.ingress_subproc_cid = self.service.ingress_subproc_cid
-        self.integration_subproc_cid = self.service.integration_subproc_cid
+        self.integrated_subproc_cid = self.service.integrated_subproc_cid
         self.egress_subproc_cid = self.service.egress_subproc_cid
+        self.integration_cache_subproc_cid = self.service.integration_cache_subproc_cid
 
         self.ingress_subproc = self.service.ingress_subproc
-        self.integration_subproc = self.service.integration_subproc
+        self.integrated_subproc = self.service.integrated_subproc
         self.egress_subproc = self.service.egress_subproc
+        self.integration_cache_subproc = self.service.integration_cache_subproc
 
         self.ingress_input_data_cid = self.service.enhanced_bom['init_data_cid']
         # self.ingress_input_data_cid = self.service.enhanced_bom['invoice']['data_cid']
@@ -87,12 +89,12 @@ class Processor:
 
     def Integration_SubProc(self):
         self.service.INTEGRATION_HOME = self.service.meshClient.INTEGRATION_HOME + "/outputs"
-        self.service.meshClient.integration(
+        self.service.integration_cache_subproc(
             self.service.INGRESS_DATA_HOME,
             self.service.INTEGRATION_INPUT_CACHE
         )
         wait_for_directory(self.service.INTEGRATION_INPUT_CACHE, check_interval=1)
-        self.integration_subproc(self.service.INTEGRATION_INPUT_DATA_CACHE, self.service.INTEGRATION_HOME)
+        self.integrated_subproc(self.service.INTEGRATION_INPUT_DATA_CACHE, self.service.INTEGRATION_HOME)
         wait_for_directory(self.service.INTEGRATION_HOME)
         self.integration_output = self.service.meshClient.cidDir(self.service.INTEGRATION_HOME)
         self.integration_output_ipfs = f'ipfs://{self.integration_output}/*.csv'

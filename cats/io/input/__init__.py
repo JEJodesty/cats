@@ -5,7 +5,7 @@ class Function(InfraFunction):
         self.service = service
         self.infraFunc = InfraFunction.__init__(self, self.service)
         self.orderCID: str = self.service.orderCID
-        self.processCID = self.service.integration_subproc_cid
+        self.processCID = self.service.integrated_subproc_cid
         self.process: Processor = None
         self.dataCID: str = None
         self.invoiceCID: str = None

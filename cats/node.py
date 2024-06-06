@@ -42,11 +42,11 @@ def execute_link_cat():
         order_request = request.get_json()
         order_request["order"] = json.loads(SERVICE.meshClient.cat(order_request["order_cid"]))
         order_request['invoice'] = json.loads(SERVICE.meshClient.cat(order_request['order']['invoice_cid']))
+
         prev_data_cid = order_request['invoice']['data_cid']
         data_cid = SERVICE.meshClient.linkData(prev_data_cid)
+
         ipfs_uri = f'ipfs://{data_cid}/*.csv'
-        print("Hi")
-        pprint(order_request)
         catFactory, updated_order_request = SERVICE.initFactory(order_request, ipfs_uri)
         pprint(updated_order_request)
         bom_response = SERVICE.execute(catFactory, updated_order_request)

@@ -105,21 +105,6 @@ class CoD:
         print()
         return submit_job_id
 
-    def integration(self, input_dir: str, output_dir: str = None, download: str = False):
-        print("Integration:")
-        if download is True:
-            download = "--download"
-        else:
-            download = ""
-        if output_dir is None:
-            output_dir: str = self.INTEGRATION_INPUT_CACHE
-        cmd = f"""
-        bacalhau docker run --id-only --wait {download} -i {input_dir} --output-dir {output_dir} \
-        alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
-        """
-        print(cmd)
-        return self.codSubmit(cmd)
-
     # submitJob submits a job to the Bacalhau network
     def submitJob(self, cid: str) -> str:
         assert len(cid) > 0

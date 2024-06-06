@@ -13,6 +13,19 @@ def ingress(input_dir: str):
     print(cmd)
     return codSubmit(cmd)
 
+def integration_cache(input_dir: str, output_dir: str = None, download: str = False):
+    print("Integration Cache:")
+    if download is True:
+        download = "--download"
+    else:
+        download = ""
+    cmd = f"""
+    bacalhau docker run --id-only --wait {download} -i {input_dir} --output-dir {output_dir} \
+    alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
+    """
+    print(cmd)
+    return codSubmit(cmd)
+
 
 def egress(input_dir: str):
     print("Egress:")

@@ -47,17 +47,18 @@ class Service:
         # self.enhanced_init_bom = None
 
         self.ingress_subproc_cid = None
-        self.integration_subproc_cid = None
+        self.integrated_subproc_cid = None
         self.egress_subproc_cid = None
+        self.integration_cache_subproc_cid = None
 
         self.ingress_subproc = None
-        self.integration_subproc = None
+        self.integrated_subproc = None
         self.egress_subproc = None
+        self.integration_cache_subproc = None
 
         self.orderCID = None
         self.dataCID = None
         self.functionCID = None
-        self.integration_subproc_cid = None
         self.order = None
         self.process = None
 
@@ -158,39 +159,40 @@ class Service:
         )
         self.functionCID = self.enhanced_bom['order']['function_cid']
         function_dict = json.loads(self.meshClient.cat(self.functionCID))
-
         self.ingress_subproc_cid = function_dict['ingress_subproc_cid']
-        self.integration_subproc_cid = function_dict['integration_subproc_cid']
+        self.integrated_subproc_cid = function_dict['integrated_subproc_cid']
         self.egress_subproc_cid = function_dict['egress_subproc_cid']
+        self.integration_cache_subproc_cid = function_dict['integration_cache_subproc_cid']
 
         self.ingress_subproc = pickle.loads(self.meshClient.catObj(self.ingress_subproc_cid))
-        self.integration_subproc = pickle.loads(self.meshClient.catObj(self.integration_subproc_cid))
+        self.integrated_subproc = pickle.loads(self.meshClient.catObj(self.integrated_subproc_cid))
         self.egress_subproc = pickle.loads(self.meshClient.catObj(self.egress_subproc_cid))
+        self.integration_cache_subproc = pickle.loads(self.meshClient.catObj(self.integration_cache_subproc_cid))
 
         self.order_cid = self.enhanced_bom['invoice']['order_cid']
         self.init_bom_json_cid = self.enhanced_bom['bom_json_cid']
         self.bom_json_cid = self.init_bom_json_cid
         return self.init_bom_car_cid, self.init_bom_json_cid
 
-    def catSubmit(self, bom):
-        order = json.loads(self.meshClient.cat(bom["order_cid"]))
-        print("Order:")
-        print()
-        pprint(order)
-        print()
-        ppost = lambda args, endpoint: \
-            f'curl -X POST -H "Content-Type: application/json" -d \\\n\'{json.dumps(**args)}\' {endpoint}'
-        post = lambda args, endpoint: \
-            'curl -X POST -H "Content-Type: application/json" -d \'' + json.dumps(**args) + f'\' {endpoint}'
-
-        post_cmd = post({'obj': bom}, order["endpoint"])
-        print(ppost({'obj': bom, 'indent': 4}, order["endpoint"]))
-        print()
-        response_str = subprocess.check_output(post_cmd, shell=True)
-        output_bom = json.loads(response_str)
-
-        output_bom['POST'] = post_cmd
-        return output_bom
+    # def catSubmit(self, bom):
+    #     order = json.loads(self.meshClient.cat(bom["order_cid"]))
+    #     print("Order:")
+    #     print()
+    #     pprint(order)
+    #     print()
+    #     ppost = lambda args, endpoint: \
+    #         f'curl -X POST -H "Content-Type: application/json" -d \\\n\'{json.dumps(**args)}\' {endpoint}'
+    #     post = lambda args, endpoint: \
+    #         'curl -X POST -H "Content-Type: application/json" -d \'' + json.dumps(**args) + f'\' {endpoint}'
+    #
+    #     post_cmd = post({'obj': bom}, order["endpoint"])
+    #     print(ppost({'obj': bom, 'indent': 4}, order["endpoint"]))
+    #     print()
+    #     response_str = subprocess.check_output(post_cmd, shell=True)
+    #     output_bom = json.loads(response_str)
+    #
+    #     output_bom['POST'] = post_cmd
+    #     return output_bom
 
     def flatten_bom(self, bom_response):
         invoice = json.loads(
