@@ -78,6 +78,7 @@ how virtual resources owned by the Data Product should be managed, routed, and p
 adherence to Data Contracting Standards of organizations participating in a Data Mesh.
 ![alt_text](images/CATkernel.jpeg)
 
+#### Architecture Description:
 * **Function** is a FaaS for scalable Data Processing and analytics executed as CAT **Processes**. Functions (FaaS) are deployed 
 on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS) 
   * **Processes** are **Functional Data Processors** executable by InfraFunctions (FaaS) deployed on Structure (PaaS), and 
@@ -90,7 +91,7 @@ on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS)
     * The CAT Order is updated in alignment CATs Architectural Quantum’s Functionality. This Order will include the 
     resulting updated of Structure (PaaS) with respect to the updated Plant (SaaS) and an updated Function (FaaS) with 
     updated Ingress and Egress subProcesses (FaaS)
-* **Structure (PaaS** as **IaC) provisions** and maintains the Plant (SaaS) as Function’s (FaaS) scalable execution environment. 
+* **Structure** (**PaaS** as **IaC**) provisions and maintains the Plant (SaaS) as Function’s (FaaS) scalable execution environment. 
   * The **Plant (SaaS)** is **InfraStructure’s (IaaS)** dynamically scaled execution environment of **Function (FaaS)** 
   as an IaC plugin(s)
     * The web application codebase is Content Addressed within CAT Orders as Data Contract metadata for Order registration. 
