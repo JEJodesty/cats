@@ -24,7 +24,7 @@ Architectural Quantum in a way suitable for their roles using the CATs’ API to
 Data Mesh for a variety of use-cases. CAT’s Data Product teams can be multidisciplinary due to the fact they can operate 
 and maintain the different portions of the entire Web2 cloud service model based on role.
 
-Data Product Team Example:
+### Data Product Team Example:
 * Applied discipline for **Functions (FaaS)**
   * **Data Science** involves exploratory data analysis (EDA), data cleaning and visualization, and 
   predictive modeling / machine learning to inform Control Plane decisions and strategies. 
