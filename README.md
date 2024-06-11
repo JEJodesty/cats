@@ -59,6 +59,12 @@ distributed-computing job submission in addition to the client-server job submis
 
 ### [Contribute!](docs/CONTRIBUTING.md)
 
+### Continuous Data Initiative Reification:
+**Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be 
+compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate 
+CATs provenance records within feedback loops of Data Initiatives.
+![alt_text](images/CATs_bom_ag.jpeg)
+
 ### CATs' Architectural Quantum:
 Organizations and collaborators participating will employ CATs for rapid ratification of service agreements within 
 collaborative feedback loops of [**Data Initiatives**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative). 
@@ -110,12 +116,6 @@ on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS)
     (FaaS) execution configurations of Plant (SaaS) operations. 
       * The CAT Order is updated in alignment with event-driven functionality and operations with the resulting mutation 
       of Structure (PaaS).
-
-### Continuous Data Initiative Reification:
-**Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be 
-compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate 
-CATs provenance records within feedback loops of Data Initiatives.
-![alt_text](images/CATs_bom_ag.jpeg)
 
 ### CATs' Data Provenance Record:
 **BOM (Bill of Materials)** are CATs' Content-Addressed Data Provenance record for verifiable data processing and 

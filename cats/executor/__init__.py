@@ -62,13 +62,4 @@ class Executor:
 
         del self.enhanced_bom['bom_json_cid']
         del self.enhanced_bom['init_data_cid']
-        # print(os.getcwd())
-        # exit()
-
-        # os.remove("bom.json")
-        # os.remove("invoice.json")
-        # os.remove("order.json")
-        # os.remove("bom.car")
-        # os.remove("cat-action-plane-config")
         return self.enhanced_bom, None
-        # return self.invoiceCID
