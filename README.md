@@ -114,8 +114,8 @@ on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS)
     provisioning and management of Structure (PaaS) executing Function. This is accomplished using IaC to provision 
     InfraStructure (IaaS) as the execution paradigm of the Plant (SaaS) as well as contributing to InfraFunctions’ 
     (FaaS) execution configurations of Plant (SaaS) operations. 
-      * The CAT Order is updated in alignment with event-driven functionality and operations with the resulting mutation 
-      of Structure (PaaS).
+    * The CAT Order is updated in alignment with event-driven functionality and operations with the resulting mutation 
+    of Structure (PaaS).
 
 ### CATs' Data Provenance Record:
 **BOM (Bill of Materials)** are CATs' Content-Addressed Data Provenance record for verifiable data processing and 
