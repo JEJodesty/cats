@@ -1,9 +1,8 @@
-import glob, json, os, pickle, subprocess
-from copy import deepcopy
+import glob, json, os, pickle
 from pathlib import Path
-from pprint import pprint
 import pandas as pd
 import ipfsapi as ipfsApi
+import boto3 as boto3
 
 from cats.factory import Factory
 from cats.service.utils import executeCMD
@@ -19,14 +18,27 @@ class Service:
         self.ipfsClient: ipfsApi = self.meshClient.ipfsClient
         self.executeCMD = executeCMD
 
+        self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID'),
+        self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+        self.S3_CLIENT = boto3.client(
+            's3',
+            region_name='us-east-2',
+            aws_access_key_id=self.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY
+        )
         self.CATS_HOME = self.meshClient.CATS_HOME = CATS_HOME
         self.DATA_HOME = self.meshClient.DATA_HOME = self.CATS_HOME + '/data'
         self.JOB_HOME = self.meshClient.JOB_HOME = self.DATA_HOME + '/jobs'
         self.CACHE_HOME = self.meshClient.CACHE_HOME = self.DATA_HOME + "/cache"
+        self.INPUT_HOME = self.meshClient.INPUT_HOME = self.DATA_HOME + '/input'
+        self.OUTPUT_HOME = self.meshClient.OUTPUT_HOME = self.DATA_HOME + '/output'
         self.INTEGRATION_INPUT_CACHE = self.meshClient.INTEGRATION_INPUT_CACHE = \
             f"{self.CACHE_HOME}/integration"
         self.INTEGRATION_INPUT_DATA_CACHE = self.meshClient.INTEGRATION_INPUT_DATA_CACHE = \
             f"{self.INTEGRATION_INPUT_CACHE}/outputs"
+        self.bucket_name = self.DATA_HOME.split('/')[-1]
+        self.job_directory_path = f"{self.JOB_HOME.split('/')[-1]}/"
+        self.cache_directory_path = f"{self.CACHE_HOME.split('/')[-1]}/"
         self.catStore()
 
         self.CAT_HOME = None
@@ -44,7 +56,6 @@ class Service:
         self.init_bom_car_cid = None
         self.enhanced_init_bom = None
         self.enhanced_bom = None
-        # self.enhanced_init_bom = None
 
         self.ingress_subproc_cid = None
         self.integrated_subproc_cid = None
@@ -83,6 +94,8 @@ class Service:
         Path(self.DATA_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.JOB_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.CACHE_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.INPUT_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.OUTPUT_HOME).mkdir(parents=True, exist_ok=True)
 
     def initFactory(self, order_request, ipfs_uri):
         self.initBOMcar(
@@ -90,7 +103,7 @@ class Service:
             structure_filepath=order_request['order']['structure_filepath'],
             function_cid=order_request['order']['function_cid'],
             init_data_cid=ipfs_uri,
-            init_bom_filename=f"{self.DATA_HOME}/bom.car"
+            init_bom_filename=f"{self.OUTPUT_HOME}/bom.car"
         )
         catFactory = Factory(self)
         return catFactory, order_request
@@ -138,7 +151,7 @@ class Service:
         return df
 
     def initBOMcar(self,
-        function_cid, init_data_cid, init_bom_filename=None,
+        function_cid, init_data_cid, init_bom_filename,
         structure_cid=None, structure_filepath=None
     ):
         if init_bom_filename is None:
@@ -151,11 +164,10 @@ class Service:
             init_data_cid=init_data_cid,
             init_bom_filename=init_bom_filename
         )
-        # self.CAT_HOME = self.JOB_HOME + f"""cat={datetime.utcnow().isoformat()}"""
-        # Path(self.CAT_HOME).mkdir(parents=True, exist_ok=True)
         self.enhanced_bom, init_bom = self.meshClient.getEnhancedBom(
             bom_json_cid=self.init_bom_json_cid,
-            CAT_HOME=self.CAT_HOME
+            INPUT_HOME=self.INPUT_HOME,
+            OUTPUT_HOME=self.OUTPUT_HOME
         )
         self.functionCID = self.enhanced_bom['order']['function_cid']
         function_dict = json.loads(self.meshClient.cat(self.functionCID))

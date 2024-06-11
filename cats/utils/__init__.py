@@ -1,3 +1,4 @@
+import boto3
 import os, time, json, subprocess
 from copy import deepcopy
 from pprint import pprint
@@ -200,23 +201,3 @@ def wait_for_directory_to_be_populated(directory_path, check_interval=1, timeout
 
         # Wait for the specified interval before checking again
         time.sleep(check_interval)
-
-
-def flatten_bom(bom_response, meshClient):
-    invoice = json.loads(
-        meshClient.cat(bom_response["bom"]["invoice_cid"])
-    )
-    invoice['order'] = json.loads(
-        meshClient.cat(invoice['order_cid']),
-    )
-    invoice['order']['flat'] = {
-        'function': json.loads(meshClient.cat(invoice['order']["function_cid"])),
-        'invoice': json.loads(meshClient.cat(invoice['order']["invoice_cid"]))
-    }
-    bom_response["flat_bom"] = {
-        'invoice': invoice,
-        'log': json.loads(
-            meshClient.cat(bom_response["bom"]["log_cid"])
-        )
-    }
-    return bom_response

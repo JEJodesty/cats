@@ -1,8 +1,6 @@
-from pprint import pprint
-
-from cats import SERVICE
 import logging, json, traceback
 from flask import Flask, request, jsonify
+from cats import SERVICE
 
 catNode = Flask(__name__)
 
@@ -48,7 +46,6 @@ def execute_link_cat():
 
         ipfs_uri = f'ipfs://{data_cid}/*.csv'
         catFactory, updated_order_request = SERVICE.initFactory(order_request, ipfs_uri)
-        pprint(updated_order_request)
         bom_response = SERVICE.execute(catFactory, updated_order_request)
 
         # Return BOM

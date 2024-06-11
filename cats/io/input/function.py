@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime
 from pathlib import Path
 from ray.data import Dataset
 from cats.utils import wait_for_directory
@@ -145,21 +145,7 @@ class Function(InfraFunction):
         self.egress_job_id = None
         self.invoice_data_cid = None
 
-    def catStore(self):
-        self.CAT_HOME = self.service.meshClient.CAT_HOME = f"""{self.service.JOB_HOME}/cat={datetime.utcnow().isoformat()}"""
-        self.service.INGRESS_HOME = self.service.meshClient.INGRESS_HOME = f"{self.CAT_HOME}/ingress"
-        self.service.INTEGRATION_HOME = self.service.meshClient.INTEGRATION_HOME = f"{self.CAT_HOME}/integration"
-        self.service.EGRESS_HOME = self.service.meshClient.EGRESS_HOME = f"{self.CAT_HOME}/egress"
-        self.service.PROCESS_HOME = self.service.meshClient.PROCESS_HOME = f"{self.CAT_HOME}/process"
-
-        Path(self.service.INGRESS_HOME).mkdir(parents=True, exist_ok=True)
-        Path(self.service.INTEGRATION_HOME).mkdir(parents=True, exist_ok=True)
-        Path(self.service.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
-        Path(self.service.EGRESS_HOME).mkdir(parents=True, exist_ok=True)
-        Path(self.service.PROCESS_HOME).mkdir(parents=True, exist_ok=True)
-
     def execute(self):
-        self.catStore()
         self.ingress_job_id, self.integration_s3_output, self.egress_job_id = self.processor.execute()
         self.invoice_data_cid = self.processor.invoice_data_cid
         return self.ingress_job_id, self.integration_s3_output, self.egress_job_id

@@ -1,5 +1,4 @@
-import json, glob, os, multiprocessing, shutil, subprocess, tempfile, time, re
-
+import json, glob, os, multiprocessing, shutil, subprocess, tempfile, time
 from cats.utils import subproc_run
 
 

@@ -65,7 +65,51 @@ collaborative feedback loops of [**Data Initiatives**](https://github.com/BlockS
 CATs' apply an **Architectural Quantum** Domain-Driven Design principle described in 
 [**Data Mesh of Data Products**](https://martinfowler.com/articles/data-mesh-principles.html) to reify Data Initiatives.
 (* [**Design Description**](docs/DESIGN.md))
+
+The Action Plane is the Analytical Data Processing interface. The Action Plane orchestrates and supervises 
+how virtual resources owned by the Data Product should be managed, routed, and processed and is stored “offmesh” 
+(“offline”). It supervises the exchange of data between sub-Process components within the Data sub-Plane (Process) in 
+adherence to Data Contracting Standards of organizations participating in a Data Mesh.
 ![alt_text](images/CATkernel.jpeg)
+
+* **Function** is a FaaS for scalable Data Processing and analytics executed as CAT **Processes**. Functions (FaaS) are deployed 
+on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS) 
+  * **Processes** are **Functional Data Processors** executable by InfraFunctions (FaaS) deployed on Structure (PaaS), and 
+  contextualized with pre and post processed data by InfraFunctions (FaaS). Processes (FaaS) are executed with and made 
+  orchestratable by InfraFunctions (FaaS) to support the following use-cases 
+    * **Data Science** involves exploratory data analysis (EDA), data cleaning and visualization, and 
+    predictive modeling / machine learning to inform Control Plane decisions and strategies. 
+    * **Machine Learning Engineering** involves the development, training, performance optimizing, and deployment of machine 
+    learning models as scalable **Integration** sub-Processes (FaaS) orchestrated by InfraFunction (FaaS). 
+    * **Data Analysis** involves the composition of Data Product’s InfraFunctions as data processing language (integration).
+    * The CAT Order is updated with the inclusion of resulting mutated Functions (FaaS) for execution processed by CATs 
+    Factory Client.
+  * **InfraFunction (FaaS) is a Data Processing orchestrator** that employs a CAR for the configurable execution of scalable 
+  **Process**ing operated by the Plant (SaaS)
+    * **Data Engineering** supports data process **Integration** sub-Processes functionality (FaaS) with the design, 
+    development, composition, automation, and maintenance of pre and post data processing for data analysis as Ingress 
+    and **Egress** sub-Processes orchestrated by InfraFunction (FaaS). It also involves the following:
+      * Contributing Process functionality to InfraFunctions (FaaS) composed in sub-Processing in order of **Ingress**, 
+      **Integration**, and **Egress**. These contributions involve configuration and performance tuning of data processing 
+      frameworks executing Processes.
+      * Develop and integrate data processing frameworks executing Processes as Plant (SaaS) IaC plugin execution modes 
+      on Structure (PaaS) 
+    * The CAT Order is updated in alignment CATs Architectural Quantum’s Functionality. This Order will include the 
+    resulting updated of Structure (PaaS) with respect to the updated Plant (SaaS) and an updated Function (FaaS) with 
+    updated Ingress and Egress subProcesses (FaaS)
+* **Structure (PaaS** as **IaC) provisions** and maintains the Plant (SaaS) as Function’s (FaaS) scalable execution environment. 
+  * The **Plant (SaaS)** is **InfraStructure’s (IaaS)** dynamically scaled execution environment of **Function (FaaS)** 
+  as an IaC plugin(s)
+    * **Back-End Engineering** the Plant involves the development and maintenance of new IaC plugins. These plugins support 
+    the execution of InfraFunction such as existing open source Analytics Platforms.
+    * The web application codebase is Content Addressed within CAT Orders as Data Contract metadata for Order registration. 
+  * **InfraStructure (IaaS)** supports the provisioning of dynamically scaled infrastructure for maintaining a Plant (SaaS). 
+    * **Data Platform / Cloud / Infrastructure Engineering** involves the design and IaC development, and automation of the 
+    provisioning and management of Structure (PaaS) executing Function. This is accomplished using IaC to provision 
+    InfraStructure (IaaS) as the execution paradigm of the Plant (SaaS) as well as contributing to InfraFunctions’ 
+    (FaaS) execution configurations of Plant (SaaS) operations. 
+      * The CAT Order is updated in alignment with event-driven functionality and operations with the resulting mutation 
+      of Structure (PaaS).
 
 ### Continuous Data Initiative Reification:
 **Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be 

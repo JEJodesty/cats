@@ -9,6 +9,8 @@ class MeshClient(CoD):
         self.DATA_HOME = None
         self.JOB_HOME = None
         self.CACHE_HOME = None
+        self.INPUT_HOME = None
+        self.OUTPUT_HOME = None
 
         self.INGRESS_HOME = None
         self.INTEGRATION_HOME = None
@@ -119,24 +121,25 @@ class MeshClient(CoD):
                     car_bom_cid = attrs['Hash']
         return car_bom_cid, bom_cid
 
-    def getEnhancedBom(self, bom_json_cid: str, DATA_HOME: str = None):
-        if DATA_HOME is None:
-            DATA_HOME = self.DATA_HOME
-        self.CAR_HOME = DATA_HOME + '/bom.car'
-        self.get(cid=bom_json_cid, output=DATA_HOME, filepath='bom.json')
-        bom = json.loads(open(f'{DATA_HOME}/bom.json', 'r').read())
+    def getEnhancedBom(self, bom_json_cid: str, INPUT_HOME: str = None, OUTPUT_HOME: str = None):
+        if INPUT_HOME is None:
+            INPUT_HOME = self.INPUT_HOME
+        if OUTPUT_HOME is None:
+            OUTPUT_HOME = self.OUTPUT_HOME
+        self.CAR_HOME = OUTPUT_HOME + '/bom.car'
+        self.get(cid=bom_json_cid, output=OUTPUT_HOME, filepath='bom.json')
+        bom = json.loads(open(f'{OUTPUT_HOME}/bom.json', 'r').read())
         enhanced_bom = deepcopy(bom)
         enhanced_bom['bom_json_cid'] = bom_json_cid
 
-        self.get(cid=bom['invoice_cid'], output=DATA_HOME, filepath='invoice.json')
-        enhanced_bom['invoice'] = json.loads(open(f'{DATA_HOME}/invoice.json', 'r').read())
+        self.get(cid=bom['invoice_cid'], output=OUTPUT_HOME, filepath='invoice.json')
+        enhanced_bom['invoice'] = json.loads(open(f'{OUTPUT_HOME}/invoice.json', 'r').read())
 
-        self.get(cid=enhanced_bom['invoice']['order_cid'],
-                 output=DATA_HOME, filepath='order.json')
-        enhanced_bom['order'] = json.loads(open(f'{DATA_HOME}/order.json', 'r').read())
+        self.get(cid=enhanced_bom['invoice']['order_cid'], output=INPUT_HOME, filepath='order.json')
+        enhanced_bom['order'] = json.loads(open(f'{INPUT_HOME}/order.json', 'r').read())
 
         self.get(
-            cid=enhanced_bom['order']['structure_cid'], output=DATA_HOME,
+            cid=enhanced_bom['order']['structure_cid'], output=INPUT_HOME,
             filepath=enhanced_bom['order']['structure_filepath']
         )
         return deepcopy(enhanced_bom), bom
