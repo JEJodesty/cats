@@ -5,8 +5,8 @@ import ipfsapi as ipfsApi
 import boto3 as boto3
 
 from cats.factory import Factory
-from cats.service.utils import executeCMD
 from cats.network import MeshClient
+from cats.service.utils import executeCMD
 
 
 class Service:
@@ -185,26 +185,6 @@ class Service:
         self.init_bom_json_cid = self.enhanced_bom['bom_json_cid']
         self.bom_json_cid = self.init_bom_json_cid
         return self.init_bom_car_cid, self.init_bom_json_cid
-
-    # def catSubmit(self, bom):
-    #     order = json.loads(self.meshClient.cat(bom["order_cid"]))
-    #     print("Order:")
-    #     print()
-    #     pprint(order)
-    #     print()
-    #     ppost = lambda args, endpoint: \
-    #         f'curl -X POST -H "Content-Type: application/json" -d \\\n\'{json.dumps(**args)}\' {endpoint}'
-    #     post = lambda args, endpoint: \
-    #         'curl -X POST -H "Content-Type: application/json" -d \'' + json.dumps(**args) + f'\' {endpoint}'
-    #
-    #     post_cmd = post({'obj': bom}, order["endpoint"])
-    #     print(ppost({'obj': bom, 'indent': 4}, order["endpoint"]))
-    #     print()
-    #     response_str = subprocess.check_output(post_cmd, shell=True)
-    #     output_bom = json.loads(response_str)
-    #
-    #     output_bom['POST'] = post_cmd
-    #     return output_bom
 
     def flatten_bom(self, bom_response):
         invoice = json.loads(

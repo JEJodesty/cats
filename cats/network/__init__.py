@@ -1,16 +1,20 @@
 import json, subprocess
 from copy import copy, deepcopy
+from pprint import pprint
+
 from cats.network.cod import CoD
 
 
 class MeshClient(CoD):
-    def __init__(self, ipfsClient, filecoinClient=None, awsClient=None):
+    def __init__(self, ipfsClient, filecoinClient=None, awsClient=None, CATS_HOME=None):
         self.CATS_HOME = None
         self.DATA_HOME = None
         self.JOB_HOME = None
         self.CACHE_HOME = None
         self.INPUT_HOME = None
         self.OUTPUT_HOME = None
+        if CATS_HOME is not None:
+            self.catStore(CATS_HOME)
 
         self.INGRESS_HOME = None
         self.INTEGRATION_HOME = None
@@ -25,6 +29,133 @@ class MeshClient(CoD):
         self.awsClient = awsClient
         self.context = ...
         CoD.__init__(self, INTEGRATION_INPUT_CACHE=self.INTEGRATION_INPUT_CACHE, cidDir=self.cidDir)
+
+    def catStore(self, CATS_HOME):
+        self.CATS_HOME = CATS_HOME
+        self.DATA_HOME = self.CATS_HOME + '/data'
+        self.JOB_HOME = self.DATA_HOME + '/jobs'
+
+    def catSubmit(self, order_request):
+        print("Order:")
+        order = json.loads(self.cat(order_request["order_cid"]))
+        print()
+        pprint(order)
+        print()
+
+        ppost = lambda args, endpoint: \
+            f'curl -X POST -H "Content-Type: application/json" -d \\\n\'{json.dumps(**args)}\' {endpoint}'
+        post = lambda args, endpoint: \
+            'curl -X POST -H "Content-Type: application/json" -d \'' + json.dumps(**args) + f'\' {endpoint}'
+
+        post_cmd = post({'obj': order_request}, order["endpoint"])
+        print(ppost({'obj': order_request}, order["endpoint"]))
+        print()
+        response_str = subprocess.check_output(post_cmd, shell=True)
+        output_bom = json.loads(response_str)
+
+        output_bom['POST'] = post_cmd
+        return output_bom
+
+    def linkProcess(
+            self,
+            cat_response,
+            ingress_subproc=None,
+            integrated_subproc=None,
+            egress_subproc=None,
+            integration_cache_subproc=None,
+            infrafunction_subproc=None
+    ):
+        flattened_bom = self.flatten_bom(cat_response)
+        flat_bom = deepcopy(flattened_bom['flat_bom'])
+        function_cids = flat_bom['invoice']['order']['flat']['function']
+        function = {}
+        if ingress_subproc is not None:
+            function['ingress_subproc_cid'] = self.ipfsClient.add_pyobj(ingress_subproc)
+        else:
+            function['ingress_subproc_cid'] = function_cids['ingress_subproc_cid']
+        if integrated_subproc is not None:
+            function['integrated_subproc_cid'] = self.ipfsClient.add_pyobj(integrated_subproc)
+        else:
+            function['integrated_subproc_cid'] = function_cids['integrated_subproc_cid']
+        if egress_subproc is not None:
+            function['egress_subproc_cid'] = self.ipfsClient.add_pyobj(egress_subproc)
+        else:
+            function['egress_subproc_cid'] = function_cids['egress_subproc_cid']
+        if integration_cache_subproc is not None:
+            function['integration_cache_subproc_cid'] = self.ipfsClient.add_pyobj(integration_cache_subproc)
+        else:
+            function['integration_cache_subproc_cid'] = function_cids['integration_cache_subproc_cid']
+        if infrafunction_subproc is not None:
+            function['infrafunction_subproc_cid'] = self.ipfsClient.add_pyobj(infrafunction_subproc)
+        else:
+            function['infrafunction_subproc_cid'] = function_cids['infrafunction_subproc_cid']
+        new_function_cid = self.ipfsClient.add_str(json.dumps(function))
+
+        invoice = flat_bom['invoice']
+        input_invoice = {'data_cid': invoice['data_cid']}
+        new_invoice_cid = self.ipfsClient.add_str(json.dumps(input_invoice))
+
+        order = invoice['order']
+        order['function_cid'] = new_function_cid
+        order['invoice_cid'] = new_invoice_cid
+        del order['flat']
+        order['endpoint'] = 'http://127.0.0.1:5000/cat/node/link'
+
+        order_request = {'order_cid': self.ipfsClient.add_str(json.dumps(order))}
+        return order_request
+
+    def create_order_request(
+            self,
+            ingress_subproc,
+            integrated_subproc,
+            egress_subproc,
+            integration_cache_subproc,
+            data_dirpath,
+            structure_filepath,
+            endpoint='http://127.0.0.1:5000/cat/node/execute'
+    ):
+        structure_cid, structure_name = self.cidFile(structure_filepath)
+        function = {
+            'ingress_subproc_cid': self.ipfsClient.add_pyobj(ingress_subproc),
+            'integrated_subproc_cid': self.ipfsClient.add_pyobj(integrated_subproc),
+            'egress_subproc_cid': self.ipfsClient.add_pyobj(egress_subproc),
+            'integration_cache_subproc_cid': self.ipfsClient.add_pyobj(integration_cache_subproc),
+            'infrafunction_subproc_cid': None
+        }
+        invoice = {
+            "data_cid": self.cidDir(data_dirpath)
+        }
+        order = {
+            "function_cid": self.ipfsClient.add_str(json.dumps(function)),
+            "structure_cid": structure_cid,
+            "invoice_cid": self.ipfsClient.add_str(json.dumps(invoice)),
+            "structure_filepath": structure_name,
+            "JOB_HOME": self.JOB_HOME,
+            "endpoint": endpoint
+        }
+        order_request = {
+            'order_cid': self.ipfsClient.add_str(json.dumps(order))
+        }
+        return order_request
+
+    def flatten_bom(self, bom_response):
+        invoice = json.loads(
+            self.cat(bom_response["bom"]["invoice_cid"])
+        )
+        invoice['order'] = json.loads(
+            self.cat(invoice['order_cid']),
+        )
+        invoice['order']['flat'] = {
+            'function': json.loads(self.cat(invoice['order']["function_cid"])),
+            'invoice': json.loads(self.cat(invoice['order']["invoice_cid"]))
+        }
+        bom_response["flat_bom"] = {
+            'invoice': invoice,
+            'log': json.loads(
+                self.cat(bom_response["bom"]["log_cid"])
+            )
+        }
+        return bom_response
 
     def initBOMjson(self,
         structure_cid: str, structure_filepath: str, function_cid: str, init_data_cid: str,
@@ -157,16 +288,6 @@ class MeshClient(CoD):
 
     def cidDir(self, filepath: str):
         data = self.ipfsClient.add(filepath, recursive=True)
-        # # data_dir = filepath.split('/')[-1]
-        # print('0')
-        # print(filepath)
-        # print('1')
-        # print(data)
-        # # print('2')
-        # # print(data_dir)
-        # # print('3')
-        # # print(list(filter(lambda x: x['Name'] == data_dir, data)))
-        # exit()
         if type(data) is list:
             data_json = list(filter(lambda x: x['Name'] == 'outputs', data))[-1]
             data_cid = data_json['Hash']
