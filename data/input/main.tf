@@ -40,25 +40,21 @@ resource "shell_script" "delete_cats_k8s" {
   }
 }
 
-#resource "shell_script" "setup_cod" {
-#  lifecycle_commands {
-#    create = <<-EOF
-#      cd ~/Projects/Research/cats-research/
-#      if test -f /usr/local/bin/bacalhau;
-#      then
-#        curl -sL https://get.bacalhau.org/install.sh | bash
-##        wget https://github.com/bacalhau-project/bacalhau/releases/download/v1.1.5/bacalhau_v1.1.5_linux_amd64.tar.gz
-##        tar -xvzf bacalhau_v1.1.5_linux_amd64.tar.gz
-##        sudo mv ./bacalhau /usr/local/bin/
-#      fi
-#    EOF
-##    delete = "rm bacalhau_v1.1.5_linux_amd64.tar.gz"
-#    delete = ""
-#  }
-#  depends_on = [
-#    shell_script.delete_cats_k8s
-#  ]
-#}
+resource "shell_script" "setup_cod" {
+  lifecycle_commands {
+    create = <<-EOF
+      cd ~/Projects/Research/cats-research/
+      if test -f /usr/local/bin/bacalhau;
+      then
+        curl -sL https://get.bacalhau.org/install.sh | bash
+      fi
+    EOF
+    delete = ""
+  }
+  depends_on = [
+    shell_script.delete_cats_k8s
+  ]
+}
 
 provider "kind" {
   # Configuration options
@@ -70,7 +66,7 @@ resource "kind_cluster" "default" {
   wait_for_ready = "true"
   depends_on = [
     shell_script.delete_cats_k8s,
-#    shell_script.setup_cod
+    shell_script.setup_cod
   ]
 }
 
@@ -125,36 +121,3 @@ resource "helm_release" "ray-cluster" {
     helm_release.kuberay-operator
   ]
 }
-
-#resource "helm_release" "hdfs" {
-#  name       = "hdfs"
-#  repository = "https://gradiant.github.io/charts"
-#  chart      = "gradiant"
-#  version    = "0.1.10"
-#  depends_on = [
-#    kind_cluster.default
-#  ]
-#}
-
-
-#resource "helm_release" "hdfs" {
-#  name       = "hdfs"
-#  repository = "https://gchq.github.io/gaffer-docker"
-#  chart      = "hdfs"
-#  version    = "2.0.0"
-#  set {
-#    name  = "hdfs.namenode.tag"
-#    value = "3.3.3"
-#  }
-#  set {
-#    name  = "hdfs.datanode.tag"
-#    value = "3.3.3"
-#  }
-#  set {
-#    name  = "hdfs.shell.tag"
-#    value = "3.3.3"
-#  }
-#  depends_on = [
-#    kind_cluster.default
-#  ]
-#}

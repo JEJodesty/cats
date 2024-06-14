@@ -26,3 +26,4 @@ online
 requirements.txt
 data/cache/
 data/jobs/
+cats/*/new.py
