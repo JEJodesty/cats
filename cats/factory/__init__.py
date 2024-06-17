@@ -56,7 +56,7 @@ class Executor:
             'egress_job_id': self.egress_job_id
         }
         self.enhanced_bom['invoice']['data_cid'] = self.function.invoice_data_cid
-        self.enhanced_bom['log_cid'] = self.service.ipfsClient.add_json(self.enhanced_bom['log'])
+        self.enhanced_bom['log_cid'] = self.service.meshClient.ipfsClient.add_json(self.enhanced_bom['log'])
 
         del self.enhanced_bom['bom_json_cid']
         del self.enhanced_bom['init_data_cid']

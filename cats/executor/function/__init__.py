@@ -27,7 +27,7 @@ class Processor(InfraFunction):
         self.integration_output_ipfs = None
         self.egress_job_id = None
 
-    def Ingress_SubProc(self):
+    def Ingress(self):
         self.ingress_job_id = self.ingress_subproc(input_dir=self.ingress_input_data_cid)
         self.service.INGRESS_JOB_STATUS = self.service.meshClient.waitForJobCompletion(
             self.ingress_job_id, check_interval=1, timeout=None
@@ -38,7 +38,7 @@ class Processor(InfraFunction):
         self.service.INGRESS_DATA_HOME = f'ipfs://{self.service.meshClient.INGRESS_HOME}/outputs'
         return self.ingress_job_id
 
-    def Integration_SubProc(self):
+    def Integration(self):
         self.service.INTEGRATION_HOME = self.service.meshClient.INTEGRATION_HOME + "/outputs"
         self.service.integration_cache_subproc(
             self.service.INGRESS_DATA_HOME,
@@ -51,7 +51,7 @@ class Processor(InfraFunction):
         self.integration_output_ipfs = f'ipfs://{self.integration_output}/*.csv'
         return self.integration_output
 
-    def Egress_SubProc(self):
+    def Egress(self):
         self.egress_job_id = self.egress_subproc(input_dir=self.integration_output_ipfs)
         self.service.EGRESS_JOB_STATUS = self.service.meshClient.waitForJobCompletion(
             self.egress_job_id, check_interval=1, timeout=None
@@ -65,9 +65,9 @@ class Processor(InfraFunction):
 
     def process(self):
         print("CAT Executing")
-        self.ingress_job_id = self.Ingress_SubProc()
-        self.integration_output = self.Integration_SubProc()
-        self.egress_job_id = self.Egress_SubProc()
+        self.ingress_job_id = self.Ingress()
+        self.integration_output = self.Integration()
+        self.egress_job_id = self.Egress()
         print("...")
         print(self.ingress_job_id)
         print(self.integration_output)

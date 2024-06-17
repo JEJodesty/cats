@@ -18,7 +18,6 @@ class Structure:
         self.infraStructure.apply()
 
 
-
 class Function:
     def __init__(self, service):
         self.service = service

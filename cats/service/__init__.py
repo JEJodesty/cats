@@ -1,12 +1,12 @@
 import glob, json, os, pickle
 from pathlib import Path
 import pandas as pd
-import ipfsapi as ipfsApi
 import boto3 as boto3
 
 from cats.factory import Factory
 from cats.network import MeshClient
-from cats.service.utils import executeCMD
+from cats.service.k8s import KubeService
+from cats.utils import subproc_run, executeCMD
 
 
 class Service:
@@ -15,8 +15,7 @@ class Service:
         CATS_HOME: str
     ):
         self.meshClient: MeshClient = meshClient
-        self.ipfsClient: ipfsApi = self.meshClient.ipfsClient
-        self.executeCMD = executeCMD
+        self.kubeService: KubeService = KubeService
 
         self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID'),
         self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
@@ -73,22 +72,8 @@ class Service:
         self.order = None
         self.process = None
 
-    # def start_ipfs_daemon(self):
-    #     # Command to start the IPFS daemon
-    #     command = ['ipfs', 'daemon']
-    #
-    #     # Start the daemon
-    #     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    #
-    #     # You can now handle the output or errors if necessary
-    #     stdout, stderr = process.communicate()
-    #
-    #     if process.returncode == 0:
-    #         print("IPFS daemon started successfully.")
-    #         print(stdout.decode())
-    #     else:
-    #         print("Failed to start IPFS daemon.")
-    #         print(stderr.decode())
+        self.subproc_run = lambda cmd: subproc_run(cmd, cwd=self.CATS_HOME)
+        self.executeCMD = executeCMD
 
     def catStore(self):
         Path(self.DATA_HOME).mkdir(parents=True, exist_ok=True)
@@ -113,10 +98,10 @@ class Service:
         enhanced_bom, _ = executor.execute()
 
         invoice = {}
-        enhanced_bom['invoice']['order_cid'] = self.ipfsClient.add_str(
+        enhanced_bom['invoice']['order_cid'] = self.meshClient.ipfsClient.add_str(
             json.dumps(order_request['order'])
         )
-        invoice['invoice_cid'] = self.ipfsClient.add_str(
+        invoice['invoice_cid'] = self.meshClient.ipfsClient.add_str(
             json.dumps(enhanced_bom['invoice'])
         )
         invoice['invoice'] = enhanced_bom['invoice']
@@ -127,7 +112,7 @@ class Service:
         }
         bom_response = {
             'bom': bom,
-            'bom_cid': self.ipfsClient.add_str(json.dumps(bom))
+            'bom_cid': self.meshClient.ipfsClient.add_str(json.dumps(bom))
         }
         return bom_response
 

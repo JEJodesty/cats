@@ -5,24 +5,24 @@ class InfraStructure:
 
     def destroy(self):
         print('Destroy Structure!')
-        self.service.executeCMD(['terraform', 'destroy', '--auto-approve'], cwd=self.service.CATS_HOME)
+        self.service.executeCMD('terraform destroy --auto-approve')
         print()
         print()
 
     def plan(self):
         print('Plan Structure!')
-        self.service.executeCMD(['terraform', 'plan'], cwd=self.service.CATS_HOME)
+        self.service.executeCMD('terraform plan')
         print()
         print()
 
     def initialize(self):
         print('Initialize Structure!')
-        self.service.executeCMD(['terraform', 'init', '--upgrade'], cwd=self.service.CATS_HOME)
+        self.service.executeCMD('terraform init --upgrade')
         print()
         print()
 
     def apply(self):
         print('Apply Structure!')
-        self.service.executeCMD(['terraform', 'apply', '--auto-approve'], cwd=self.service.CATS_HOME)
+        self.service.executeCMD('terraform apply --auto-approve')
         print()
         print()

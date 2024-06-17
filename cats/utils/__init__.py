@@ -7,14 +7,40 @@ class Dict2Class(object):
             setattr(self, key, my_dict[key])
 
 
-def subproc_run(cmd):
-    return subprocess.run(
+def subproc_run(cmd, cwd=None):
+    proc = subprocess.run(
         cmd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         shell=True,
-        text=True
+        text=True,
+        cwd=cwd
     )
+    return proc
+
+
+def procInBackground(cmd, cwd=None):
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True, cwd=cwd)
+    print("The subprocess is running in the background.")
+
+    for path in execute(cmd):
+        print(path, end="")
+    return popen
+
+def executeCMD(cmd, cwd=None):
+    popen = None
+    def execute(x):
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True, cwd=cwd)
+        for stdout_line in iter(popen.stdout.readline, ""):
+            yield stdout_line
+        popen.stdout.close()
+        return_code = popen.wait()
+        if return_code:
+            raise subprocess.CalledProcessError(return_code, x)
+
+    for path in execute(cmd):
+        print(path, end="")
+    return popen
 
 
 def wait_for_directory(directory_path, check_interval=1):
