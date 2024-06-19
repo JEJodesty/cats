@@ -19,6 +19,44 @@ cat_order_request_0 = service.create_order_request(
 )
 cat_invoiced_response_0 = service.catSubmit(cat_order_request_0)
 
+# def flatten_bom(self, bom_response):
+#     invoice = json.loads(
+#         self.meshClient.cat(bom_response["bom"]["invoice_cid"])
+#     )
+#     invoice['order'] = json.loads(
+#         self.meshClient.cat(invoice['order_cid']),
+#     )
+#     invoice['order']['flat'] = {
+#         'function': json.loads(self.meshClient.cat(invoice['order']["function_cid"])),
+#         'invoice': json.loads(self.meshClient.cat(invoice['order']["invoice_cid"]))
+#     }
+#     bom_response["flat_bom"] = {
+#         'invoice': invoice,
+#         'log': json.loads(
+#             self.meshClient.cat(bom_response["bom"]["log_cid"])
+#         )
+#     }
+#     return bom_response
+#
+#
+# def cid_to_pandasDF(self, cid, download_dir, format='*.csv', read_dir='/outputs', parrent_dir=None):
+#     if parrent_dir is None:
+#         parrent_dir = self.CATS_HOME
+#
+#     path = f'{parrent_dir}/{download_dir}'
+#     os.system(f"rm -rf {path}")
+#     self.meshClient.get(cid, download_dir, parrent_dir)
+#
+#     # Get the files from the path provided
+#     files = glob.glob(os.path.join(f"{path}{read_dir}", format))
+#     dfs = list(pd.read_csv(f).assign(filename=f) for f in files)
+#     df = None
+#     for dfx in dfs:
+#         if df is None:
+#             df = dfx
+#         else:
+#             df = pd.concat([df, dfx], ignore_index=True)
+#     return df
 
 class TestDataVerificationCAT0:
     flat_cat_invoiced_response_0 = service.flatten_bom(cat_invoiced_response_0)

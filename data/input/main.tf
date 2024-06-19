@@ -40,13 +40,47 @@ resource "shell_script" "delete_cats_k8s" {
   }
 }
 
+#resource "shell_script" "set_bsd_udp_buffer_size_for_go" {
+#  lifecycle_commands {
+#    create = <<-EOF
+#      cd ~/Projects/cats-research
+#      # https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+#      sudo sysctl -w net.core.wmem_max=7500000
+#      sudo sysctl -w net.core.rmem_max=7500000
+#    EOF
+#    delete = ""
+#  }
+#  depends_on = [
+#    shell_script.delete_cats_k8s
+#  ]
+#}
+
+
 resource "shell_script" "setup_cod" {
   lifecycle_commands {
     create = <<-EOF
       cd ~/Projects/Research/cats-research/
-      if test -f /usr/local/bin/bacalhau;
-      then
-        curl -sL https://get.bacalhau.org/install.sh | bash
+      # Function to check if Bacalhau is installed
+      is_bacalhau_installed() {
+          if command -v bacalhau &> /dev/null; then
+              return 0
+          else
+              return 1
+          fi
+      }
+
+      # Function to install Bacalhau
+      install_bacalhau() {
+          echo "Bacalhau is not installed. Installing..."
+          # You can replace the following command with the actual installation command for Bacalhau
+          curl -sL https://get.bacalhau.org/install.sh | bash
+      }
+
+      # Check if Bacalhau is installed
+      if is_bacalhau_installed; then
+          echo "Bacalhau is already installed."
+      else
+          install_bacalhau
       fi
     EOF
     delete = ""

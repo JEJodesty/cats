@@ -1,12 +1,12 @@
 from cats.executor.function import InfraFunction, Processor
-from cats.executor.structure import InfraStructure
+from cats.executor.structure import InfraStructure, Plant
 
 
 class Structure:
     def __init__(self, service):
         self.service = service
         self.bom_json_cid = self.service.bom_json_cid
-        # self.plant: Plant = plant
+        self.plant: Plant = Plant(service=self.service)
         self.infraStructure: InfraStructure = InfraStructure(service=self.service)
 
     def redeploy(self):
@@ -22,7 +22,8 @@ class Function:
     def __init__(self, service):
         self.service = service
         self.CAT_HOME = None
-        self.processor: Processor = Processor(service=self.service)
+        self.infraFunction: InfraFunction = InfraFunction(service=self.service)
+        self.processor: Processor = self.infraFunction.compose()
         self.ingress_job_id = None
         self.integration_output = None
         self.egress_job_id = None

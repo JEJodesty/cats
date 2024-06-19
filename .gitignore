@@ -27,3 +27,6 @@ requirements.txt
 data/cache/
 data/jobs/
 cats/*/new.py
+offline
+data/input/.terraform/
+data/input/plant/.terraform/

@@ -52,7 +52,7 @@ class Executor:
         self.enhanced_bom['function'] = json.loads(self.service.meshClient.cat(self.enhanced_bom['order']['function_cid']))
         self.enhanced_bom['log'] = {
             'ingress_job_id': self.ingress_job_id,
-            'integration_output': self.integration_s3_output,
+            'integration_output_cid': self.integration_s3_output,
             'egress_job_id': self.egress_job_id
         }
         self.enhanced_bom['invoice']['data_cid'] = self.function.invoice_data_cid

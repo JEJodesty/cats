@@ -1,6 +1,5 @@
-import glob, json, os, pickle
+import json, os
 from pathlib import Path
-import pandas as pd
 import boto3 as boto3
 
 from cats.factory import Factory
@@ -31,6 +30,8 @@ class Service:
         self.CACHE_HOME = self.meshClient.CACHE_HOME = self.DATA_HOME + "/cache"
         self.INPUT_HOME = self.meshClient.INPUT_HOME = self.DATA_HOME + '/input'
         self.OUTPUT_HOME = self.meshClient.OUTPUT_HOME = self.DATA_HOME + '/output'
+        self.INPUT_PLANT_HOME = self.meshClient.INPUT_PLANT_HOME = self.INPUT_HOME + '/plant'
+        self.INPUT_DATA_HOME = self.meshClient.INPUT_DATA_HOME = self.INPUT_HOME + '/data'
         self.INTEGRATION_INPUT_CACHE = self.meshClient.INTEGRATION_INPUT_CACHE = \
             f"{self.CACHE_HOME}/integration"
         self.INTEGRATION_INPUT_DATA_CACHE = self.meshClient.INTEGRATION_INPUT_DATA_CACHE = \
@@ -56,22 +57,7 @@ class Service:
         self.enhanced_init_bom = None
         self.enhanced_bom = None
 
-        self.ingress_subproc_cid = None
-        self.integrated_subproc_cid = None
-        self.egress_subproc_cid = None
-        self.integration_cache_subproc_cid = None
-
-        self.ingress_subproc = None
-        self.integrated_subproc = None
-        self.egress_subproc = None
-        self.integration_cache_subproc = None
-
-        self.orderCID = None
-        self.dataCID = None
-        self.functionCID = None
-        self.order = None
-        self.process = None
-
+        self.order_cid = None
         self.subproc_run = lambda cmd: subproc_run(cmd, cwd=self.CATS_HOME)
         self.executeCMD = executeCMD
 
@@ -81,6 +67,8 @@ class Service:
         Path(self.CACHE_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.OUTPUT_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.INPUT_PLANT_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.INPUT_DATA_HOME).mkdir(parents=True, exist_ok=True)
 
     def initFactory(self, order_request, ipfs_uri):
         self.initBOMcar(
@@ -92,6 +80,30 @@ class Service:
         )
         catFactory = Factory(self)
         return catFactory, order_request
+
+    def initBOMcar(self,
+        function_cid, init_data_cid, init_bom_filename,
+        structure_cid=None, structure_filepath=None
+    ):
+        if init_bom_filename is None:
+            init_bom_filename = self.meshClient.CAR_HOME
+
+        self.init_bom_car_cid, self.init_bom_json_cid = self.meshClient.initBOMcar(
+            structure_cid=structure_cid,
+            structure_filepath=structure_filepath,
+            function_cid=function_cid,
+            init_data_cid=init_data_cid,
+            init_bom_filename=init_bom_filename
+        )
+        self.enhanced_bom, init_bom = self.meshClient.getEnhancedBom(
+            bom_json_cid=self.init_bom_json_cid,
+            INPUT_HOME=self.INPUT_HOME,
+            OUTPUT_HOME=self.OUTPUT_HOME
+        )
+
+        self.order_cid = self.enhanced_bom['invoice']['order_cid']
+        self.bom_json_cid = self.init_bom_json_cid = self.enhanced_bom['bom_json_cid']
+        return self.init_bom_car_cid, self.bom_json_cid
 
     def execute(self, catFactory, order_request):
         executor = catFactory.produce()
@@ -113,79 +125,5 @@ class Service:
         bom_response = {
             'bom': bom,
             'bom_cid': self.meshClient.ipfsClient.add_str(json.dumps(bom))
-        }
-        return bom_response
-
-    def cid_to_pandasDF(self, cid, download_dir, format='*.csv', read_dir='/outputs', parrent_dir=None):
-        if parrent_dir is None:
-            parrent_dir = self.CATS_HOME
-
-        path = f'{parrent_dir}/{download_dir}'
-        os.system(f"rm -rf {path}")
-        self.meshClient.get(cid, download_dir, parrent_dir)
-
-        # Get the files from the path provided
-        files = glob.glob(os.path.join(f"{path}{read_dir}", format))
-        dfs = list(pd.read_csv(f).assign(filename=f) for f in files)
-        df = None
-        for dfx in dfs:
-            if df is None:
-                df = dfx
-            else:
-                df = pd.concat([df, dfx], ignore_index=True)
-        return df
-
-    def initBOMcar(self,
-        function_cid, init_data_cid, init_bom_filename,
-        structure_cid=None, structure_filepath=None
-    ):
-        if init_bom_filename is None:
-            init_bom_filename = self.meshClient.CAR_HOME
-
-        self.init_bom_car_cid, self.init_bom_json_cid = self.meshClient.initBOMcar(
-            structure_cid=structure_cid,
-            structure_filepath=structure_filepath,
-            function_cid=function_cid,
-            init_data_cid=init_data_cid,
-            init_bom_filename=init_bom_filename
-        )
-        self.enhanced_bom, init_bom = self.meshClient.getEnhancedBom(
-            bom_json_cid=self.init_bom_json_cid,
-            INPUT_HOME=self.INPUT_HOME,
-            OUTPUT_HOME=self.OUTPUT_HOME
-        )
-        self.functionCID = self.enhanced_bom['order']['function_cid']
-        function_dict = json.loads(self.meshClient.cat(self.functionCID))
-        self.ingress_subproc_cid = function_dict['ingress_subproc_cid']
-        self.integrated_subproc_cid = function_dict['integrated_subproc_cid']
-        self.egress_subproc_cid = function_dict['egress_subproc_cid']
-        self.integration_cache_subproc_cid = function_dict['integration_cache_subproc_cid']
-
-        self.ingress_subproc = pickle.loads(self.meshClient.catObj(self.ingress_subproc_cid))
-        self.integrated_subproc = pickle.loads(self.meshClient.catObj(self.integrated_subproc_cid))
-        self.egress_subproc = pickle.loads(self.meshClient.catObj(self.egress_subproc_cid))
-        self.integration_cache_subproc = pickle.loads(self.meshClient.catObj(self.integration_cache_subproc_cid))
-
-        self.order_cid = self.enhanced_bom['invoice']['order_cid']
-        self.init_bom_json_cid = self.enhanced_bom['bom_json_cid']
-        self.bom_json_cid = self.init_bom_json_cid
-        return self.init_bom_car_cid, self.init_bom_json_cid
-
-    def flatten_bom(self, bom_response):
-        invoice = json.loads(
-            self.meshClient.cat(bom_response["bom"]["invoice_cid"])
-        )
-        invoice['order'] = json.loads(
-            self.meshClient.cat(invoice['order_cid']),
-        )
-        invoice['order']['flat'] = {
-            'function': json.loads(self.meshClient.cat(invoice['order']["function_cid"])),
-            'invoice': json.loads(self.meshClient.cat(invoice['order']["invoice_cid"]))
-        }
-        bom_response["flat_bom"] = {
-            'invoice': invoice,
-            'log': json.loads(
-                self.meshClient.cat(bom_response["bom"]["log_cid"])
-            )
         }
         return bom_response

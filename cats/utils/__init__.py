@@ -18,24 +18,32 @@ def subproc_run(cmd, cwd=None):
     )
     return proc
 
-
-def procInBackground(cmd, cwd=None):
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True, cwd=cwd)
-    print("The subprocess is running in the background.")
-
-    for path in execute(cmd):
-        print(path, end="")
-    return popen
+#
+# def procInBackground(cmd, cwd=None):
+#     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True, cwd=cwd)
+#     print("The subprocess is running in the background.")
+#
+#     for path in execute(cmd):
+#         print(path, end="")
+#     return popen
 
 def executeCMD(cmd, cwd=None):
     popen = None
     def execute(x):
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True, universal_newlines=True, cwd=cwd)
+        popen = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            shell=True,
+            universal_newlines=True,
+            cwd=cwd
+        )
         for stdout_line in iter(popen.stdout.readline, ""):
             yield stdout_line
         popen.stdout.close()
         return_code = popen.wait()
-        if return_code:
+        if return_code != 0:
+            print("Terraform Error:\n", popen.stderr.read())
             raise subprocess.CalledProcessError(return_code, x)
 
     for path in execute(cmd):
@@ -97,3 +105,18 @@ def wait_for_directory_to_be_populated(directory_path, check_interval=1, timeout
 
         # Wait for the specified interval before checking again
         time.sleep(check_interval)
+
+def filter_cid(data, result=None):
+    if result is None:
+        result = {}
+    if isinstance(data, dict):
+        for key, value in data.items():
+            if '_cid' in key:
+                result[key] = value
+            else:
+                if isinstance(value, dict) or isinstance(value, list):
+                    filter_cid(value, result)
+    elif isinstance(data, list):
+        for item in data:
+            filter_cid(item, result)
+    return result

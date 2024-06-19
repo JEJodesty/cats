@@ -13,6 +13,8 @@ class MeshClient(CoD):
         self.CACHE_HOME = None
         self.INPUT_HOME = None
         self.OUTPUT_HOME = None
+        self.INPUT_PLANT_HOME = None
+        self.INPUT_DATA_HOME = None
         if CATS_HOME is not None:
             self.catStore(CATS_HOME)
         self.ipfs_daemon_proc = ipfs(cwd=self.CATS_HOME).start_daemon()
