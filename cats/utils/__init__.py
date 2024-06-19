@@ -106,6 +106,7 @@ def wait_for_directory_to_be_populated(directory_path, check_interval=1, timeout
         # Wait for the specified interval before checking again
         time.sleep(check_interval)
 
+
 def filter_cid(data, result=None):
     if result is None:
         result = {}
