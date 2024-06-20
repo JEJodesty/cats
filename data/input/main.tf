@@ -47,6 +47,11 @@ resource "shell_script" "delete_cats_k8s" {
 #      # https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
 #      sudo sysctl -w net.core.wmem_max=7500000
 #      sudo sysctl -w net.core.rmem_max=7500000
+#
+#      sudo tar -xvzf kubo_v0.29.0_linux-amd64.tar.gz
+#      cd kubo
+#      sudo bash install.sh
+#      ipfs --version
 #    EOF
 #    delete = ""
 #  }

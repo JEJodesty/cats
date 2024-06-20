@@ -1,8 +1,10 @@
 import json, subprocess
 from copy import copy, deepcopy
 from pprint import pprint
+import pickle
 
 from cats.network.clients import CoD, ipfs
+from cats.utils import Text2Python
 
 
 class MeshClient(CoD):
@@ -32,6 +34,53 @@ class MeshClient(CoD):
         self.awsClient = awsClient
         self.context = ...
         CoD.__init__(self, INTEGRATION_INPUT_CACHE=self.INTEGRATION_INPUT_CACHE, cidDir=self.cidDir)
+
+    def retrieve_cids(self, cid_dict):
+        def switch_case(case):
+            match case:
+                case 'text':
+                    try:
+                        return lambda cid: self.cat(cid)
+                    except Exception as e:
+                        print(f"An error occurred while retrieving CID {cid}: {e}")
+                        return cid
+                case 'obj':
+                    try:
+                        return lambda cid: pickle.loads(self.catObj(cid))
+                    except Exception as e:
+                        print(f"An error occurred while fetching the object from IPFS: {e}")
+                        return cid
+                case _:
+                    return cid
+
+        cid_contents = {}
+        for key, cid in cid_dict.items():
+            if cid is not None:
+                try:
+                    print(f"{key} - {cid}")
+                    cid_contents[key] = switch_case('text')(cid)
+                except:
+                    try:
+                        print(f"{key} - {cid}")
+                        py_txt = switch_case('obj')(cid)
+                        cid_contents[key] = Text2Python(py_txt)
+                    except:
+                        print(f"{key} - {cid}")
+                        cid_contents[key] = cid
+            else:
+                cid_contents[key] = switch_case(None)
+        return cid_contents
+
+    def fetch_ipfs_object(self, cid):
+        try:
+            # Fetch the binary content from IPFS
+            binary_content = self.cat(cid)
+            # Deserialize the object using pickle
+            obj = pickle.loads(binary_content)
+            return obj
+        except Exception as e:
+            print(f"An error occurred while fetching the object from IPFS: {e}")
+            return None
 
     def catStore(self, CATS_HOME):
         self.CATS_HOME = CATS_HOME

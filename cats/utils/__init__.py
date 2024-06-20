@@ -1,6 +1,14 @@
 import os, time, subprocess
 
 
+class Text2Python:
+    def __init__(self, python_txt):
+        self.python_txt = python_txt
+
+    def greet(self):
+        return f"Hello, {self.python_txt}!"
+
+
 class Dict2Class(object):
     def __init__(self, my_dict):
         for key in my_dict:

@@ -78,8 +78,7 @@ class Service:
             init_data_cid=ipfs_uri,
             init_bom_filename=f"{self.OUTPUT_HOME}/bom.car"
         )
-        catFactory = Factory(self)
-        return catFactory, order_request
+        return Factory(self), order_request
 
     def initBOMcar(self,
         function_cid, init_data_cid, init_bom_filename,
