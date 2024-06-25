@@ -20,7 +20,7 @@ class Processor:
                 self.ingress_job_id, check_interval=1, timeout=None
             )
         published_results = self.infraFunction.service.meshClient.getPublishedURI(self.ingress_job_id)
-        self.infraFunction.service.meshClient.INGRESS_HOME = published_results['CID']
+        self.infraFunction.service.meshClient.INGRESS_HOME = published_results['Params']['CID']
         self.infraFunction.service.INGRESS_EXIT_CODE = self.infraFunction.service.meshClient.cat(
             self.infraFunction.service.meshClient.INGRESS_HOME + "/exitCode"
         )
@@ -53,7 +53,7 @@ class Processor:
                 self.egress_job_id, check_interval=1, timeout=None
             )
         published_results = self.infraFunction.service.meshClient.getPublishedURI(self.egress_job_id)
-        self.infraFunction.service.meshClient.EGRESS_HOME = self.invoice_data_cid = published_results['CID']
+        self.infraFunction.service.meshClient.EGRESS_HOME = self.invoice_data_cid = published_results['Params']['CID']
         self.infraFunction.service.EGRESS_EXIT_CODE = self.infraFunction.service.meshClient.cat(
             self.infraFunction.service.meshClient.EGRESS_HOME + "/exitCode"
         )

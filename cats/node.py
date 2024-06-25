@@ -1,4 +1,6 @@
 import logging, json, traceback
+from pprint import pprint
+
 from flask import Flask, request, jsonify
 from cats import SERVICE
 
@@ -38,11 +40,14 @@ def execute_init_cat():
 def execute_link_cat():
     try:
         order_request = request.get_json()
+
         order_request["order"] = json.loads(SERVICE.meshClient.cat(order_request["order_cid"]))
         order_request['invoice'] = json.loads(SERVICE.meshClient.cat(order_request['order']['invoice_cid']))
 
         prev_data_cid = order_request['invoice']['data_cid']
+        pprint(prev_data_cid)
         data_cid = SERVICE.meshClient.linkData(prev_data_cid)
+        pprint(data_cid)
 
         ipfs_uri = f'ipfs://{data_cid}/*.csv'
         catFactory, updated_order_request = SERVICE.initFactory(order_request, ipfs_uri)

@@ -1,4 +1,6 @@
 import json, glob, os, multiprocessing, shutil, subprocess, tempfile, time
+from pprint import pprint
+
 from cats.utils import subproc_run
 
 
@@ -50,25 +52,39 @@ class CoD:
         return data_dir_cid
 
     def describeJob(self, job_id):
-        cmd = f"bacalhau describe --json {job_id}"
-        print(cmd)
+        cmd = f"bacalhau job describe {job_id} --output json --pretty"
+        # print(cmd)
         job_result = subproc_run(cmd)
+        # print(job_result.stdout)
+        job_dict = json.loads(job_result.stdout)
+        return job_dict
+
+    def getJobExecutions(self, job_id):
+        cmd = f"bacalhau job executions {job_id} --output json --pretty"
+        # print(cmd)
+        job_result = subproc_run(cmd)
+        # print(job_result.stdout)
         job_dict = json.loads(job_result.stdout)
         return job_dict
 
     def getJobState(self, job_id):
-        return self.describeJob(job_id)['State']
-
-    def getJobExecutions(self, job_id):
-        return self.describeJob(job_id)['State']['Executions']
+        return self.describeJob(job_id)['Job']['State']
 
     def getPublishedURI(self, job_id):
-        key_to_find = 'State'
-        value_to_find = 'Completed'
-        matching_execution = next(
-            (d for d in self.getJobExecutions(job_id) if d.get(key_to_find) == value_to_find), None
-        )
-        return matching_execution['PublishedResults']
+        # print(type(self.getJobExecutions(job_id).pop()["PublishedResult"]))
+        # pprint(self.getJobExecutions(job_id).pop()["PublishedResult"])
+        return self.getJobExecutions(job_id).pop()["PublishedResult"]
+
+    # def getJobExecutions(self, job_id):
+    #     return self.describeJob(job_id)['State']['Executions']
+
+    # def getPublishedURI(self, job_id):
+    #     key_to_find = 'State'
+    #     value_to_find = 'Completed'
+    #     matching_execution = next(
+    #         (d for d in self.getJobExecutions(job_id) if d.get(key_to_find) == value_to_find), None
+    #     )
+    #     return matching_execution['PublishedResults']
 
     def waitForJobCompletion(self, job_id, check_interval=1, timeout=None):
         start_time = time.time()
@@ -88,8 +104,12 @@ class CoD:
 
     def checkStatusOfJob_printless(self, job_id: str) -> str:
         assert len(job_id) > 0
-        cmd = f"bacalhau list --output json --id-filter {job_id}"
+        # cmd = f"bacalhau list --output json --id-filter {job_id}"
+        # trimmed_job_id = print(job_id.split('j-'))[-1]
+        cmd = f"bacalhau job describe {job_id}  --output json --pretty"
+        # cmd = f"bacalhau job list --output json --pretty | jq '.[] | select(.ID == \"{trimmed_job_id}\")'"
         p = subproc_run(cmd)
+        # print(p.stdout)
         r = self.parseJobStatus(p.stdout)
         return r
 
@@ -176,8 +196,11 @@ class CoD:
         if len(result) == 0:
             return ""
         r = json.loads(result)
+        # print(r["Job"]["State"]["StateType"])
+        # exit()
         if len(r) > 0:
-            return r[0]["State"]["State"]
+            return r["Job"]["State"]["StateType"]
+            # return r[0]["Job"]["State"]["StateType"]
         return ""
 
     # parseHashes splits lines from a text file into a list
