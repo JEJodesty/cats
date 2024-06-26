@@ -333,3 +333,38 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
   * Alleviated by "A CAT at its core is a unit of computational work specified by the triplet 1) what the input is, 
     2) what does the computation, and 3) what the output is.  Controllers require feedback, which is currently 
     outside of the scope of a single cat. Any cyclic orchestration must be external to CATs." - BlockScience
+
+### Week 20 (5/27 - 5/31):
+* Review RAG stewardship fictionalization context
+  * https://stewardship-fractalization.gitbook.io/project-planning/workshop-3-chatgpt-with-rag-retrieval-augmented-generation
+* Review Software Governance in to fractional stewardship
+  * https://standard.open-contracting.org/latest/en/governance/
+* Consider a Stewardship Profile that maps to agents within a Multi-agent system
+  * [Multi-agent systems](https://en.wikipedia.org/wiki/Multi-agent_system)
+* Consider roles as Architectural Resposiblities with respect to [RolePlayer](https://github.com/mzargham/RolePlayer)
+* Review Docker workload on-boarding for cat Refactor
+  * https://docs.bacalhau.org/setting-up/workload-onboarding/container/docker-workload-onboarding
+* Cosider homestar (Everywhere Computer network) for IPVM inclusion for "resilience, certainty or portability"
+  * https://github.com/ipvm-wg/homestar/
+  * https://fission.codes/ecosystem/ipvm/
+  * https://everywhere.computer/
+  * https://docs.ipfs.tech/concepts/cod/#bacalhau
+
+### Week 21 (6/3 - 5/7):
+* Updated Bacalhau Node and refactor for CoD interoperability for CATs v3
+* Exposed ingress and egress to action plane via Process with a interoperable integration point for CATs v3
+
+### Week 22 (6/10 - 6/14):
+* Included data product disciplines to CATs Architectural Quantum for CATs v3
+* Implement InfraStructure Sub Component separately
+
+### Week 23 (6/17 - 6/21):
+* IPFS daemon initiated by CAT Node
+* partially implement function for applying sbom
+* Refactor infrafunction composes Processor & Plant and Infrstructure
+* Installed KMS locally for cat/rid Integration
+
+### Week 24 (6/24 - 6/28):
+* bring your own cache otherwise it is local 
+  * Expanso introduces breaking changes continuously to bacalhau (CoD) without stable release)
+* Removed CoD
