@@ -55,33 +55,10 @@ resource "shell_script" "delete_cats_k8s" {
 #  ]
 #}
 
-
-resource "shell_script" "setup_cod" {
+resource "shell_script" "pull_ipfs_image" {
   lifecycle_commands {
     create = <<-EOF
-      cd ~/Projects/Research/cats-research/
-      # Function to check if Bacalhau is installed
-      is_bacalhau_installed() {
-          if command -v bacalhau &> /dev/null; then
-              return 0
-          else
-              return 1
-          fi
-      }
-
-      # Function to install Bacalhau
-      install_bacalhau() {
-          echo "Bacalhau is not installed. Installing..."
-          # You can replace the following command with the actual installation command for Bacalhau
-          curl -sL https://get.bacalhau.org/install.sh | bash
-      }
-
-      # Check if Bacalhau is installed
-      if is_bacalhau_installed; then
-          echo "Bacalhau is already installed."
-      else
-          install_bacalhau
-      fi
+      docker pull ipfs/go-ipfs
     EOF
     delete = ""
   }
@@ -89,6 +66,56 @@ resource "shell_script" "setup_cod" {
     shell_script.delete_cats_k8s
   ]
 }
+
+#resource "shell_script" "setup_ipfs_migration" {
+#  lifecycle_commands {
+#    create = <<-EOF
+#      # Check if the container is already running
+#      if [ ! "$(docker ps -q -f name=ipfs-migration)" ]; then
+#          # Check if the container exists but is not running
+#          if [ "$(docker ps -aq -f status=exited -f name=ipfs-migration)" ]; then
+#              # Cleanup
+#              docker rm ipfs-migration
+#          fi
+#          # Run the container
+#          docker run -d --name ipfs-migration -v ~/Projects/cats/data/output/data:/output ipfs/go-ipfs
+#      else
+#          echo "ipfs-migration is already running."
+#      fi
+#    EOF
+#    delete = ""
+#  }
+#  depends_on = [
+#    shell_script.delete_cats_k8s,
+#    shell_script.pull_ipfs_image
+#  ]
+#}
+
+
+#resource "shell_script" "setup_ipfs_integration" {
+#  lifecycle_commands {
+#    create = <<-EOF
+#      # Check if the container is already running
+#      if [ ! "$(docker ps -q -f name=ipfs-integration)" ]; then
+#          # Check if the container exists but is not running
+#          if [ "$(docker ps -aq -f status=exited -f name=ipfs-integration)" ]; then
+#              # Cleanup
+#              docker rm ipfs-integration
+#          fi
+#          # Run the container
+#          docker run -d --name ipfs-integration -v ~/Projects/cats/data/output/data:/output ipfs/go-ipfs
+#      else
+#          echo "ipfs-integration is already running."
+#      fi
+#    EOF
+#    delete = ""
+#  }
+#  depends_on = [
+#    shell_script.delete_cats_k8s,
+#    shell_script.pull_ipfs_image,
+#    shell_script.setup_ipfs_migration
+#  ]
+#}
 
 provider "kind" {
   # Configuration options
@@ -100,7 +127,7 @@ resource "kind_cluster" "default" {
   wait_for_ready = "true"
   depends_on = [
     shell_script.delete_cats_k8s,
-    shell_script.setup_cod
+#    shell_script.setup_ipfs_migration
   ]
 }
 

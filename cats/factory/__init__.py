@@ -30,12 +30,14 @@ class Executor:
         self.service.INGRESS_HOME = self.service.meshClient.INGRESS_HOME = f"{self.CAT_HOME}/ingress"
         self.service.INTEGRATION_HOME = self.service.meshClient.INTEGRATION_HOME = f"{self.CAT_HOME}/integration"
         self.service.EGRESS_HOME = self.service.meshClient.EGRESS_HOME = f"{self.CAT_HOME}/egress"
+        self.service.EGRESS_INPUT_DATA = self.service.meshClient.EGRESS_INPUT_DATA = f"{self.service.EGRESS_HOME}/outputs"
         self.service.PROCESS_HOME = self.service.meshClient.PROCESS_HOME = f"{self.CAT_HOME}/process"
 
         Path(self.service.INGRESS_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.service.INTEGRATION_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.service.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
         Path(self.service.EGRESS_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.service.EGRESS_INPUT_DATA).mkdir(parents=True, exist_ok=True)
         Path(self.service.PROCESS_HOME).mkdir(parents=True, exist_ok=True)
 
     def execute(self, enhanced_bom=None):
@@ -45,8 +47,10 @@ class Executor:
 
         self.invoiceCID = self.enhanced_bom['invoice_cid']
         self.orderCID = self.enhanced_bom['invoice']['order_cid']
-
-        self.structure.redeploy()
+        try:
+            self.structure.redeploy()
+        except:
+            self.structure.deploy()
         self.ingress_job_id, self.integration_s3_output, self.egress_job_id = self.function.execute()
 
         self.enhanced_bom['function'] = json.loads(self.service.meshClient.cat(self.enhanced_bom['order']['function_cid']))

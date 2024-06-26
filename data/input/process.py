@@ -1,40 +1,115 @@
+import subprocess
 from typing import Dict
 import numpy as np
 import ray
 
-from cats.utils.cod import codSubmit
+from cats.utils import executeCMD
 
 
-def ingress(input_dir: str):
-    print("Ingress:")
-    cmd = f"""
-    bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
-    """
+def docker_ipfs_cmd(input_dir_cid, output_dir, container):
+    return (
+        f"docker exec {container} sh -c '"
+        f"ipfs get {input_dir_cid} -o {output_dir} && "
+        f"cd {output_dir} && "
+        f"rm -f api config datastore_spec gateway repo.lock version && "
+        f"ipfs add -r ."
+        f"'"
+    )
+
+
+run_ipfs_container = lambda x: f"""
+if [ ! "$(docker ps -q -f name=ipfs-{x})" ]; then
+  # Check if the container exists but is not running
+  if [ "$(docker ps -aq -f status=exited -f name=ipfs-{x})" ]; then
+      # Cleanup
+      docker rm ipfs-{x}
+  fi
+  # Run the container
+  docker run -d --name ipfs-{x} ipfs/go-ipfs
+else
+  echo "ipfs-{x} is already running."
+fi
+"""
+
+
+def ipfs_migration(input_dir_cid, migration, output_dir='/outputs/data'):
+    executeCMD(run_ipfs_container(migration))
+    cmd = docker_ipfs_cmd(input_dir_cid, output_dir, container='ipfs-migration')
     print(cmd)
-    return codSubmit(cmd)
+    try:
+        # Execute the Docker command
+        result = subprocess.run(
+            cmd,
+            shell=True,
+            capture_output=True,
+            text=True
+        )
+
+        # Check if the command was successful
+        if result.returncode == 0:
+            # Parse the output to get the CID
+            output_lines = result.stdout.splitlines()
+            for line in output_lines:
+                if line.startswith('added') and line.endswith('data'):
+                    # The CID is the second element in the space-separated line
+                    cid = line.split()[1]
+                    return cid
+            return "CID not found in the output."
+        else:
+            return f"Command failed with error: {result.stderr}"
+
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
+
+def ingress(input_dir_cid):
+    return ipfs_migration(input_dir_cid=input_dir_cid, migration='ingress')
+
+def egress(input_dir_cid):
+    return ipfs_migration(input_dir_cid=input_dir_cid, migration='egress')
+
+run_integration_container = lambda v_output_dir, output_dir: f"""
+if [ ! "$(docker ps -q -f name=ipfs-integration)" ]; then
+  # Check if the container exists but is not running
+  if [ "$(docker ps -aq -f status=exited -f name=ipfs-integration)" ]; then
+      # Cleanup
+      docker rm ipfs-integration
+  fi
+  # Run the container
+  docker run -d --name ipfs-integration -v {v_output_dir}:{output_dir} ipfs/go-ipfs
+else
+  echo "ipfs-integration is already running."
+fi
+"""
 
 
-def integration_cache(input_dir: str, output_dir: str = None, download: str = False):
+def integration_cache(input_dir_cid: str, v_output_dir, output_dir='/outputs'):
     print("Integration Cache:")
-    if download is True:
-        download = "--download"
-    else:
-        download = ""
-    cmd = f"""
-    bacalhau docker run --id-only --wait {download} -i {input_dir} --output-dir {output_dir} \
-    alpine:3.20.0 -- sh -c 'cp -r /inputs/* /'
-    """
-    print(cmd)
-    return codSubmit(cmd)
+    executeCMD(run_integration_container(v_output_dir, output_dir))
+    cmd = docker_ipfs_cmd(input_dir_cid, output_dir, container='ipfs-integration')
+    try:
+        # Execute the Docker command
+        result = subprocess.run(
+            cmd,
+            shell=True,
+            capture_output=True,
+            text=True
+        )
 
+        # Check if the command was successful
+        if result.returncode == 0:
+            # Parse the output to get the CID
+            output_lines = result.stdout.splitlines()
+            for line in output_lines:
+                if line.startswith('added') and line.endswith('data'):
+                    # The CID is the second element in the space-separated line
+                    cid = line.split()[1]
+                    return cid
+            return "CID not found in the output."
+        else:
+            return f"Command failed with error: {result.stderr}"
 
-def egress(input_dir: str):
-    print("Egress:")
-    cmd = f"""
-    bacalhau docker run --id-only --wait -p ipfs -i {input_dir} alpine:3.20.0 -- sh -c 'cp -r /inputs/* /outputs/'
-    """
-    print(cmd)
-    return codSubmit(cmd)
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
 
 
 def function_0(batch: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:

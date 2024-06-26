@@ -12,8 +12,15 @@ class Structure:
     def redeploy(self):
         print()
         print()
-        print('Deploy Structure!')
+        print('Re-Deploy Structure!')
         self.infraStructure.destroy()
+        self.infraStructure.initialize()
+        self.infraStructure.apply()
+
+    def deploy(self):
+        print()
+        print()
+        print('Deploy Structure!')
         self.infraStructure.initialize()
         self.infraStructure.apply()
 

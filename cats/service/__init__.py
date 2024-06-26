@@ -30,6 +30,7 @@ class Service:
         self.CACHE_HOME = self.meshClient.CACHE_HOME = self.DATA_HOME + "/cache"
         self.INPUT_HOME = self.meshClient.INPUT_HOME = self.DATA_HOME + '/input'
         self.OUTPUT_HOME = self.meshClient.OUTPUT_HOME = self.DATA_HOME + '/output'
+        self.OUTPUT_DATA_HOME = self.meshClient.OUTPUT_DATA_HOME = self.OUTPUT_HOME + '/data'
         self.INPUT_PLANT_HOME = self.meshClient.INPUT_PLANT_HOME = self.INPUT_HOME + '/plant'
         self.INPUT_DATA_HOME = self.meshClient.INPUT_DATA_HOME = self.INPUT_HOME + '/data'
         self.INTEGRATION_INPUT_CACHE = self.meshClient.INTEGRATION_INPUT_CACHE = \
@@ -67,6 +68,7 @@ class Service:
         Path(self.CACHE_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.OUTPUT_HOME).mkdir(parents=True, exist_ok=True)
+        # Path(self.OUTPUT_DATA_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_PLANT_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_DATA_HOME).mkdir(parents=True, exist_ok=True)
 

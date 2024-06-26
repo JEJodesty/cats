@@ -1,4 +1,6 @@
 import json, pickle
+from pprint import pprint
+
 from cats.utils import wait_for_directory
 
 
@@ -7,71 +9,56 @@ class Processor:
         self.infraFunction = infraFunction
         self.invoice_data_cid = None
 
-        self.ingress_job_id = None
         self.ingress_input_data_cid = self.infraFunction.enhanced_bom['init_data_cid']
-        self.integration_output = None
-        self.integration_output_ipfs = None
-        self.egress_job_id = None
+        self.ingress_data_cid = None
+        self.integration_data_cid = None
+        self.egress_data_cid = None
 
     def Ingress(self):
-        self.ingress_job_id = self.infraFunction.ingress_subproc(input_dir=self.ingress_input_data_cid)
-        self.infraFunction.service.INGRESS_JOB_STATUS = \
-            self.infraFunction.service.meshClient.waitForJobCompletion(
-                self.ingress_job_id, check_interval=1, timeout=None
-            )
-        published_results = self.infraFunction.service.meshClient.getPublishedURI(self.ingress_job_id)
-        self.infraFunction.service.meshClient.INGRESS_HOME = published_results['Params']['CID']
-        self.infraFunction.service.INGRESS_EXIT_CODE = self.infraFunction.service.meshClient.cat(
-            self.infraFunction.service.meshClient.INGRESS_HOME + "/exitCode"
-        )
-        self.infraFunction.service.INGRESS_DATA_HOME = \
-            f'ipfs://{self.infraFunction.service.meshClient.INGRESS_HOME}/outputs'
-        return self.ingress_job_id
+        self.infraFunction.service.INGRESS_DATA_HOME = self.ingress_data_cid = \
+            self.infraFunction.ingress_subproc(input_dir_cid=self.ingress_input_data_cid)
+        self.infraFunction.service.INGRESS_JOB_STATUS = "Completed"
+        self.infraFunction.service.INGRESS_EXIT_CODE = "0"
+        return self.ingress_data_cid
 
     def Integration(self):
         self.infraFunction.service.INTEGRATION_HOME = \
             self.infraFunction.service.meshClient.INTEGRATION_HOME + "/outputs"
         self.infraFunction.integration_cache_subproc(
-            self.infraFunction.service.INGRESS_DATA_HOME,
-            self.infraFunction.service.INTEGRATION_INPUT_CACHE
+            input_dir_cid=self.infraFunction.service.INGRESS_DATA_HOME,
+            v_output_dir=self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE
         )
-        wait_for_directory(self.infraFunction.service.INTEGRATION_INPUT_CACHE, check_interval=1)
+        wait_for_directory(self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE, check_interval=1)
         self.infraFunction.integrated_subproc(
             self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE,
             self.infraFunction.service.INTEGRATION_HOME
         )
         wait_for_directory(self.infraFunction.service.INTEGRATION_HOME, check_interval=1)
-        self.integration_output = \
+        self.integration_data_cid, _ = \
             self.infraFunction.service.meshClient.cidDir(self.infraFunction.service.INTEGRATION_HOME)
-        self.integration_output_ipfs = f'ipfs://{self.integration_output}/*.csv'
-        return self.integration_output
+        return self.integration_data_cid
 
     def Egress(self):
-        self.egress_job_id = self.infraFunction.egress_subproc(input_dir=self.integration_output_ipfs)
-        self.infraFunction.service.EGRESS_JOB_STATUS = \
-            self.infraFunction.service.meshClient.waitForJobCompletion(
-                self.egress_job_id, check_interval=1, timeout=None
+        self.infraFunction.service.meshClient.EGRESS_HOME = \
+            self.egress_data_cid = self.invoice_data_cid = \
+            self.infraFunction.egress_subproc(
+                input_dir_cid=self.integration_data_cid
             )
-        published_results = self.infraFunction.service.meshClient.getPublishedURI(self.egress_job_id)
-        self.infraFunction.service.meshClient.EGRESS_HOME = self.invoice_data_cid = published_results['Params']['CID']
-        self.infraFunction.service.EGRESS_EXIT_CODE = self.infraFunction.service.meshClient.cat(
-            self.infraFunction.service.meshClient.EGRESS_HOME + "/exitCode"
-        )
-        self.infraFunction.service.EGRESS_HOME = \
-            f'ipfs://{self.infraFunction.service.meshClient.EGRESS_HOME}/outputs'
-        return self.egress_job_id
+        self.infraFunction.service.EGRESS_JOB_STATUS = "Completed"
+        self.infraFunction.service.EGRESS_EXIT_CODE = "0"
+        return self.egress_data_cid
 
     def process(self):
         print("CAT Executing")
-        self.ingress_job_id = self.Ingress()
-        self.integration_output = self.Integration()
-        self.egress_job_id = self.Egress()
+        self.ingress_data_cid = self.Ingress()
+        self.integration_data_cid = self.Integration()
+        self.egress_data_cid = self.Egress()
         print("...")
-        print(self.ingress_job_id)
-        print(self.integration_output)
-        print(self.egress_job_id)
+        print(self.ingress_data_cid)
+        print(self.integration_data_cid)
+        print(self.egress_data_cid)
         print("CAT Executed")
-        return self.ingress_job_id, self.integration_output, self.egress_job_id
+        return self.ingress_data_cid, self.integration_data_cid, self.egress_data_cid
 
 
 class InfraFunction:

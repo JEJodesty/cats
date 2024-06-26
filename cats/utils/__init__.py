@@ -51,7 +51,7 @@ def executeCMD(cmd, cwd=None):
         popen.stdout.close()
         return_code = popen.wait()
         if return_code != 0:
-            print("Terraform Error:\n", popen.stderr.read())
+            print("Error:\n", popen.stderr.read())
             raise subprocess.CalledProcessError(return_code, x)
 
     for path in execute(cmd):

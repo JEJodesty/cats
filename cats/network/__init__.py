@@ -15,6 +15,7 @@ class MeshClient(CoD):
         self.CACHE_HOME = None
         self.INPUT_HOME = None
         self.OUTPUT_HOME = None
+        self.OUTPUT_DATA_HOME = None
         self.INPUT_PLANT_HOME = None
         self.INPUT_DATA_HOME = None
         if CATS_HOME is not None:
@@ -25,6 +26,7 @@ class MeshClient(CoD):
         self.INTEGRATION_HOME = None
         self.INTEGRATION_INPUT_CACHE = None
         self.INTEGRATION_INPUT_DATA_CACHE = None
+        self.EGRESS_INPUT_DATA = None
         self.EGRESS_HOME = None
 
         self.CAT_HOME = None
@@ -145,16 +147,36 @@ class MeshClient(CoD):
 
         invoice = flat_bom['invoice']
         input_invoice = {'data_cid': invoice['data_cid']}
-        new_invoice_cid = self.ipfsClient.add_str(json.dumps(input_invoice))
+        prev_invoice_cid = self.ipfsClient.add_str(json.dumps(input_invoice))
 
         order = invoice['order']
         order['function_cid'] = new_function_cid
-        order['invoice_cid'] = new_invoice_cid
+        order['invoice_cid'] = prev_invoice_cid
         del order['flat']
-        order['endpoint'] = 'http://127.0.0.1:5000/cat/node/link'
+        order['endpoint'] = 'http://127.0.0.1:5000/cat/node/init'
 
         order_request = {'order_cid': self.ipfsClient.add_str(json.dumps(order))}
         return order_request
+
+    def cidDir(self, filepath: str):
+        name = filepath.split('/')[-1]
+        dir = self.ipfsClient.add(filepath, recursive=True)
+        if type(dir) is list:
+            # dir_json = list(filter(lambda x: x['Name'] == 'outputs', dir))[-1]
+            dir_json = list(filter(lambda x: x['Name'] == name, dir))[-1]
+            dir_cid = dir_json['Hash']
+            dir_name = dir_json['Name']
+            return dir_cid, dir_name
+        else:
+            dir_cid = dir['Hash']
+            # dir_name = dir['Name']
+            return dir_cid
+
+    def cidFile(self, filepath):
+        file_json = self.ipfsClient.add(filepath)
+        file_cid = file_json['Hash']
+        file_name = file_json['Name']
+        return file_cid, file_name
 
     def create_order_request(
             self,
@@ -166,7 +188,10 @@ class MeshClient(CoD):
             structure_filepath,
             endpoint='http://127.0.0.1:5000/cat/node/execute'
     ):
-        structure_cid, structure_name = self.cidFile(structure_filepath)
+        structure_cid, structure_name = self.cidFile(filepath=structure_filepath)
+        data_cid, dir_name = self.cidDir(data_dirpath)
+        # print(dir_name)
+        # print(data_cid)
         function = {
             'ingress_subproc_cid': self.ipfsClient.add_pyobj(ingress_subproc),
             'integrated_subproc_cid': self.ipfsClient.add_pyobj(integrated_subproc),
@@ -175,7 +200,7 @@ class MeshClient(CoD):
             'infrafunction_subproc_cid': None
         }
         invoice = {
-            "data_cid": self.cidDir(data_dirpath)
+            "data_cid": data_cid
         }
         order = {
             "function_cid": self.ipfsClient.add_str(json.dumps(function)),
@@ -331,20 +356,3 @@ class MeshClient(CoD):
         invoice = {'orderCID': orderCID, 'dataCID': dataCID, 'seedCID': seedCID}
         invoice_cid = self.ipfsClient.add_json(invoice)
         return invoice_cid
-
-    def cidFile(self, filepath):
-        file_json = self.ipfsClient.add(filepath)
-        file_cid = file_json['Hash']
-        file_name = file_json['Name']
-        return file_cid, file_name
-
-    def cidDir(self, filepath: str):
-        data = self.ipfsClient.add(filepath, recursive=True)
-        if type(data) is list:
-            data_json = list(filter(lambda x: x['Name'] == 'outputs', data))[-1]
-            data_cid = data_json['Hash']
-            return data_cid
-        else:
-            data_json = data
-            data_cid = data_json['Hash']
-            return data_cid

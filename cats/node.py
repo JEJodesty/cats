@@ -22,8 +22,9 @@ def execute_init_cat():
         # if 'bom_cid' not in bom:
         #     return jsonify({'error': 'CID not provided'}), 400
 
-        ipfs_uri = f'ipfs://{order_request["invoice"]["data_cid"]}/*.csv'
-        catFactory, updated_order_request = SERVICE.initFactory(order_request, ipfs_uri)
+        catFactory, updated_order_request = SERVICE.initFactory(
+            order_request, order_request["invoice"]["data_cid"]
+        )
         bom_response = SERVICE.execute(catFactory, updated_order_request)
 
         # Return BOM
@@ -34,30 +35,6 @@ def execute_init_cat():
         logger.error("An error occurred: %s", traceback.format_exc())
         response = jsonify({'error': str(e)})
         return response
-
-
-@catNode.route('/cat/node/link', methods=['POST'])
-def execute_link_cat():
-    try:
-        order_request = request.get_json()
-
-        order_request["order"] = json.loads(SERVICE.meshClient.cat(order_request["order_cid"]))
-        order_request['invoice'] = json.loads(SERVICE.meshClient.cat(order_request['order']['invoice_cid']))
-
-        prev_data_cid = order_request['invoice']['data_cid']
-        pprint(prev_data_cid)
-        data_cid = SERVICE.meshClient.linkData(prev_data_cid)
-        pprint(data_cid)
-
-        ipfs_uri = f'ipfs://{data_cid}/*.csv'
-        catFactory, updated_order_request = SERVICE.initFactory(order_request, ipfs_uri)
-        bom_response = SERVICE.execute(catFactory, updated_order_request)
-
-        # Return BOM
-        return jsonify(bom_response)
-
-    except Exception as e:
-        return jsonify({'error': str(e)})
 
 
 if __name__ == '__main__':
