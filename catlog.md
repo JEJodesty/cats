@@ -44,6 +44,7 @@ Update readme and refactor
 * Research Economic Adapters for CATs
 * Research multilevel linked-list for CATs’ subgraph
 
+
 ### Week 5 (1/5 – 1/9): 
 * Research bidirectional mapping supports multilevel linked-list for CATs’ subgraph
 * Consider Transducers for CAT MIMO
@@ -112,6 +113,18 @@ CATs' Content-Addressed Data Assets are processed, sold / exchanged / published 
   * https://developer.confluent.io/courses/data-mesh/data-ownership/
   * https://en.wikipedia.org/wiki/Conway%27s_law
 * 3/1: Review Data Column Lineage value to in establishing Domain-Oriented Ownership in CATs Invoice in a way that makes BOM’s searchable and discoverable
+
+What makes CATs Governable by including BOMs within Data Product’s Data Contracts?
+
+CATs are governable and support multi-disciplinary collaboration of data processing because CATs Architectural Quantum is an abstract governance model enforced within CATs’ Bills-Of-Materials (BOMs) for which knowledge domains are represented as meta-data of data provenance records to support domain ownership. 
+
+BOMs are unique identifiers that provide the means of data production (assembly) and transportation as reproducible lineage contextualised by knowledge domains for federated governance. BOMs consist of Data Product service Orders of data processing that are Invoiced as fulfillments of service agreements specified by Data Product’s Data Contracts
+
+Federated Governance is enabled by BOMs due the following. The domain specific data provenance BOMs establish the legitimacy of network policy changes suggested by Fractional Stewards of Data Products by enabling them to identify data quality issues at their source on a self-serviced Data Platform of many Data Products. 
+
+CATs enables Fractional Stewards to do this because historical data production is contextualised and reproducible within the scope of their knowledge domains by design during development and production as a requirement of a service Order. CATs data processes submitted by their service Orders are Invoiced to fulfil agreements within Data Products’ Data Contracts.
+
+A Data Contract is a Service agreement between producer and consumer with attribute dependencies for downstream Data Product evolution with dedicated lineage. Governance policy discussions between data producers and consumers in policy feedback loops about data production requirements should balance the prioritization of outcomes and methodologies should culminate into an amenable data structure / dataset.
 
 ### Week 9 (3/4 - 3/8):
 * 3/4: Contextualize “Data as an asset” with CATs Architecture
@@ -292,7 +305,7 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
 ### Week 17 (4/29 - 5/3):
 * Review Scaled and Leveled Stewardship
   * https://stewardship-fractalization.gitbook.io/project-planning/generative-ai-chatgpt-claudeai
-* Review contextualization of reposibilities based on Prompt Engineering Questions & general responsibilities of "Fractional Stewards"
+* Review contextualization of responsibilities based on Prompt Engineering Questions & general responsibilities of "Fractional Stewards"
   * https://stewardship-fractalization.gitbook.io/project-planning/user-stories
 * Review Project Roadmap for Stewardship Fractalization in consideration for CAT Team Dynamics
   * https://stewardship-fractalization.gitbook.io/project-planning/project-roadmap
@@ -305,12 +318,12 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
 * Consider Marketing Steward using Prompt Engineering / partial input being a "Comparison Table/Matrix summarizing different Stewardship Organization/Solutions missions/purposes, designs and features"
   * https://stewardship-fractalization.gitbook.io/project-planning/projects-product-market-fit-analysis
 
-### Week 17 (5/6 - 5/10):
+### Week 18 (5/6 - 5/10):
 * Removing s3 cache from CATs and replace with local storage solution
 
 ### Week 18 (5/13 - 5/17):
 * Removed s3 cache from CATs and replaced with local storage solution
-* Research Retrieval Augmented Generation (RAG) and how CATs
+* Research adaptive Retrieval Augmented Generation (aRAG)
   * https://vercel.com/guides/retrieval-augmented-generation
   * https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_adaptive_rag/
 * Reviewed KMS-identity for integration into CATs
@@ -337,11 +350,11 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
 ### Week 20 (5/27 - 5/31):
 * Review RAG stewardship fictionalization context
   * https://stewardship-fractalization.gitbook.io/project-planning/workshop-3-chatgpt-with-rag-retrieval-augmented-generation
-* Review Software Governance in to fractional stewardship
+* Review Software Governance with respect to fractional stewardship
   * https://standard.open-contracting.org/latest/en/governance/
 * Consider a Stewardship Profile that maps to agents within a Multi-agent system
   * [Multi-agent systems](https://en.wikipedia.org/wiki/Multi-agent_system)
-* Consider roles as Architectural Resposiblities with respect to [RolePlayer](https://github.com/mzargham/RolePlayer)
+* Consider roles as Architectural Responsibilities with respect to [RolePlayer](https://github.com/mzargham/RolePlayer)
 * Review Docker workload on-boarding for cat Refactor
   * https://docs.bacalhau.org/setting-up/workload-onboarding/container/docker-workload-onboarding
 * Cosider homestar (Everywhere Computer network) for IPVM inclusion for "resilience, certainty or portability"
@@ -358,13 +371,11 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
 * Included data product disciplines to CATs Architectural Quantum for CATs v3
 * Implement InfraStructure Sub Component separately
 
-### Week 23 (6/17 - 6/21):
+### Week 23 (6/17 - 6/26):
 * IPFS daemon initiated by CAT Node
 * partially implement function for applying sbom
 * Refactor infrafunction composes Processor & Plant and Infrstructure
 * Installed KMS locally for cat/rid Integration
 
 ### Week 24 (6/24 - 6/28):
-* bring your own cache otherwise it is local 
-  * Expanso introduces breaking changes continuously to bacalhau (CoD) without stable release)
-* Removed CoD
+* bring your own cache otherwise it is local (bg: Expanso introduces breaking changes to bacalhau without stable release)

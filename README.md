@@ -78,7 +78,7 @@ how virtual resources owned by the Data Product should be managed, routed, and p
 adherence to Data Contracting Standards of organizations participating in a Data Mesh.
 ![alt_text](images/CATkernel.jpeg)
 
-#### Architecture Description:
+#### Quantum Architecture Description as a [Minimal Federated Operating Model](https://www.starburst.io/blog/data-mesh-book-bulletin-principle-of-federated-computational-governance/)
 * **Function** is a FaaS for scalable Data Processing and analytics executed as CAT **Processes**. Functions (FaaS) are deployed 
 on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS) 
   * **Processes** are **Functional Data Processors** executable by InfraFunctions (FaaS) deployed on Structure (PaaS), and 
