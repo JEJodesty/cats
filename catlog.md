@@ -1,3 +1,5 @@
+## January:
+
 ### Week 0 (1/2 - 1/5):
 Update readme and refactor 
 
@@ -9,7 +11,8 @@ Update readme and refactor
 * Research CLI wrapper alternative to CDKTF 
 * Review Database Sharding within the context of Data Products’ data: https://aws.amazon.com/what-is/database-sharding/
 * Review Value of data
-* Verify CATs’ Project Update: Factory & Executor components; Invoice, Order, Function, Executor, & BOM Block Designs, Structure’s Ray Cluster Deployment  on Kubernetese, BOM Initialization, CAT Node & Node Design
+* Verify CATs’ Project Update: Factory & Executor components; Invoice, Order, Function, Executor, & BOM Block Designs, 
+Structure’s Ray Cluster Deployment  on Kubernetese, BOM Initialization, CAT Node & Node Design
 
 ### Week 2 (1/15 - 1/19):
 * Research Dynamic Terraform Providers for Plant Deployments
@@ -37,15 +40,16 @@ Update readme and refactor
   * Reviewed Novo Nordisk Data Mesh Platform discussion
   * Verify CATs’ Project Update: CATs s3 cache, BOM ERD
 
+## February:
+
 ### Week 4 (1/29 - 2/2): 
 * Included Ubuntu 20.04 Installation Update
 * Refactored CATs
 * Researched CAT cache access management
-* Research Economic Adapters for CATs
+* Research Economic Adapters for CATs from Ocean Protocol
 * Research multilevel linked-list for CATs’ subgraph
 
-
-### Week 5 (1/5 – 1/9): 
+### Week 5 (2/5 – 2/9): 
 * Research bidirectional mapping supports multilevel linked-list for CATs’ subgraph
 * Consider Transducers for CAT MIMO
 * Updated PR Template
@@ -57,7 +61,9 @@ Update readme and refactor
 * 2/14 - 2/15: 
   * Reviewed Data Mesh Roundtable Discussions about Data Contracts and “Agile” Data Products
   * Attended Protocol Labs project updates
-* 2/16: Research System Architecture layers and wrote notes as Data Contract Article for CATs
+* 2/16: 
+  * Research System Architecture layers and wrote notes as Data Contract Article for CATs
+* **Wrote Article:** [What does a CATs data contract do?](https://github.com/BlockScience/cats/wiki/Articles#what-does-a-cats-data-contract-do)
 
 Data Mesh Resources:
 * “Inside a Data Contract”: https://www.youtube.com/watch?v=ye4geXMuJKs
@@ -72,35 +78,20 @@ Data Contract Implementation Examples:
 System Architecture:
 * https://blog.jgriffiths.org/systems-architecture-conceptual-logical-and-physical/
 
-What does a CATs data contract do?
-
-Data Contract is a Service agreement between producer and consumer with attribute dependencies for downstream Data Product evolution with dedicated lineage. A data contracts can provide tools for collaboration on data requirements as product promises within a shared context that inform policies for contract mutation along side Data Product releases.
-
-A Data Contract’s Product Promises are what the data product owners expect from its data consumer up to the latest block of information. These promises may include data quality, data usage terms and conditions, schema, service-objectives, billing, etc. Data Contract policy mutation cascaded downstream as bilateral lateral agreements that “forks” lineage as a new Data Product version. For Example, the consumer takes the risk of violating privacy. Data Producers create Data Contracts on Organization and Business Terms. The consumer of the Data Contract enforces Governance policies. The producer of the Data Contract owns the Data Product if the organization doesn't have a Governance body. 
-
-Governance policies are discussed between data producers and consumers to agree upon data producer requirements. These discussions should culminate into an amenable data structure / dataset. Structured data is conducive for pre-exsisting policies and less discussion. Less structured data will need more discussion and policy feedback loops. We need a Minimal Viable Data Contract that includes what is necessary for an organization to govern with the means of supporting policy feedback loops in a way that guides discussion in a way that balances the prioritization of outcomes and methodologies.
-
-Interdependent data domains have sub-domains with identifiers for generating Data Products. CAT Nodes will generate and execute Virtual Data Products composed as Data Contracts that enforce Data Provenance using Bills of Materials (BOMs). BOMs are CATs' Content-Addressed Data Provenance record for verifiable data processing and transport on a Mesh network of CAT Nodes. Data Contracts will contain a BOMs lineages and act as block headers for Content-Addressed Transformers (CATs) instances. Data Products are mutated during policy feedback loops informed collaborators communicating their understanding of knowledge domains. Collaborators will identify knowledge sub-domains with references and will access sub-domains using Content-Addresses. Access is federated via knowledge domain hierarchies in abstractions that enable collaborators to participate in governance cycles by leveraging their understanding of knowledge.
-
 ### Week 7 (2/19 - 2/23):
 * 2/19 - 2/21: Contextualize value of BOM within the context of Data as a Product that contains Data Contracts
 * 2/22 - 2/23: Updated Readme informed by examples of Data Assets within the context of Machine-Readable Cataloging
+* **Wrote Article:** [What is a Content-Addressed Data Asset (CADA)?](https://github.com/BlockScience/cats/wiki/Articles#what-is-a-content-addressed-data-asset-cada)
 
 Resources:
 * https://www.loc.gov/marc/umb/um01to06.html
 * https://docs.informatica.com/data-engineering/data-engineering-quality/10-2-1/business-glossary-guide/glossary-content-management/business-term-links/data-asset.html
 
-What is a Content-Addressed Data Asset (CADA)?
-
-CATs Data Products will consist of Data Contracts with provenance as executable BOMs lineages and act as block headers for Content-Addressed Transformers (CATs) instances that contain Data Assets. BOMs are CATs' Content-Addressed Data Provenance record for verifiable data processing and transport on a Mesh network of CAT Nodes that can contain Data Assets. A data asset may be a system or application output” (dataset) that holds value for an organization or individual that is accessible. Data Assets’ value can derive from the data's potential for generating insights, informing decision-making, contributing to product development, enhancing operational efficiency, or creating economic benefits through its sale or exchange. 
-
-CATs' Content-Addressed Data Assets are processed, sold / exchanged / published on CAT’s Data Mesh via CAT Nodes subsumed by downstream CATs’ Data Products. Data Assets consist of the following:
-* **Data Domains** - "A predefined or user-defined Model repository object that represents the functional meaning of an" attribute "based on column data or column name such as" account identification.
-* **Data Objects** - Content-Addresses of data sources used to extract metadata for analysis.
+## March:
 
 ### Week 8 (2/26 - 3/1):
-
-* 2/26: Researched Digital Asset Management related Data Contracts and Data Mesh Registry & considered a Rule Asset being used for Network Policies in addition to Attribute Quality 
+* 2/26: Researched Digital Asset Management related Data Contracts and Data Mesh Registry & considered a Rule Asset 
+  being used for Network Policies in addition to Attribute Quality 
 * 2/27: Considered Data & Rule Assets for Data Mesh Registry Artifact Schema
   * https://towardsdatascience.com/the-data-mesh-registry-a-window-into-your-data-mesh-20dece35e05a 
   * https://docs.informatica.com/data-engineering/data-engineering-quality/10-2-1/business-glossary-guide/glossary-content-management/business-term-links/data-asset.html
@@ -113,18 +104,7 @@ CATs' Content-Addressed Data Assets are processed, sold / exchanged / published 
   * https://developer.confluent.io/courses/data-mesh/data-ownership/
   * https://en.wikipedia.org/wiki/Conway%27s_law
 * 3/1: Review Data Column Lineage value to in establishing Domain-Oriented Ownership in CATs Invoice in a way that makes BOM’s searchable and discoverable
-
-What makes CATs Governable by including BOMs within Data Product’s Data Contracts?
-
-CATs are governable and support multi-disciplinary collaboration of data processing because CATs Architectural Quantum is an abstract governance model enforced within CATs’ Bills-Of-Materials (BOMs) for which knowledge domains are represented as meta-data of data provenance records to support domain ownership. 
-
-BOMs are unique identifiers that provide the means of data production (assembly) and transportation as reproducible lineage contextualised by knowledge domains for federated governance. BOMs consist of Data Product service Orders of data processing that are Invoiced as fulfillments of service agreements specified by Data Product’s Data Contracts
-
-Federated Governance is enabled by BOMs due the following. The domain specific data provenance BOMs establish the legitimacy of network policy changes suggested by Fractional Stewards of Data Products by enabling them to identify data quality issues at their source on a self-serviced Data Platform of many Data Products. 
-
-CATs enables Fractional Stewards to do this because historical data production is contextualised and reproducible within the scope of their knowledge domains by design during development and production as a requirement of a service Order. CATs data processes submitted by their service Orders are Invoiced to fulfil agreements within Data Products’ Data Contracts.
-
-A Data Contract is a Service agreement between producer and consumer with attribute dependencies for downstream Data Product evolution with dedicated lineage. Governance policy discussions between data producers and consumers in policy feedback loops about data production requirements should balance the prioritization of outcomes and methodologies should culminate into an amenable data structure / dataset.
+* **Wrote Article:** [What makes CATs Governable by including BOMs within Data Product’s Data Contracts?](https://github.com/BlockScience/cats/wiki/Articles#what-makes-cats-governable-by-including-boms-within-data-products-data-contracts)
 
 ### Week 9 (3/4 - 3/8):
 * 3/4: Contextualize “Data as an asset” with CATs Architecture
@@ -141,21 +121,13 @@ A Data Contract is a Service agreement between producer and consumer with attrib
 * 3/8: Contextualize Ocean Protocol & CATs Architecture with prosumption
   * https://docs.oceanprotocol.com/developers/architecture 
   * https://en.wikipedia.org/wiki/Prosumer
-
-“Data as an asset” enables the consumption, production, [prosumption](https://en.wikipedia.org/wiki/Prosumer) of Data Assets on CATs Data Mesh
-
-“Data as an asset” [0.](https://atlan.com/data-as-an-asset/) conceptually emphasizes recognizing and treating data as a strategic investment organizations can leverage to deliver future economic benefits by enabling the consumption, production, prosumption of ones own data as an asset. Prosumption is the consumption and production of value, "either for self-consumption or consumption by others, and can receive implicit or explicit incentives from organizations involved in the exchange." [1.](https://doi.org/10.1108/JOSM-05-2020-0155)
-
-The availability of high-quality and domain-specified Data Assets enables Data Products on inter-connected CAT Nodes on CATs Data Mesh to facilitate cross-functional asset utilization within Data Initiatives in a way that support Data Sovereignty. "Data sovereignty refers to a group or individual’s right to control and maintain their own data, which includes the collection, storage, and interpretation of data." [2.](https://www.nnlm.gov/guides/data-glossary/data-sovereignty#:~:text=Definition,storage%2C%20and%20interpretation%20of%20data.)
-
-Registering and cataloging CATs can accelerate innovative Data Product creation and facilitate Data Sovereignty in Data Initiatives that discover and utilize “Data as an asset”. Data Products use and operate CAT Nodes to produce, register, and catalog “Data as an asset” as searchable and discoverable Data Assets by Data Products on CATs Data Mesh. CATs Data Assets enhances strategic, operational, and analysis informed decision-making by using BOMs as feedback loop mechanisms across domains in a way that suits specific collaborative contexts across organizations.
+* **Wrote Article:** [“Data as an asset” enables the consumption, production, prosumption of Data Assets on CATs Data Mesh](https://github.com/BlockScience/cats/wiki/Articles#data-as-an-asset-enables-the-consumption-production-prosumption-of-data-assets-on-cats-data-mesh)
 
 Resources:
 * https://www.youtube.com/watch?v=uv52swYfStU&t=6s
 * https://www.youtube.com/watch?v=pbBGciy8ZbM
 
 ### Week 10 (3/11 - 3/15):
-
 * 3/11: Review ocean Data NFTs and Datatokens and relate Hexagonal architecture to Data Contract SLAs
   * https://docs.oceanprotocol.com/developers/contracts/datanft-and-datatoken
   * https://en.wikipedia.org/wiki/Non-fungible_token#:~:text=A%20non%2Dfungible%20token%20(NFT,to%20be%20sold%20and%20traded.
@@ -182,18 +154,14 @@ Resources:
   * Updated CATs architecture, readme, and interactive logs
 
 ### Week 11 (3/18 - 3/22):
-
 * 3/18 - 3/20: Contextualize data contract creation team' role responsibilities into modern roles
 * 3/21 - 3/22: 
-  * Contextualize modern data contract creation team' role responsibilities into CATs Control and Action planes for an operational model for the placement of Data Stewardship responsibilities
+  * Contextualize modern data contract creation team' role responsibilities into CATs Control and Action planes for an 
+  operational model for the placement of Data Stewardship responsibilities
   * Communicate the value of Data Contract inclusion in BOM bellow.
-
-Why should Data Contracts be included in CATs' BOMs for Data Product development on a Data Mesh?
-
-Data Product(s) CATs are executed by Data Contract deployments with Data Provenance by Ordering CATs that are Invoiced within Bills of Materials (BOMs). BOMs are CATs' Content-Addressed Data Provenance record for verifiable data processing and transport on CAT Mesh. Data Contracts will contain BOM lineages and act as headers for Content-Addressed Transformer instances (CATs). Their inclusion of BOMs are necessary for organizations to rapidly mutate Data Products alongside discussions that affect product outcomes and development methodologies. Data Products are mutated during stakeholder discussions about Data Contracts with respect to network policy / protocol. These discussions continuously inform multi-lateral Data Product agreements between stakeholders and collaborators that produce and consume data using BOMs as feedback loop mechanisms for (re)submitting CAT Orders. These discussions should also culminate into a CAT Order of amenable data structures / datasets for which processing is Invoiced within BOMs. Collaborators can participate in data provenance supported product development by Content-Addressing Data as an Asset.
+* **Wrote Article:** [Why should Data Contracts be included in CATs' BOMs for Data Product development on a Data Mesh?](https://github.com/BlockScience/cats/wiki/Articles#why-should-data-contracts-be-included-in-cats-boms-for-data-product-development-on-a-data-mesh)
 
 ### Week 12 (3/25 - 3/29):
-
 * 3/25 - 3/27: 
   * Review Bitol's Data Contract examples
     * https://bitol.io/
@@ -216,6 +184,8 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
   * Contextualize Event-Driven programming for CAT Plant and Dataflow programming for CATs Process and InfrFunction
     * https://en.wikipedia.org/wiki/Event-driven_programming
     * https://en.wikipedia.org/wiki/Dataflow_programming
+
+## April:
 
 ### Week 13 (4/1 - 4/5):
 * 4/1 - 4/3:
@@ -270,7 +240,8 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
     * https://www.investopedia.com/terms/b/bill-of-materials.asp#toc-types-of-bills-of-materials
   * Contextualize CAT orders with a Transfer (Network) Function
     * https://en.wikipedia.org/wiki/Transfer_function
-  * Contextually lift Mesh partnership with Model-Based Institution Design (MBID) and relate to Model-Based System Engineering in preperation to include Computer-Aided Governance in CATs3
+  * Contextually lift Mesh partnership with Model-Based Institution Design (MBID) and relate to Model-Based System 
+  Engineering in preperation to include Computer-Aided Governance in CATs3
     * https://medium.com/block-science/model-based-institutional-design-3939b4f0137a
   * Research LangGraph for CAT Mesh reification
     * https://www.langchain.com/
@@ -282,7 +253,6 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
     * https://github.com/ksoclabs/kbom?tab=readme-ov-file
     * https://github.com/kubernetes-sigs/bom
     
-
 ### Week 16 (4/22 - 4/26):
 * Consider Multi-Agent Conversation for row-wise business function
   * https://arxiv.org/abs/2308.08155
@@ -302,26 +272,31 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
 * Review "Engineering for Legitimacy"
   * https://blog.block.science/engineering-for-legitimacy/
 
+## May:
+
 ### Week 17 (4/29 - 5/3):
 * Review Scaled and Leveled Stewardship
   * https://stewardship-fractalization.gitbook.io/project-planning/generative-ai-chatgpt-claudeai
-* Review contextualization of responsibilities based on Prompt Engineering Questions & general responsibilities of "Fractional Stewards"
+* Review contextualization of responsibilities based on Prompt Engineering Questions & general responsibilities of 
+  "Fractional Stewards"
   * https://stewardship-fractalization.gitbook.io/project-planning/user-stories
 * Review Project Roadmap for Stewardship Fractalization in consideration for CAT Team Dynamics
   * https://stewardship-fractalization.gitbook.io/project-planning/project-roadmap
-* Review Fractional Stewardship MVP approach in consideration to publishing a Policy development in Steward profile to Agent Nodes in LangGraph. These Policies are front loaded as "algorithmic suggestions"
+* Review Fractional Stewardship MVP approach in consideration to publishing a Policy development in Steward profile to 
+  Agent Nodes in LangGraph. These Policies are front loaded as "algorithmic suggestions"
   * https://stewardship-fractalization.gitbook.io/project-planning/mvps
 * Note Abstract User Stories as application references
   * https://stewardship-fractalization.gitbook.io/project-planning/user-stories
 * Review "DAO Governance Model" for comparison to Federated Computational Governance Model
   * https://stewardship-fractalization.gitbook.io/project-planning/tokens-and-smart-contract-designs
-* Consider Marketing Steward using Prompt Engineering / partial input being a "Comparison Table/Matrix summarizing different Stewardship Organization/Solutions missions/purposes, designs and features"
+* Consider Marketing Steward using Prompt Engineering / partial input being a "Comparison Table/Matrix summarizing 
+  different Stewardship Organization/Solutions missions/purposes, designs and features"
   * https://stewardship-fractalization.gitbook.io/project-planning/projects-product-market-fit-analysis
-
+  
 ### Week 18 (5/6 - 5/10):
 * Removing s3 cache from CATs and replace with local storage solution
 
-### Week 18 (5/13 - 5/17):
+### Week 19 (5/13 - 5/17):
 * Removed s3 cache from CATs and replaced with local storage solution
 * Research adaptive Retrieval Augmented Generation (aRAG)
   * https://vercel.com/guides/retrieval-augmented-generation
@@ -331,24 +306,34 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
 * Read "A Language for Studying Knowledge Networks: The Ethnography of LLMs"
   * https://kelsienabben.substack.com/p/a-language-for-studying-knowledge?utm_source=post-email-title&publication_id=198759&post_id=144672529&utm_campaign=email-post-title&isFreemail=true&r=23p95&triedRedirect=true&utm_medium=email
 
-### Week 19 (5/19 - 5/24):
-* The Plant is a Transfer Function that accepts an Order as Input and produces and Output with by executing Function (Process) with Executor (Actuator) that executes a Process(es). The Plant exposes the control variable (u(t)) for Control Feedback Loop and the Function (Process) produces the process variable (y(t)). The Process Variable is the Statistical Process Control of CATs Dataset I/O (Ingress/Egress)
+### Week 20 (5/19 - 5/24):
+* The Plant is a Transfer Function that accepts an Order as Input and produces and Output with by executing Function 
+  (Process) with Executor (Actuator) that executes a Process(es). The Plant exposes the control variable (u(t)) for 
+  Control Feedback Loop and the Function (Process) produces the process variable (y(t)). The Process Variable is the 
+  Statistical Process Control of CATs Dataset I/O (Ingress/Egress)
   * https://en.wikipedia.org/wiki/Plant_(control_theory)
   * https://en.wikipedia.org/wiki/Actuator
   * https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller
   * https://en.wikipedia.org/wiki/Process_variable
-* Docker can be executed within an Alpine Linux Docker container ["Docker in Docker" (DinD)] for upcoming cadCAD's nested Block executions as a summation of the control variable (u(t)) that configure CATs Data Product and the summation of the process variable (y(t))
+* Docker can be executed within an Alpine Linux Docker container ["Docker in Docker" (DinD)] for upcoming cadCAD's 
+  nested Block executions as a summation of the control variable (u(t)) that configure CATs Data Product and the 
+  summation of the process variable (y(t))
   * https://www.alpinelinux.org/about/
   * https://en.wikipedia.org/wiki/Process_variable
-* Note: "Integral windup particularly occurs as a limitation of physical systems, compared with ideal systems, due to the ideal output being physically impossible (process saturation: the output of the process being limited at the top or bottom of its scale, making the error constant)."
-* Concern: "Integral windup particularly occurs as a limitation of physical systems, compared with ideal systems, due to the ideal output being physically impossible (process [saturation](https://en.wiktionary.org/wiki/saturation): the output of the process being limited at the top or bottom of its scale, making the error constant)."
+* Note: "Integral windup particularly occurs as a limitation of physical systems, compared with ideal systems, due to 
+  the ideal output being physically impossible (process saturation: the output of the process being limited at the top 
+  or bottom of its scale, making the error constant)."
+* Concern: "Integral windup particularly occurs as a limitation of physical systems, compared with ideal systems, due to 
+  the ideal output being physically impossible (process [saturation](https://en.wiktionary.org/wiki/saturation): the 
+  output of the process being limited at the top or bottom of its scale, making the error constant)."
   * https://en.wikipedia.org/wiki/Integral_windup
   * Alleviated by "A CAT at its core is a unit of computational work specified by the triplet 1) what the input is, 
     2) what does the computation, and 3) what the output is.  Controllers require feedback, which is currently 
     outside of the scope of a single cat. Any cyclic orchestration must be external to CATs." - BlockScience
-* Alpine Linux Docker can be the execution paradigm of cadCAD and CATs Plant because they can run as Docker inside Docker "DinD” to and functionally map cadCAD multi-dimensional blocks to CAT Functions
+* Alpine Linux Docker can be the execution paradigm of cadCAD and CATs Plant because they can run as Docker inside 
+  Docker "DinD” to and functionally map cadCAD multi-dimensional blocks to CAT Functions
 
-### Week 20 (5/27 - 5/31):
+### Week 21 (5/27 - 5/31):
 * Review RAG stewardship fictionalization context
   * https://stewardship-fractalization.gitbook.io/project-planning/workshop-3-chatgpt-with-rag-retrieval-augmented-generation
 * Review Software Governance with respect to fractional stewardship
@@ -364,15 +349,17 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
   * https://everywhere.computer/
   * https://docs.ipfs.tech/concepts/cod/#bacalhau
 
-### Week 21 (6/3 - 5/7):
+## June:
+
+### Week 22 (6/3 - 6/7):
 * Updated Bacalhau Node and refactor for CoD interoperability for CATs v3
 * Exposed ingress and egress to action plane via Process with a interoperable integration point for CATs v3
 
-### Week 22 (6/10 - 6/14):
+### Week 23 (6/10 - 6/14):
 * Included data product disciplines to CATs Architectural Quantum for CATs v3
 * Implement InfraStructure Sub Component separately
 
-### Week 23 (6/17 - 6/26):
+### Week 24 (6/17 - 6/26):
 * IPFS daemon initiated by CAT Node
 * partially implement function for applying sbom
 * Refactor infrafunction composes Processor & Plant and Infrstructure
@@ -380,31 +367,6 @@ Data Product(s) CATs are executed by Data Contract deployments with Data Provena
 
 ### Week 24 (6/24 - 6/28):
 * bring your own cache otherwise it is local (bg: Expanso introduces breaking changes to bacalhau without stable release)
-
-**What is the Architectural purpose of CATs as a Function a.k.a. the ACG [Monad](https://en.wikipedia.org/wiki/Monad_(functional_programming))?**
-
-* **Governance Plane: z(t)** 
-  * is for the Stewardship of a Data Product Supply Network of CATs represented as a Directed Acyclic Graph of Data Product Supply
-  * **Control Plane: y(t)** 
-    * is for the Networking of what is Produced as a result of Science & Engineering CATs
-    * **Action Plane: x(t)** 
-      * is for the Science & Engineering of Data Transformation as Computational Processing, a.k.a. CATs
-
-**Multi-Agent Collaboration (MAC) for CATs using Content-Addressable Router (CAR)**
-
-* _Design Description_
-  * CATs and LangGraphs integration can enable a row wise business function as a Chart Tool of Multi-Agent Collaboration (MAC) if CAT Orders 
-    act as a Transfer (Network) Function implemented as an OOP Command Pattern for which CATs Ingress and Egress sub-processes can be 
-    executed by CATs’ Content-Addressable Router (CAR).
-  * Architectural Considerations: CATs can inform business decisions given the following:
-    * Action Plane: x(t)
-      * CAT Functions can be defined as LangGraph Call Tools executed by LangGraphs Tool Node 
-      * CAT Factory produces CAT Executors integrated with LangGraphs Tool Executor.
-    * Control Plane: y(t) [aka Content-Addressable Router (CAR)]
-      * CAR integrated with LangGraphs Router.
-      * cadCAD (Network) Policies aka “Algorithmic Suggestions” can be deployed on LangGraphs Agent Nodes with specified Domain-Name 
-        references as Rule Asset RIDs
-    * Governance Plane: z(t)
-      * A GreyBox Model for as a feature parameterized Tensor Field with process variable (PV) as label 
-      * The business function is a CATs Control & Action Matrix - a 2 dimensional representation of 3 dimensional space
-      
+* reviewed pid controller to suggest the Architectural purpose of CATs in consideration of a [Monad](https://en.wikipedia.org/wiki/Monad_(functional_programming))
+* Expressed [Architectural purpose of CATs data mesh as a function](https://github.com/BlockScience/cats/wiki/Articles#what-is-the-architectural-purpose-of-cats-as-a-function)
+* Described design for [Multi-Agent Collaboration (MAC) for CATs using Content-Addressable Router (CAR)](https://github.com/BlockScience/cats/wiki/Articles#multi-agent-collaboration-mac-for-cats-using-content-addressable-router-car)
