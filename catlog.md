@@ -1,3 +1,5 @@
+# Weekly Log
+
 ## January:
 
 ### Week 0 (1/2 - 1/5):
