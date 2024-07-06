@@ -20,7 +20,8 @@ class MeshClient(CoD):
         self.INPUT_DATA_HOME = None
         if CATS_HOME is not None:
             self.catStore(CATS_HOME)
-        self.ipfs_daemon_proc = ipfs(cwd=self.CATS_HOME).start_daemon()
+        # ipfs(cwd=self.CATS_HOME).shutdown()
+        ipfs(cwd=self.CATS_HOME).daemon()
 
         self.INGRESS_HOME = None
         self.INTEGRATION_HOME = None
@@ -156,7 +157,7 @@ class MeshClient(CoD):
         order['endpoint'] = 'http://127.0.0.1:5000/cat/node/init'
 
         order_request = {'order_cid': self.ipfsClient.add_str(json.dumps(order))}
-        return order_request
+        return self.order_request
 
     def cidDir(self, filepath: str):
         name = filepath.split('/')[-1]
@@ -190,8 +191,6 @@ class MeshClient(CoD):
     ):
         structure_cid, structure_name = self.cidFile(filepath=structure_filepath)
         data_cid, dir_name = self.cidDir(data_dirpath)
-        # print(dir_name)
-        # print(data_cid)
         function = {
             'ingress_subproc_cid': self.ipfsClient.add_pyobj(ingress_subproc),
             'integrated_subproc_cid': self.ipfsClient.add_pyobj(integrated_subproc),

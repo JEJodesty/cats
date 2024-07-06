@@ -12,6 +12,7 @@ terraform {
       source = "tehcyx/kind"
       version = "0.2.0"
     }
+    local = {}
   }
 }
 
@@ -67,55 +68,59 @@ resource "shell_script" "pull_ipfs_image" {
   ]
 }
 
-#resource "shell_script" "setup_ipfs_migration" {
-#  lifecycle_commands {
-#    create = <<-EOF
-#      # Check if the container is already running
-#      if [ ! "$(docker ps -q -f name=ipfs-migration)" ]; then
-#          # Check if the container exists but is not running
-#          if [ "$(docker ps -aq -f status=exited -f name=ipfs-migration)" ]; then
-#              # Cleanup
-#              docker rm ipfs-migration
-#          fi
-#          # Run the container
-#          docker run -d --name ipfs-migration -v ~/Projects/cats/data/output/data:/output ipfs/go-ipfs
-#      else
-#          echo "ipfs-migration is already running."
-#      fi
-#    EOF
-#    delete = ""
-#  }
-#  depends_on = [
-#    shell_script.delete_cats_k8s,
-#    shell_script.pull_ipfs_image
-#  ]
-#}
+resource "shell_script" "setup_ipfs_migration" {
+  lifecycle_commands {
+    create = <<-EOF
+      # Check if the container is running
+      if [ "$(docker ps -q -f name=ipfs-migration)" ]; then
+         echo "Stopping the running container: ipfs-migration"
+         docker stop ipfs-migration
+      fi
+
+      # Check if the container exists (but is not running)
+      if [ "$(docker ps -aq -f name=ipfs-migration)" ]; then
+         echo "Removing the existing container: ipfs-migration"
+         docker rm ipfs-migration
+      fi
+
+      echo "Starting a new container: ipfs-migration"
+      docker run -d --name ipfs-migration ipfs/go-ipfs
+    EOF
+    delete = ""
+  }
+  depends_on = [
+    shell_script.delete_cats_k8s,
+    shell_script.pull_ipfs_image
+  ]
+}
 
 
-#resource "shell_script" "setup_ipfs_integration" {
-#  lifecycle_commands {
-#    create = <<-EOF
-#      # Check if the container is already running
-#      if [ ! "$(docker ps -q -f name=ipfs-integration)" ]; then
-#          # Check if the container exists but is not running
-#          if [ "$(docker ps -aq -f status=exited -f name=ipfs-integration)" ]; then
-#              # Cleanup
-#              docker rm ipfs-integration
-#          fi
-#          # Run the container
-#          docker run -d --name ipfs-integration -v ~/Projects/cats/data/output/data:/output ipfs/go-ipfs
-#      else
-#          echo "ipfs-integration is already running."
-#      fi
-#    EOF
-#    delete = ""
-#  }
-#  depends_on = [
-#    shell_script.delete_cats_k8s,
-#    shell_script.pull_ipfs_image,
-#    shell_script.setup_ipfs_migration
-#  ]
-#}
+resource "shell_script" "destroy_ipfs_integration" {
+  lifecycle_commands {
+    create = <<-EOF
+      # Check if the container is running
+      if [ "$(docker ps -q -f name=ipfs-integration)" ]; then
+         echo "Stopping the running container: ipfs-integration"
+         docker stop ipfs-integration
+      fi
+
+      # Check if the container exists (but is not running)
+      if [ "$(docker ps -aq -f name=ipfs-integration)" ]; then
+         echo "Removing the existing container: ipfs-integration"
+         docker rm ipfs-integration
+      fi
+
+      echo "Starting a new container: ipfs-integration"
+      docker run -d --name ipfs-integration -v $INTEGRATION_INPUT_DATA_CACHE:/outputs ipfs/go-ipfs
+    EOF
+    delete = ""
+  }
+  depends_on = [
+    shell_script.delete_cats_k8s,
+    shell_script.pull_ipfs_image,
+    shell_script.setup_ipfs_migration
+  ]
+}
 
 provider "kind" {
   # Configuration options
@@ -127,7 +132,8 @@ resource "kind_cluster" "default" {
   wait_for_ready = "true"
   depends_on = [
     shell_script.delete_cats_k8s,
-#    shell_script.setup_ipfs_migration
+    shell_script.setup_ipfs_migration,
+    shell_script.destroy_ipfs_integration
   ]
 }
 

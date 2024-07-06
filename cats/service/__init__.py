@@ -68,6 +68,8 @@ class Service:
         Path(self.CACHE_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.OUTPUT_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
+        Path(self.INTEGRATION_INPUT_DATA_CACHE).mkdir(parents=True, exist_ok=True)
         # Path(self.OUTPUT_DATA_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_PLANT_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_DATA_HOME).mkdir(parents=True, exist_ok=True)

@@ -35,7 +35,8 @@ class Executor:
 
         Path(self.service.INGRESS_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.service.INTEGRATION_HOME).mkdir(parents=True, exist_ok=True)
-        Path(self.service.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
+        # Path(self.service.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
+        # Path(self.service.INTEGRATION_INPUT_DATA_CACHE).mkdir(parents=True, exist_ok=True)
         Path(self.service.EGRESS_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.service.EGRESS_INPUT_DATA).mkdir(parents=True, exist_ok=True)
         Path(self.service.PROCESS_HOME).mkdir(parents=True, exist_ok=True)

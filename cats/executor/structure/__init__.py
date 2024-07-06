@@ -1,3 +1,6 @@
+import os
+
+
 class Plant:
     def __init__(self, service):
         self.service = service
@@ -12,6 +15,18 @@ class InfraStructure:
         self.service = service
         self.INPUT_PLANT_HOME = self.service.INPUT_PLANT_HOME
         self.initialize()
+        os.environ["INTEGRATION_INPUT_DATA_CACHE"] = self.service.INTEGRATION_INPUT_DATA_CACHE
+        print(
+            f"Environment variable INTEGRATION_INPUT_DATA_CACHE is set to:",
+            os.environ["INTEGRATION_INPUT_DATA_CACHE"]
+        )
+        print('Initialize Structure!')
+        self.service.executeCMD(
+            'terraform init',
+            cwd=self.INPUT_PLANT_HOME
+        )
+        print()
+        print()
 
     def destroy(self):
         print('Destroy Structure!')

@@ -1,4 +1,5 @@
 import json, pickle
+from pathlib import Path
 from pprint import pprint
 
 from cats.utils import wait_for_directory
@@ -24,9 +25,13 @@ class Processor:
     def Integration(self):
         self.infraFunction.service.INTEGRATION_HOME = \
             self.infraFunction.service.meshClient.INTEGRATION_HOME + "/outputs"
+        # Path(self.infraFunction.service.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
+        # Path(self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE).mkdir(parents=True, exist_ok=True)
         self.infraFunction.integration_cache_subproc(
             input_dir_cid=self.infraFunction.service.INGRESS_DATA_HOME,
-            v_output_dir=self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE
+            cwd=self.infraFunction.service.INTEGRATION_INPUT_CACHE
+            # cwd=self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE
+            # v_output_dir=self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE
         )
         wait_for_directory(self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE, check_interval=1)
         self.infraFunction.integrated_subproc(
@@ -36,6 +41,11 @@ class Processor:
         wait_for_directory(self.infraFunction.service.INTEGRATION_HOME, check_interval=1)
         self.integration_data_cid, _ = \
             self.infraFunction.service.meshClient.cidDir(self.infraFunction.service.INTEGRATION_HOME)
+        # print(self.infraFunction.service.INGRESS_DATA_HOME)
+        # print(self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE)
+        # print(self.infraFunction.service.INTEGRATION_HOME)
+        # print(self.integration_data_cid)
+        # exit()
         return self.integration_data_cid
 
     def Egress(self):

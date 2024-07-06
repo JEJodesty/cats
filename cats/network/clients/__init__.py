@@ -10,7 +10,19 @@ class ipfs:
         self.daemon_cmd = None
         self.proc = None
 
-    def start_daemon(self, daemon_cmd='ipfs daemon'):
+    def daemon(self, daemon_cmd='ipfs daemon'):
+        self.daemon_cmd = daemon_cmd
+        self.proc = subprocess.Popen(
+            self.daemon_cmd,
+            stdout=subprocess.PIPE,
+            shell=True,
+            universal_newlines=True,
+            cwd=self.cwd
+        )
+        print(self.proc.stdout)
+        return self.proc
+
+    def shutdown(self, daemon_cmd='ipfs shutdown'):
         self.daemon_cmd = daemon_cmd
         self.proc = subprocess.Popen(
             self.daemon_cmd,
