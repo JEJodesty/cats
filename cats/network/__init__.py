@@ -157,9 +157,10 @@ class MeshClient(CoD):
         order['endpoint'] = 'http://127.0.0.1:5000/cat/node/init'
 
         order_request = {'order_cid': self.ipfsClient.add_str(json.dumps(order))}
-        return self.order_request
+        return order_request
 
     def cidDir(self, filepath: str):
+        # print(filepath)
         name = filepath.split('/')[-1]
         dir = self.ipfsClient.add(filepath, recursive=True)
         if type(dir) is list:

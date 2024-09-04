@@ -10,7 +10,7 @@ terraform {
     }
     kind = {
       source = "tehcyx/kind"
-      version = "0.2.0"
+      version = "0.5.1"
     }
     local = {}
   }
@@ -128,7 +128,7 @@ provider "kind" {
 
 resource "kind_cluster" "default" {
   name = "cat-action-plane"
-  node_image = "kindest/node:v1.23.0"
+  node_image = "kindest/node:v1.26.0"
   wait_for_ready = "true"
   depends_on = [
     shell_script.delete_cats_k8s,
@@ -165,7 +165,7 @@ resource "helm_release" "kuberay-operator" {
   name       = "kuberay-operator"
   repository = "https://ray-project.github.io/kuberay-helm/"
   chart      = "kuberay-operator"
-  version    = "1.0.0"
+  version    = "1.1.1"
   wait_for_jobs = "true"
   depends_on = [
     kind_cluster.default
@@ -176,13 +176,13 @@ resource "helm_release" "ray-cluster" {
   name       = "raycluster"
   repository = "https://ray-project.github.io/kuberay-helm/"
   chart      = "ray-cluster"
-  version    = "0.6.0"
+  version    = "1.1.1"
   wait_for_jobs = "true"
-#  set {
-#    name  = "image.tag"
-#    value = "nightly-aarch64"
-#    type  = "string"
-#  }
+  set {
+    name  = "image.tag"
+    value = "2.9.0-aarch64"
+    type  = "string"
+  }
   depends_on = [
     kind_cluster.default,
     helm_release.kuberay-operator

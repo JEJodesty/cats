@@ -209,7 +209,7 @@ class CoD:
             return ""
         r = json.loads(result)
         # print(r["Job"]["State"]["StateType"])
-        # exit()
+        #
         if len(r) > 0:
             return r["Job"]["State"]["StateType"]
             # return r[0]["Job"]["State"]["StateType"]
