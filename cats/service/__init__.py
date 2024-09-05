@@ -18,12 +18,16 @@ class Service:
 
         self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID'),
         self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-        self.S3_CLIENT = boto3.client(
-            's3',
-            region_name='us-east-2',
-            aws_access_key_id=self.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY
-        )
+        self.S3_CLIENT = None
+        try:
+            self.S3_CLIENT = boto3.client(
+                's3',
+                region_name='us-east-2',
+                aws_access_key_id=self.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=self.AWS_SECRET_ACCESS_KEY
+            )
+        except:
+            self.S3_CLIENT = None
         self.CATS_HOME = self.meshClient.CATS_HOME = CATS_HOME
         self.DATA_HOME = self.meshClient.DATA_HOME = self.CATS_HOME + '/data'
         self.JOB_HOME = self.meshClient.JOB_HOME = self.DATA_HOME + '/jobs'

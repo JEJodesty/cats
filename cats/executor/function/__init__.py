@@ -60,8 +60,11 @@ class Processor:
 
     def process(self):
         print("CAT Executing")
+        print("CAT Ingress")
         self.ingress_data_cid = self.Ingress()
+        print("CAT Integration")
         self.integration_data_cid = self.Integration()
+        print("CAT Egress")
         self.egress_data_cid = self.Egress()
         print("...")
         print(self.ingress_data_cid)
