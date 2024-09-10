@@ -266,7 +266,10 @@ class MeshClient(CoD):
         init_bom_json_cid = self.ipfsClient.add_json(init_bom)
         return init_bom_json_cid
 
-    def initBOMcar(self, structure_cid: str, structure_filepath: str, function_cid: str, init_data_cid: str, init_bom_filename: str, seed_cid=None):
+    def initBOMcar(self,
+            structure_cid: str, structure_filepath: str, function_cid: str, init_data_cid: str,
+            init_bom_filename: str, seed_cid=None
+        ):
         init_bom_json_cid = self.initBOMjson(structure_cid, structure_filepath, function_cid, init_data_cid)
         car_bom_cid, init_bom_json_cid = self.convertBOMtoCAR(init_bom_json_cid, init_bom_filename)
         return car_bom_cid, init_bom_json_cid

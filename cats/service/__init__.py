@@ -16,10 +16,12 @@ class Service:
         self.meshClient: MeshClient = meshClient
         self.kubeService: KubeService = KubeService
 
-        self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID'),
-        self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+        self.AWS_ACCESS_KEY_ID = None
+        self.AWS_SECRET_ACCESS_KEY = None
         self.S3_CLIENT = None
         try:
+            self.AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+            self.AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
             self.S3_CLIENT = boto3.client(
                 's3',
                 region_name='us-east-2',

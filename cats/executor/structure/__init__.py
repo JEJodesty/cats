@@ -20,13 +20,6 @@ class InfraStructure:
             f"Environment variable INTEGRATION_INPUT_DATA_CACHE is set to:",
             os.environ["INTEGRATION_INPUT_DATA_CACHE"]
         )
-        # print('Initialize Structure!')
-        # self.service.executeCMD(
-        #     'terraform init',
-        #     cwd=self.INPUT_STRUCTURE_HOME
-        # )
-        # print()
-        # print()
 
     def destroy(self):
         print('Destroy Structure!')

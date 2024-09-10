@@ -1,5 +1,4 @@
 import logging, json, traceback
-from pprint import pprint
 
 from flask import Flask, request, jsonify
 from cats import SERVICE
