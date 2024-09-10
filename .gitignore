@@ -29,3 +29,4 @@ cats/*/new.py
 offline
 data/input/.terraform/
 data/input/plant/.terraform/
+data/input/structure/.terraform
