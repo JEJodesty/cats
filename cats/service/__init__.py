@@ -35,7 +35,8 @@ class Service:
         self.INPUT_HOME = self.meshClient.INPUT_HOME = self.DATA_HOME + '/input'
         self.OUTPUT_HOME = self.meshClient.OUTPUT_HOME = self.DATA_HOME + '/output'
         self.OUTPUT_DATA_HOME = self.meshClient.OUTPUT_DATA_HOME = self.OUTPUT_HOME + '/data'
-        self.INPUT_PLANT_HOME = self.meshClient.INPUT_PLANT_HOME = self.INPUT_HOME + '/plant'
+        self.INPUT_STRUCTURE_HOME = self.meshClient.INPUT_STRUCTURE_HOME = self.INPUT_HOME + '/structure'
+        # self.INPUT_STRUCTURE_HOME = self.meshClient.INPUT_STRUCTURE_HOME = self.INPUT_HOME + '/plant'
         self.INPUT_DATA_HOME = self.meshClient.INPUT_DATA_HOME = self.INPUT_HOME + '/data'
         self.INTEGRATION_INPUT_CACHE = self.meshClient.INTEGRATION_INPUT_CACHE = \
             f"{self.CACHE_HOME}/integration"
@@ -75,7 +76,7 @@ class Service:
         Path(self.INTEGRATION_INPUT_CACHE).mkdir(parents=True, exist_ok=True)
         Path(self.INTEGRATION_INPUT_DATA_CACHE).mkdir(parents=True, exist_ok=True)
         # Path(self.OUTPUT_DATA_HOME).mkdir(parents=True, exist_ok=True)
-        Path(self.INPUT_PLANT_HOME).mkdir(parents=True, exist_ok=True)
+        Path(self.INPUT_STRUCTURE_HOME).mkdir(parents=True, exist_ok=True)
         Path(self.INPUT_DATA_HOME).mkdir(parents=True, exist_ok=True)
 
     def initFactory(self, order_request, ipfs_uri):

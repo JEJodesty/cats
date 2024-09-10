@@ -16,7 +16,7 @@ class MeshClient(CoD):
         self.INPUT_HOME = None
         self.OUTPUT_HOME = None
         self.OUTPUT_DATA_HOME = None
-        self.INPUT_PLANT_HOME = None
+        self.INPUT_STRUCTURE_HOME = None
         self.INPUT_DATA_HOME = None
         if CATS_HOME is not None:
             self.catStore(CATS_HOME)
