@@ -2,18 +2,26 @@
 ![alt_text](images/CATs_chaordic_kernel.jpeg)
 
 ## Description:
-**Content-Addressable Transformers** (**CATs**) is a unified Data Service Collaboration framework for organizations. 
-CATs connect collaborators between organizations on a Data Mesh with interoperable parallelized and distributed 
-computing at horizontal & vertical scale. CATs' establish a scalable and self-serviced Data Platform as a Data Mesh 
-network of scalable and interoperable distributed computing workloads with Data Provenance deployable on Kubernetes. 
-These workloads [CAT(s)] enable for Big Data processing with Scientific Computing capabilities. CATs are integration 
+**Content-Addressable Transformers** (**CATs**) is a unified Data Service Collaboration framework for organizations 
+implemented as an edge-computing service that establish a Data Mesh as a scalable self-serviced Data Platform of 
+Data Products with Data Provenance. CATs connect collaborators between organizations on a Data Mesh via the 
+Content-Addressed Storage(CAS) of interoperable and scalable data processing to enable Data Provenance. CAT data 
+processing workloads (CATs) are deployable as parallelized and distributed processes at horizontal & vertical scale to 
+support scalable (big) data processing microservices with Scientific Computing capabilities. CATs are also integration 
 points which enable scaled data processing portability between client-server cloud platforms and mesh (p2p) networks 
-with minimal rework or modification. 
+with minimal rework or modification.
+
+CATs are submitted as content-addressed Orders of data processes (transformers) which are Invoiced for verification and 
+logged as Bills-Of-Materials that serve as Data Provenance records. These records are content-addressed as unique 
+identifiers of CAT workloads and their content. CATs content-addresses are also used as URIs that provide a means of 
+data transportation. Therefore, the implementation of CATs' as content-addressed data processes establishes and 
+self-services a scalable Data Platform as a Data Mesh network of interoperable distributed computing workloads 
+deployable on Kubernetes as CATs execution paradigm. 
 
 CATs enables the 
 [continuous reification of **Data Initiatives**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
-by cataloging discoverable, accessable, and re-executable workloads as 
- [**Data Service Collaboration**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
+by cataloging discoverable, accessible, and re-executable workloads as 
+[**Data Service Collaboration**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
 composable records between organizations. These records provide a reliable and efficient way to manage, share, and 
 reference data processes via [**Content-Addressing**](https://en.wikipedia.org/wiki/Content-addressable_storage) Data 
 Provenance records.
@@ -34,12 +42,12 @@ Machine Learning, and AI. Ray provides CATs with interoperable computing framewo
 [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as 
 [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/).
 
-Ray is deployed as an execution middleware on top of [Bacalhau’s](https://www.bacalhau.org/) [Compute Over Data (CoD)](https://github.com/bacalhau-project/bacalhau). 
-CoD enables IPFS to serve as CATs' Data Mesh's network layer to provide parallelized data ingress and egress for IPFS 
-data. This portability closes the gap between data analysis and business operations by connecting the network planes of 
-the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs connect these network planes by enabling the instantiation of 
-FaaS with cloud services in AWS, GCP, Azure, etc. on a **Data Mesh** network of CATs. CoD enables this connection as p2p 
-distributed-computing job submission in addition to the client-server job submission provided by Ray.
+Ray is deployed as an execution middleware on Kubernetes. IPFS serves as CATs' Data Mesh's network layer to provide 
+parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and 
+business operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs 
+connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a 
+**Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to 
+the client-server job submission provided by Ray.
 ![alt_text](images/simple_CAT2b.jpeg)
 
 ### Get Started!:
