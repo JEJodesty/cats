@@ -1,6 +1,6 @@
 # install
 # kubectl, helm
-# SDKs: ipfs, cod, terraform
+# SDKs: ipfs, cod
 
 terraform {
   required_providers {
@@ -16,29 +16,18 @@ terraform {
   }
 }
 
-#variable "KUBE_CONFIG_PATH" {
-#  type = string
-#}
+locals {
+#  KUBE_CONFIG_PATH = pathexpand(var.KUBE_CONFIG_PATH)
+  k8s_config_path = pathexpand("~/.kube/config")
+}
 
 
 provider "shell" {
   sensitive_environment = {
-    #    KUBE_CONFIG_PATH = var.KUBE_CONFIG_PATH
-    KUBE_CONFIG_PATH = "~/.kube/config"
+    KUBE_CONFIG_PATH = local.k8s_config_path
   }
   interpreter        = ["/bin/sh", "-c"]
   enable_parallelism = false
-}
-
-# InfraStructure cleanup
-resource "shell_script" "delete_cats_k8s" {
-  lifecycle_commands {
-    create = <<-EOF
-      cd ~/Projects/cats-research
-      kind delete cluster --name cat-action-plane
-    EOF
-    delete = ""
-  }
 }
 
 #resource "shell_script" "set_bsd_udp_buffer_size_for_go" {
@@ -63,9 +52,6 @@ resource "shell_script" "pull_ipfs_image" {
     EOF
     delete = ""
   }
-  depends_on = [
-    shell_script.delete_cats_k8s
-  ]
 }
 
 resource "shell_script" "setup_ipfs_migration" {
@@ -89,7 +75,6 @@ resource "shell_script" "setup_ipfs_migration" {
     delete = ""
   }
   depends_on = [
-    shell_script.delete_cats_k8s,
     shell_script.pull_ipfs_image
   ]
 }
@@ -116,7 +101,6 @@ resource "shell_script" "destroy_ipfs_integration" {
     delete = ""
   }
   depends_on = [
-    shell_script.delete_cats_k8s,
     shell_script.pull_ipfs_image,
     shell_script.setup_ipfs_migration
   ]
@@ -128,31 +112,14 @@ provider "kind" {
 
 resource "kind_cluster" "default" {
   name = "cat-action-plane"
+  kubeconfig_path = local.k8s_config_path
   node_image = "kindest/node:v1.26.0"
   wait_for_ready = "true"
   depends_on = [
-    shell_script.delete_cats_k8s,
     shell_script.setup_ipfs_migration,
     shell_script.destroy_ipfs_integration
   ]
 }
-
-#resource "shell_script" "setup_helm" {
-#  lifecycle_commands {
-#    create = <<-EOF
-#      cd ~/Projects/cats-research
-#      if ! command -v helm &> /dev/null;
-#      then
-#          sudo curl -sL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-#      fi
-#    EOF
-#    delete = ""
-#  }
-#  depends_on = [
-#    kind_cluster.default,
-#    shell_script.delete_cats_k8s
-#  ]
-#}
 
 provider "helm" {
   kubernetes {
