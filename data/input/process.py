@@ -79,7 +79,7 @@ def egress(input_dir_cid):
 
 # run_integration_container = lambda v_output_dir: f"""
 # if [ ! "$(docker ps -q -f name=ipfs-integration)" ]; then
-#   # Check if the container exists but is not running
+#   # Check if the container exists bu`````t is not running
 #   if [ "$(docker ps -aq -f status=exited -f name=ipfs-integration)" ]; then
 #       # Cleanup
 #       docker stop ipfs-integration

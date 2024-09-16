@@ -1,6 +1,6 @@
 # install
-# kubectl, helm
-# SDKs: ipfs, cod, terraform
+# kubectl
+# SDKs: ipfs, cod
 
 terraform {
   required_providers {
@@ -12,114 +12,49 @@ terraform {
       source = "tehcyx/kind"
       version = "0.5.1"
     }
+    docker = {
+      source  = "kreuzwerker/docker"
+      version = "3.0.2"
+    }
     local = {}
   }
 }
 
-#variable "KUBE_CONFIG_PATH" {
-#  type = string
-#}
+locals {
+#  KUBE_CONFIG_PATH = pathexpand(var.KUBE_CONFIG_PATH)
+  k8s_config_path = pathexpand("~/.kube/config")
+  integration_mount_path = pathexpand("$INTEGRATION_INPUT_DATA_CACHE:/outputs")
+}
 
 
 provider "shell" {
   sensitive_environment = {
-    #    KUBE_CONFIG_PATH = var.KUBE_CONFIG_PATH
-    KUBE_CONFIG_PATH = "~/.kube/config"
+    KUBE_CONFIG_PATH = local.k8s_config_path
   }
   interpreter        = ["/bin/sh", "-c"]
   enable_parallelism = false
 }
 
-# InfraStructure cleanup
-resource "shell_script" "delete_cats_k8s" {
-  lifecycle_commands {
-    create = <<-EOF
-      cd ~/Projects/cats-research
-      kind delete cluster --name cat-action-plane
-    EOF
-    delete = ""
-  }
+provider "docker" {
+  host = "unix:///var/run/docker.sock"
 }
 
-#resource "shell_script" "set_bsd_udp_buffer_size_for_go" {
-#  lifecycle_commands {
-#    create = <<-EOF
-#      cd ~/Projects/cats-research
-#      # https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
-#      sudo sysctl -w net.core.wmem_max=7500000
-#      sudo sysctl -w net.core.rmem_max=7500000
-#    EOF
-#    delete = ""
-#  }
-#  depends_on = [
-#    shell_script.delete_cats_k8s
-#  ]
-#}
-
-resource "shell_script" "pull_ipfs_image" {
-  lifecycle_commands {
-    create = <<-EOF
-      docker pull ipfs/go-ipfs
-    EOF
-    delete = ""
-  }
-  depends_on = [
-    shell_script.delete_cats_k8s
-  ]
+resource "docker_image" "go-ipfs" {
+  name = "ipfs/go-ipfs:latest"
 }
 
-resource "shell_script" "setup_ipfs_migration" {
-  lifecycle_commands {
-    create = <<-EOF
-      # Check if the container is running
-      if [ "$(docker ps -q -f name=ipfs-migration)" ]; then
-         echo "Stopping the running container: ipfs-migration"
-         docker stop ipfs-migration
-      fi
-
-      # Check if the container exists (but is not running)
-      if [ "$(docker ps -aq -f name=ipfs-migration)" ]; then
-         echo "Removing the existing container: ipfs-migration"
-         docker rm ipfs-migration
-      fi
-
-      echo "Starting a new container: ipfs-migration"
-      docker run -d --name ipfs-migration ipfs/go-ipfs
-    EOF
-    delete = ""
-  }
-  depends_on = [
-    shell_script.delete_cats_k8s,
-    shell_script.pull_ipfs_image
-  ]
+# Create a container
+resource "docker_container" "ipfs-migration" {
+  image = docker_image.go-ipfs.image_id
+  name  = "ipfs-migration"
 }
 
-
-resource "shell_script" "destroy_ipfs_integration" {
-  lifecycle_commands {
-    create = <<-EOF
-      # Check if the container is running
-      if [ "$(docker ps -q -f name=ipfs-integration)" ]; then
-         echo "Stopping the running container: ipfs-integration"
-         docker stop ipfs-integration
-      fi
-
-      # Check if the container exists (but is not running)
-      if [ "$(docker ps -aq -f name=ipfs-integration)" ]; then
-         echo "Removing the existing container: ipfs-integration"
-         docker rm ipfs-integration
-      fi
-
-      echo "Starting a new container: ipfs-integration"
-      docker run -d --name ipfs-integration -v $INTEGRATION_INPUT_DATA_CACHE:/outputs ipfs/go-ipfs
-    EOF
-    delete = ""
+resource "docker_container" "ipfs-integration" {
+  image = docker_image.go-ipfs.image_id
+  name  = "ipfs-integration"
+  volumes {
+    container_path = local.integration_mount_path
   }
-  depends_on = [
-    shell_script.delete_cats_k8s,
-    shell_script.pull_ipfs_image,
-    shell_script.setup_ipfs_migration
-  ]
 }
 
 provider "kind" {
@@ -128,31 +63,14 @@ provider "kind" {
 
 resource "kind_cluster" "default" {
   name = "cat-action-plane"
+  kubeconfig_path = local.k8s_config_path
   node_image = "kindest/node:v1.26.0"
   wait_for_ready = "true"
   depends_on = [
-    shell_script.delete_cats_k8s,
-    shell_script.setup_ipfs_migration,
-    shell_script.destroy_ipfs_integration
+    docker_container.ipfs-migration,
+    docker_container.ipfs-integration
   ]
 }
-
-#resource "shell_script" "setup_helm" {
-#  lifecycle_commands {
-#    create = <<-EOF
-#      cd ~/Projects/cats-research
-#      if ! command -v helm &> /dev/null;
-#      then
-#          sudo curl -sL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
-#      fi
-#    EOF
-#    delete = ""
-#  }
-#  depends_on = [
-#    kind_cluster.default,
-#    shell_script.delete_cats_k8s
-#  ]
-#}
 
 provider "helm" {
   kubernetes {
