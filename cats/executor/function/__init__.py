@@ -1,7 +1,4 @@
 import json, pickle
-from pathlib import Path
-from pprint import pprint
-
 from cats.utils import wait_for_directory
 
 
@@ -94,5 +91,3 @@ class InfraFunction:
 
     def compose(self):
         return Processor(self)
-
-

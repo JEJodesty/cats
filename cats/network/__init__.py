@@ -1,4 +1,5 @@
 import json, subprocess
+import os
 from copy import copy, deepcopy
 from pprint import pprint
 import pickle
@@ -291,6 +292,14 @@ class MeshClient(CoD):
             cwd=output
         )
         return filepath
+
+    def testGet(self, cid: str, output: str):
+        subprocess.check_output(
+            f"ipfs get {cid} --output {output} --progress=true && echo 'IPFS download of {output} completed successfully.' || echo 'IPFS download of {cid} failed.'",
+            stderr=subprocess.STDOUT,
+            shell=True,
+            cwd=output
+        )
 
     def cat(self, cid: str):
         return subprocess.check_output(['ipfs', 'cat', cid]).decode()

@@ -1,4 +1,5 @@
 import subprocess
+import time
 from typing import Dict
 import numpy as np
 import ray
@@ -7,44 +8,17 @@ import ray
 def docker_ipfs_cmd(container, input_dir_cid, output_dir):
     return (
         f"docker exec {container} sh -c '"
-        f"ipfs get {input_dir_cid} -o {output_dir} && "
-        f"cd {output_dir} && "
+        f'ipfs get {input_dir_cid} -o {output_dir} && '
+        f'cd {output_dir} && '
         f"rm -f api config datastore_spec gateway repo.lock version && "
         f"ipfs add -r ."
         f"'"
     )
 
-# run_ipfs_container = lambda container: f"""
-# # Check if the container is running
-# if [ "$(docker ps -q -f name={container})" ]; then
-#     echo "Stopping the running container: {container}"
-#     docker stop {container}
-# fi
-#
-# # Check if the container exists (but is not running)
-# if [ "$(docker ps -aq -f name={container})" ]; then
-#     echo "Removing the existing container: {container}"
-#     docker rm {container}
-# fi
-#
-# echo "Starting a new container: {container}"
-# docker run -d --name {container} ipfs/go-ipfs
-# """
-#
-# start_ipfs_daemon = lambda container: f"docker exec {container} ipfs daemon &"
 
-
-# """
-# # Check if the new container is running
-# if [ "$(docker ps -q -f name={container})" ]; then
-#     echo "The container {container} is up and running."
-# else
-#     echo "Failed to start the container {container}."
-# fi
-# """
-
-
-def ipfs_migration(input_dir_cid, container='ipfs-migration', output_dir='/outputs/data'):
+def ipfs_migration(input_dir_cid, container='structure-ipfs_migration-1'):
+    unix_ts = int(time.time())
+    output_dir = f'/outputs/data_{unix_ts}'
     cmd = docker_ipfs_cmd(container, input_dir_cid, output_dir)
     try:
         # Execute the Docker command
@@ -52,7 +26,8 @@ def ipfs_migration(input_dir_cid, container='ipfs-migration', output_dir='/outpu
             cmd,
             shell=True,
             capture_output=True,
-            text=True
+            text=True,
+            cwd='/Users/joshua/Projects/cats/data/input/structure'
         )
 
         # Check if the command was successful
@@ -60,7 +35,8 @@ def ipfs_migration(input_dir_cid, container='ipfs-migration', output_dir='/outpu
             # Parse the output to get the CID
             output_lines = result.stdout.splitlines()
             for line in output_lines:
-                if line.startswith('added') and line.endswith('data'):
+                print(line)
+                if line.startswith('added') and line.endswith(f'data_{unix_ts}'):
                     # The CID is the second element in the space-separated line
                     cid = line.split()[1]
                     return cid
@@ -71,33 +47,19 @@ def ipfs_migration(input_dir_cid, container='ipfs-migration', output_dir='/outpu
     except Exception as e:
         return f"An error occurred: {str(e)}"
 
+
 def ingress(input_dir_cid):
     return ipfs_migration(input_dir_cid=input_dir_cid)
+
 
 def egress(input_dir_cid):
     return ipfs_migration(input_dir_cid=input_dir_cid)
 
-# run_integration_container = lambda v_output_dir: f"""
-# if [ ! "$(docker ps -q -f name=ipfs-integration)" ]; then
-#   # Check if the container exists bu`````t is not running
-#   if [ "$(docker ps -aq -f status=exited -f name=ipfs-integration)" ]; then
-#       # Cleanup
-#       docker stop ipfs-integration
-#       docker rm ipfs-integration
-#   fi
-#   # Run the container
-#   docker run -d --name ipfs-integration -v {v_output_dir}:/output ipfs/go-ipfs
-#   input_dir_cid, output_dir, container
-# else
-#   echo "ipfs-integration is already running."
-# fi
-# """
 
-
-def integration_cache(input_dir_cid: str, cwd: str): #, v_output_dir, output_dir='/output'):
+def integration_cache(input_dir_cid: str, cwd: str, container='structure-ipfs_integration-1'): #, v_output_dir, output_dir='/output'):
     print("Integration Cache:")
     exec_cmd = f"""
-    docker exec ipfs-integration \
+    docker exec {container} \
     sh -c 'ipfs get {input_dir_cid} -o outputs && rm -f api config datastore_spec gateway repo.lock version && chmod -R 777 .'
     """
     print(exec_cmd)
@@ -143,7 +105,7 @@ def function_1(batch: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
 
 
 def process_0(input, output):
-    ray.init()
+    ray.init(ignore_reinit_error=True)
     ds_in = ray.data.read_csv(input)
     print(ds_in.schema())
     print()
@@ -157,7 +119,7 @@ def process_0(input, output):
 
 
 def process_1(input, output):
-    ray.init()
+    ray.init(ignore_reinit_error=True)
     ds_in = ray.data.read_csv(input)
     print(ds_in.schema())
     print()

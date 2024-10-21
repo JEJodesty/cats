@@ -1,4 +1,6 @@
 import os, time, subprocess
+import shutil
+import stat
 
 
 class Text2Python:
@@ -87,6 +89,17 @@ def read_exit_code(file_path):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return None
+
+
+def remove_directory(dir_path):
+    if os.path.exists(dir_path):
+        try:
+            shutil.rmtree(dir_path)
+            print(f"Deleted: {dir_path}")
+        except Exception as e:
+            print(f"Error: {e}")
+    else:
+        print(f"Directory does not exist: {dir_path}")
 
 
 def wait_for_directory_to_be_populated(directory_path, check_interval=1, timeout=None):

@@ -11,6 +11,10 @@ terraform {
       source = "tehcyx/kind"
       version = "0.5.1"
     }
+    helm = {
+      source = "hashicorp/helm"
+      version = "2.15.0"
+    }
     docker = {
       source  = "kreuzwerker/docker"
       version = "3.0.2"
@@ -24,6 +28,7 @@ locals {
   k8s_config_path = pathexpand("~/.kube/config")
   integration_mount_path = pathexpand("$INTEGRATION_INPUT_DATA_CACHE:/outputs")
   docker_host = pathexpand("unix:///var/run/docker.sock")
+  ipfs_transport_compose = pathexpand("${path.module}/ipfs_transport_compose.yaml")
 }
 
 provider "shell" {
@@ -38,44 +43,35 @@ provider "docker" {
   host = local.docker_host
 }
 
+resource "shell_script" "docker_compose_ipfs_transport" {
+  lifecycle_commands {
+    create = <<-EOF
+      #!/bin/bash
+      docker-compose -f ${local.ipfs_transport_compose} up --scale ipfs_migration=1 --scale ipfs_integration=1 -d --wait
+    EOF
+    delete = ""
+  }
+}
+
 provider "kind" {
   # Configuration options
 }
 
-provider "helm" {
-  kubernetes {
-    config_context_cluster = "kind-cat-action-plane"
-    config_path = local.k8s_config_path
-  }
-}
-
-resource "docker_image" "go-ipfs" {
-  name = "ipfs/go-ipfs:latest"
-}
-
-# Create a container
-resource "docker_container" "ipfs-migration" {
-  image = docker_image.go-ipfs.image_id
-  name  = "ipfs-migration"
-}
-
-resource "docker_container" "ipfs-integration" {
-  image = docker_image.go-ipfs.image_id
-  name  = "ipfs-integration"
-  volumes {
-    container_path = local.integration_mount_path
-  }
-}
-
 resource "kind_cluster" "default" {
-  name = "cat-action-plane"
+  name = "cats"
   kubeconfig_path = local.k8s_config_path
   node_image = "kindest/node:v1.26.0"
   wait_for_ready = "true"
   depends_on = [
-    docker_container.ipfs-migration,
-    docker_container.ipfs-integration
+    shell_script.docker_compose_ipfs_transport
   ]
+}
+
+provider "helm" {
+  kubernetes {
+    config_context_cluster = "kind-cats"
+    config_path = local.k8s_config_path
+  }
 }
 
 resource "helm_release" "kuberay-operator" {

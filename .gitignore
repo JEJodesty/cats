@@ -22,7 +22,7 @@ invoice.json
 order.json
 cat-action-plane-config
 old/experiments/catMesh
-online
+data/online
 data/cache/
 data/jobs/
 cats/*/new.py

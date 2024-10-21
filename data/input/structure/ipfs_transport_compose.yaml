@@ -1,0 +1,9 @@
+services:
+  ipfs_migration:
+    image: ipfs/go-ipfs:latest
+    volumes:
+      - ./outputs:/outputs
+  ipfs_integration:
+    image: ipfs/go-ipfs:latest
+    volumes:
+      - ./outputs:/outputs
