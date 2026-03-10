@@ -1,0 +1,13 @@
+resource "shell_script" "set_bsd_udp_buffer_size_for_go" {
+  lifecycle_commands {
+    create = <<-EOF
+      cd ~/Projects/cats-research
+      # https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes
+      sudo sysctl -w net.core.wmem_max=7500000
+      sudo sysctl -w net.core.rmem_max=7500000
+    EOF
+    delete = ""
+  }
+  depends_on = [
+    shell_script.delete_cats_k8s
+  ]

@@ -1,8 +1,29 @@
 import os
+import ipfsapi as ipfsApi
 from os.path import dirname, abspath
 
-CATS_HOME = dirname(dirname(abspath(__file__)))
-DATA_HOME = CATS_HOME + '/data'
+from cats.network import MeshClient
+from cats.service import Service
+
 CWD = os.getcwd()
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+CATS_HOME = dirname(dirname(abspath(__file__)))
+MESH_CLIENT = MeshClient(
+    ipfsClient=ipfsApi.Client('127.0.0.1', 5001)
+)
+SERVICE = Service(
+    meshClient=MESH_CLIENT,
+    CATS_HOME=CATS_HOME
+)
+DATA_HOME = SERVICE.DATA_HOME
+JOB_HOME = SERVICE.JOB_HOME
+CACHE_HOME = SERVICE.CACHE_HOME
+INPUT_STRUCTURE_HOME = SERVICE.INPUT_STRUCTURE_HOME
+INPUT_DATA_HOME = SERVICE.INPUT_DATA_HOME
+OUTPUT_DATA_HOME = SERVICE.OUTPUT_DATA_HOME
+print(CATS_HOME)
+print(DATA_HOME)
+print(JOB_HOME)
+print(CACHE_HOME)
+print(INPUT_STRUCTURE_HOME)
+print(INPUT_DATA_HOME)
+print(OUTPUT_DATA_HOME)

@@ -24,11 +24,19 @@ Architectural Quantum in a way suitable for their roles using the CATs’ API to
 Data Mesh for a variety of use-cases. CAT’s Data Product teams can be multidisciplinary due to the fact they can operate 
 and maintain the different portions of the entire Web2 cloud service model based on role.
 
-For example:
-* An **Analyst** or **Data Scientist** will use CATs Process interface deployed as FaaS for Analytical Data transformation
-* A **Backend** or **ML-Engineer** implementing a CAT application as SaaS for a Data Scientist to execute machine 
-learning models / pipelines on a cloud managed Kubernetes PaaS as opposed to a machine learning handoff deployment.
-* An **Infrastructure Engineer** would use the Terraform to deploy multi-cloud IaaS for a CAT to be deployed by the 
-Backend or ML-Engineer
+### Data Product Team Example:
+* Applied discipline for **Functions (FaaS)**
+  * **Data Science** involves exploratory data analysis (EDA), data cleaning and visualization, and 
+  predictive modeling / machine learning to inform Control Plane decisions and strategies. 
+  * **Machine Learning Engineering** involves the development, training, performance optimizing, and deployment of machine 
+  learning models as scalable **Integration** sub-Processes (FaaS) orchestrated by InfraFunction (FaaS). 
+  * **Data Analysis** involves the composition of Data Product’s InfraFunctions as data processing language (integration).
+  * The CAT Order is updated with the inclusion of resulting mutated Functions (FaaS) for execution processed by CATs 
+  Factory Client.
+* Applied discipline for **Structure (PaaS** as **IaC)**
+  * **Data Platform / Cloud / Infrastructure Engineering** involves the design and IaC development, and automation of the 
+  provisioning and management of Structure (PaaS) executing Function. This is accomplished using IaC to provision 
+  InfraStructure (IaaS) as the execution paradigm of the Plant (SaaS) as well as contributing to InfraFunctions’ 
+  (FaaS) execution configurations of Plant (SaaS) operations.
 
 ### [**Orginizational Value**](./ORG.md)

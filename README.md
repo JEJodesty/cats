@@ -2,18 +2,26 @@
 ![alt_text](images/CATs_chaordic_kernel.jpeg)
 
 ## Description:
-**Content-Addressable Transformers** (**CATs**) is a unified Data Service Collaboration framework for organizations. 
-CATs connect collaborators between organizations on a Data Mesh with interoperable parallelized and distributed 
-computing at horizontal & vertical scale. CATs' establish a scalable and self-serviced Data Platform as a Data Mesh 
-network of scalable and interoperable distributed computing workloads with Data Provenance deployable on Kubernetes. 
-These workloads [CAT(s)] enable for Big Data processing with Scientific Computing capabilities. CATs are integration 
+**Content-Addressable Transformers** (**CATs**) is a unified Data Service Collaboration framework for organizations 
+implemented as an edge-computing service that establish a Data Mesh as a scalable self-serviced Data Platform of 
+Data Products with Data Provenance. CATs connect collaborators between organizations on a Data Mesh via the 
+Content-Addressed Storage(CAS) of interoperable and scalable data processing to enable Data Provenance. CAT data 
+processing workloads (CATs) are deployable as parallelized and distributed processes at horizontal & vertical scale to 
+support scalable (big) data processing microservices with Scientific Computing capabilities. CATs are also integration 
 points which enable scaled data processing portability between client-server cloud platforms and mesh (p2p) networks 
-with minimal rework or modification. 
+with minimal rework or modification.
+
+CATs are submitted as content-addressed Orders of data processes (transformers) which are Invoiced for verification and 
+logged as Bills-Of-Materials that serve as Data Provenance records. These records are content-addressed as unique 
+identifiers of CAT workloads and their content. CATs content-addresses are also used as URIs that provide a means of 
+data transportation. Therefore, the implementation of CATs' as content-addressed data processes establishes and 
+self-services a scalable Data Platform as a Data Mesh network of interoperable distributed computing workloads 
+deployable on Kubernetes as CATs execution paradigm. 
 
 CATs enables the 
 [continuous reification of **Data Initiatives**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
-by cataloging discoverable, accessable, and re-executable workloads as 
- [**Data Service Collaboration**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
+by cataloging discoverable, accessible, and re-executable workloads as 
+[**Data Service Collaboration**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
 composable records between organizations. These records provide a reliable and efficient way to manage, share, and 
 reference data processes via [**Content-Addressing**](https://en.wikipedia.org/wiki/Content-addressable_storage) Data 
 Provenance records.
@@ -34,12 +42,12 @@ Machine Learning, and AI. Ray provides CATs with interoperable computing framewo
 [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as 
 [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/).
 
-Ray is deployed as an execution middleware on top of [Bacalhau’s](https://www.bacalhau.org/) [Compute Over Data (CoD)](https://github.com/bacalhau-project/bacalhau). 
-CoD enables IPFS to serve as CATs' Data Mesh's network layer to provide parallelized data ingress and egress for IPFS 
-data. This portability closes the gap between data analysis and business operations by connecting the network planes of 
-the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs connect these network planes by enabling the instantiation of 
-FaaS with cloud services in AWS, GCP, Azure, etc. on a **Data Mesh** network of CATs. CoD enables this connection as p2p 
-distributed-computing job submission in addition to the client-server job submission provided by Ray.
+Ray is deployed as an execution middleware on Kubernetes. IPFS serves as CATs' Data Mesh's network layer to provide 
+parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and 
+business operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs 
+connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a 
+**Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to 
+the client-server job submission provided by Ray.
 ![alt_text](images/simple_CAT2b.jpeg)
 
 ### Get Started!:
@@ -59,19 +67,45 @@ distributed-computing job submission in addition to the client-server job submis
 
 ### [Contribute!](docs/CONTRIBUTING.md)
 
+### Continuous Data Initiative Reification:
+**Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be 
+compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate 
+CATs provenance records within feedback loops of Data Initiatives.
+![alt_text](images/CATs_bom_ag.jpeg)
+
 ### CATs' Architectural Quantum:
 Organizations and collaborators participating will employ CATs for rapid ratification of service agreements within 
 collaborative feedback loops of [**Data Initiatives**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative). 
 CATs' apply an **Architectural Quantum** Domain-Driven Design principle described in 
 [**Data Mesh of Data Products**](https://martinfowler.com/articles/data-mesh-principles.html) to reify Data Initiatives.
 (* [**Design Description**](docs/DESIGN.md))
+
+The Action Plane is the Analytical Data Processing interface. The Action Plane orchestrates and supervises 
+how virtual resources owned by the Data Product should be managed, routed, and processed and is stored “offmesh” 
+(“offline”). It supervises the exchange of data between sub-Process components within the Data sub-Plane (Process) in 
+adherence to Data Contracting Standards of organizations participating in a Data Mesh.
 ![alt_text](images/CATkernel.jpeg)
 
-### Continuous Data Initiative Reification:
-**Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be 
-compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate 
-CATs provenance records within feedback loops of Data Initiatives.
-![alt_text](images/CATs_bom_ag.jpeg)
+#### Quantum Architecture Description as a [Minimal Federated Operating Model](https://www.starburst.io/blog/data-mesh-book-bulletin-principle-of-federated-computational-governance/)
+* **Function** is a FaaS for scalable Data Processing and analytics executed as CAT **Processes**. Functions (FaaS) are deployed 
+on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS) 
+  * **Processes** are **Functional Data Processors** executable by InfraFunctions (FaaS) deployed on Structure (PaaS), and 
+  contextualized with pre and post processed data by InfraFunctions (FaaS). Processes (FaaS) are executed with and made 
+  orchestratable by InfraFunctions (FaaS) to support the following use-cases
+    * The CAT Order is updated with the inclusion of resulting mutated Functions (FaaS) for execution processed by CATs 
+    Factory Client.
+  * **InfraFunction (FaaS) is a Data Processing orchestrator** that employs a CAR for the configurable execution of scalable 
+  **Process**ing operated by the Plant (SaaS)
+    * The CAT Order is updated in alignment CATs Architectural Quantum’s Functionality. This Order will include the 
+    resulting updated of Structure (PaaS) with respect to the updated Plant (SaaS) and an updated Function (FaaS) with 
+    updated Ingress and Egress subProcesses (FaaS)
+* **Structure** (**PaaS** as **IaC**) provisions and maintains the Plant (SaaS) as Function’s (FaaS) scalable execution environment. 
+  * The **Plant (SaaS)** is **InfraStructure’s (IaaS)** dynamically scaled execution environment of **Function (FaaS)** 
+  as an IaC plugin(s)
+    * The web application codebase is Content Addressed within CAT Orders as Data Contract metadata for Order registration. 
+  * **InfraStructure (IaaS)** supports the provisioning of dynamically scaled infrastructure for maintaining a Plant (SaaS).
+    * The CAT Order is updated in alignment with event-driven functionality and operations with the resulting mutation 
+    of Structure (PaaS).
 
 ### CATs' Data Provenance Record:
 **BOM (Bill of Materials)** are CATs' Content-Addressed Data Provenance record for verifiable data processing and 
