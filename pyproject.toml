@@ -20,7 +20,7 @@ include = ["cats"]
 name = "cats"
 version = "0.0.0"
 authors = [
-  { name="Joshua E. Jodesty", email="joshua@block.science"},
+  { name="Joshua E. Jodesty", email="joshua@dynamicalsystemsgroup.com"},
 ]
 description = "CATs"
 readme = "README.md"
@@ -32,5 +32,5 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/BlockScience/cats"
-Issues = "https://github.com/BlockScience/cats/issues"
+Homepage = "https://github.com/DynamicalSystemsGroup/cats"
+Issues = "https://github.com/DynamicalSystemsGroup/cats/issues"

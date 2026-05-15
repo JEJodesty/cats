@@ -11,9 +11,9 @@ points which enable scaled data processing portability between client-server clo
 with minimal rework or modification. 
 
 CATs enables the 
-[continuous reification of **Data Initiatives**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
+[continuous reification of **Data Initiatives**](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
 by cataloging discoverable, accessable, and re-executable workloads as 
- [**Data Service Collaboration**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
+ [**Data Service Collaboration**](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification) 
 composable records between organizations. These records provide a reliable and efficient way to manage, share, and 
 reference data processes via [**Content-Addressing**](https://en.wikipedia.org/wiki/Content-addressable_storage) Data 
 Provenance records.
@@ -46,7 +46,7 @@ distributed-computing job submission in addition to the client-server job submis
 0. **Install [Dependencies](./docs/DEPS.md)**
 1. **Install CATs:**
     ```bash
-    git clone git@github.com:BlockScience/cats.git
+    git clone git@github.com:DynamicalSystemsGroup/cats.git
     cd cats
     # Optional: Create Virtual Environment
     # python -m venv ./venv
@@ -61,7 +61,7 @@ distributed-computing job submission in addition to the client-server job submis
 
 ### CATs' Architectural Quantum:
 Organizations and collaborators participating will employ CATs for rapid ratification of service agreements within 
-collaborative feedback loops of [**Data Initiatives**](https://github.com/BlockScience/cats?tab=readme-ov-file#continuous-data-initiative). 
+collaborative feedback loops of [**Data Initiatives**](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative). 
 CATs' apply an **Architectural Quantum** Domain-Driven Design principle described in 
 [**Data Mesh of Data Products**](https://martinfowler.com/articles/data-mesh-principles.html) to reify Data Initiatives.
 (* [**Design Description**](docs/DESIGN.md))
@@ -120,7 +120,7 @@ parallel execution of job tasks distributed to networked computers processing da
 components, and instructions required to construct, manufacture, or repair a product or service
 
 ### Image Citations:
-* **["Illustrated CAT"](https://github.com/BlockScience/cats#illustrated-cat)**
+* **["Illustrated CAT"](https://github.com/DynamicalSystemsGroup/cats#illustrated-cat)**
   * [Python logo](https://tse4.mm.bing.net/th?id=OIP.ubux1yLT726_fVc3A7WSXgHaHa&pid=Api)
   * [SQL logo](https://cdn3.iconfinder.com/data/icons/dompicon-glyph-file-format-2/256/file-sql-format-type-128.png)
   * [Terraform logo](https://tse2.mm.bing.net/th?id=OIP.1gAEVon2RF5oko4iWCfftgHaHO&pid=Api)

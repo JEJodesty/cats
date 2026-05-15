@@ -11,7 +11,7 @@ Research & Design:
 - Michael Zargham from 2016 to present
 
 Project Maintainers:
-- Joshua E. Jodesty <joshua@block.science>
+- Joshua E. Jodesty <joshua@dynamicalsystemsgroup.com>
 
 Original Contributors:
 - Joshua E. Jodesty

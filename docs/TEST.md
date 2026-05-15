@@ -1,5 +1,5 @@
 ## [Test(s)](../tests/verification_test.py):
-* **[Install CATs](https://github.com/BlockScience/cats/tree/cats2?tab=readme-ov-file#get-started)**
+* **[Install CATs](https://github.com/DynamicalSystemsGroup/cats/tree/cats2?tab=readme-ov-file#get-started)**
 * **[Create Virtual Environment](./ENV.md)**
 * **Activate Virtual Environment**
   ```bash
