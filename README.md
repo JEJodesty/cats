@@ -56,9 +56,8 @@ the client-server job submission provided by Ray.
     ```bash
     git clone git@github.com:BlockScience/cats.git
     cd cats
-    # Optional: Create Virtual Environment
-    # python -m venv ./venv
-    # source ./venv/bin/activate
+    python -m venv venv # Create Virtual Environment
+    source venv/bin/activate # Activate Virtual Environment
     python -m pip install --upgrade pip
     pip install dist/*.whl
     ```

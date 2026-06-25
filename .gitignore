@@ -30,3 +30,5 @@ offline
 data/input/.terraform/
 data/input/plant/.terraform/
 data/input/structure/.terraform
+data/input/structure/.terraform-data
+data/input/structure/providers

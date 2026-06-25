@@ -12,7 +12,13 @@
   # (venv) $
   PYTHONPATH=./ python cats/node.py
   ```
-* **Session 2**
+* **List Tests** without running them:
+  ```bash
+  # (venv) $
+  pytest --collect-only tests/verification_test.py
+  ```
+
+* **Session 2:** *Run All Tests*
   ```bash
   # (venv) $
   pytest -s tests/verification_test.py

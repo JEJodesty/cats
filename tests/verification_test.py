@@ -72,6 +72,10 @@ class catDataVerification:
         cat_invoiced_response = meshClient.catSubmit(cat_order_request)
         pprint(cat_invoiced_response)
         print()
+        if 'error' in cat_invoiced_response:
+            raise RuntimeError(
+                f"CAT node returned an error: {cat_invoiced_response['error']}"
+            )
         flat_cat_invoiced_response = meshClient.flatten_bom(cat_invoiced_response)
         pprint(flat_cat_invoiced_response)
         print()
