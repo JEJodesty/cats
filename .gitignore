@@ -25,6 +25,8 @@ old/experiments/catMesh
 data/online
 data/cache/
 data/jobs/
+data/testing/cat_*
+data/input/structure/outputs/**
 cats/*/new.py
 offline
 data/input/.terraform/
