@@ -1,9 +1,13 @@
 services:
   ipfs_migration:
-    image: ipfs/go-ipfs:latest
+    image: ipfs/kubo:release
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
-      - ./outputs:/outputs
+      - ${INTEGRATION_INPUT_DATA_CACHE:?INTEGRATION_INPUT_DATA_CACHE must be set}:/outputs
   ipfs_integration:
-    image: ipfs/go-ipfs:latest
+    image: ipfs/kubo:release
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
-      - ./outputs:/outputs
+      - ${INTEGRATION_INPUT_DATA_CACHE:?INTEGRATION_INPUT_DATA_CACHE must be set}:/outputs
