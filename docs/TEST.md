@@ -12,6 +12,13 @@
   # (venv) $
   PYTHONPATH=./ python cats/node.py
   ```
+* **Clean ephemeral test data** (recommended before every verification run and in CI):
+  ```bash
+  # (venv) $
+  ./scripts/clean-test-data.sh
+  ```
+  `pytest` also invokes this script via `tests/conftest.py` at session start and through a session autouse fixture.
+
 * **List Tests** without running them:
   ```bash
   # (venv) $
@@ -21,5 +28,6 @@
 * **Session 2:** *Run All Tests*
   ```bash
   # (venv) $
+  # ./scripts/clean-test-data.sh
   pytest -s tests/verification_test.py
   ```
