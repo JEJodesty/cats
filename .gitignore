@@ -22,8 +22,11 @@ invoice.json
 order.json
 cat-action-plane-config
 old/experiments/catMesh
+depricated
+docs/depricated
 data/online
 data/cache/
+data/deprecated/
 data/jobs/
 data/testing/cat_*
 data/input/structure/outputs/**
