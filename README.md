@@ -169,5 +169,6 @@ CATs was developed by the [Dynamical Systems Group (DSG)](https://github.com/Dyn
 - **Network Architecture & Verified Information Exchange:** 
   - [Michael Zargham (mzargham)](https://github.com/mzargham) 
   - [David Sisson](https://github.com/davidfsol5)
-- **Lead Distributed Systems Engineer / Solutions Architect:** [Joshua E. Jodesty](https://github.com/JEJodesty)
+- **Lead Solutions Architect & Developer / Distributed Systems Engineer** 
+  - [Joshua E. Jodesty](https://github.com/JEJodesty)
 - **Testing:** Danilo
