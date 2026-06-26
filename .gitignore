@@ -32,6 +32,7 @@ data/testing/cat_*
 data/input/structure/data/*
 data/input/structure/outputs/**
 data/input/structure/terraform.tfstate*
+data/input/structure/ipfs_cluster
 cats/*/new.py
 offline
 data/deprecated/
