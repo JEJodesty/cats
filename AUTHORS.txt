@@ -1,17 +1,21 @@
 Authors
 =======
 
-
-Implementation:
-- Joshua E. Jodesty from 2023 to present
-
-Research & Design:
-- Joshua E. Jodesty from 2020 to present
-- David Sisson from 2016 to present
-- Michael Zargham from 2016 to present
-
 Project Maintainers:
-- Joshua E. Jodesty <joshua@block.science>
+- Joshua E. Jodesty <joshua@dynamicalsystemsgroup.com> (https://github.com/JEJodesty)
 
 Original Contributors:
-- Joshua E. Jodesty
+- Research & Engineering:
+  - Network Architecture & Verified Information Exchange:
+    - David Sisson <david@dynamicalsystemsgroup.com> (https://github.com/davidfsol5)
+    - Michael Zargham <zargham@dynamicalsystemsgroup.com> (https://github.com/mzargham)
+  - Lead Solutions Architect / Distributed Systems Engineer:
+    - Joshua E. Jodesty <joshua@dynamicalsystemsgroup.com> (https://github.com/JEJodesty)
+
+Implementation / Developement:
+- Joshua E. Jodesty (https://github.com/JEJodesty) from 2023 to present
+
+Research & Design:
+- Joshua E. Jodesty (https://github.com/JEJodesty) from 2020 to present
+- David Sisson (https://github.com/mzargham) from 2016 to present
+- Michael Zargham (https://github.com/mzargham) from 2016 to present

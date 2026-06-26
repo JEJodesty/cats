@@ -1,5 +1,5 @@
 ## [Test(s)](../tests/verification_test.py):
-* **[Install CATs](https://github.com/BlockScience/cats/tree/cats2?tab=readme-ov-file#get-started)**
+* **[Install CATs](https://github.com/DynamicalSystemsGroup/cats/tree/cats2?tab=readme-ov-file#get-started)**
 * **[Create Virtual Environment](./ENV.md)**
 * **Activate Virtual Environment**
   ```bash
@@ -12,8 +12,22 @@
   # (venv) $
   PYTHONPATH=./ python cats/node.py
   ```
-* **Session 2**
+* **Clean ephemeral test data** (recommended before every verification run and in CI):
   ```bash
   # (venv) $
+  ./scripts/clean-test-data.sh
+  ```
+  `pytest` also invokes this script via `tests/conftest.py` at session start and through a session autouse fixture.
+
+* **List Tests** without running them:
+  ```bash
+  # (venv) $
+  pytest --collect-only tests/verification_test.py
+  ```
+
+* **Session 2:** *Run All Tests*
+  ```bash
+  # (venv) $
+  # ./scripts/clean-test-data.sh
   pytest -s tests/verification_test.py
   ```

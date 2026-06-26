@@ -48,10 +48,7 @@ class Executor:
 
         self.invoiceCID = self.enhanced_bom['invoice_cid']
         self.orderCID = self.enhanced_bom['invoice']['order_cid']
-        try:
-            self.structure.redeploy()
-        except:
-            self.structure.deploy()
+        self.structure.redeploy()
         self.ingress_job_id, self.integration_s3_output, self.egress_job_id = self.function.execute()
 
         self.enhanced_bom['function'] = json.loads(self.service.meshClient.cat(self.enhanced_bom['order']['function_cid']))

@@ -47,9 +47,16 @@ resource "shell_script" "docker_compose_ipfs_transport" {
   lifecycle_commands {
     create = <<-EOF
       #!/bin/bash
+      set -e
+      mkdir -p "$INTEGRATION_INPUT_DATA_CACHE"
+      export INTEGRATION_INPUT_DATA_CACHE="$(cd "$INTEGRATION_INPUT_DATA_CACHE" && pwd)"
       docker-compose -f ${local.ipfs_transport_compose} up --scale ipfs_migration=1 --scale ipfs_integration=1 -d --wait
+      bash ${path.module}/ipfs_connect_peers.sh
     EOF
-    delete = ""
+    delete = <<-EOF
+      #!/bin/bash
+      docker-compose -f ${local.ipfs_transport_compose} down || true
+    EOF
   }
 }
 

@@ -4,6 +4,11 @@ from pprint import pprint
 from cats.utils import subproc_run
 
 
+def _ipfs_is_running():
+    proc = subproc_run('ipfs id')
+    return proc.returncode == 0
+
+
 class ipfs:
     def __init__(self, cwd=None):
         self.cwd = cwd
@@ -11,27 +16,31 @@ class ipfs:
         self.proc = None
 
     def daemon(self, daemon_cmd='ipfs daemon'):
+        if _ipfs_is_running():
+            return None
         self.daemon_cmd = daemon_cmd
         self.proc = subprocess.Popen(
             self.daemon_cmd,
-            stdout=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             shell=True,
             universal_newlines=True,
             cwd=self.cwd
         )
-        print(self.proc.stdout)
         return self.proc
 
     def shutdown(self, daemon_cmd='ipfs shutdown'):
+        if not _ipfs_is_running():
+            return None
         self.daemon_cmd = daemon_cmd
         self.proc = subprocess.Popen(
             self.daemon_cmd,
-            stdout=subprocess.PIPE,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
             shell=True,
             universal_newlines=True,
             cwd=self.cwd
         )
-        print(self.proc.stdout)
         return self.proc
 
 

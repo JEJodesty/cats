@@ -1,4 +1,4 @@
-import json, pickle
+import json, os, pickle
 from cats.utils import wait_for_directory
 
 
@@ -13,8 +13,24 @@ class Processor:
         self.egress_data_cid = None
 
     def Ingress(self):
-        self.infraFunction.service.INGRESS_DATA_HOME = self.ingress_data_cid = \
-            self.infraFunction.ingress_subproc(input_dir_cid=self.ingress_input_data_cid)
+        ingress_result = self.infraFunction.ingress_subproc(
+            input_dir_cid=self.ingress_input_data_cid
+        )
+        if isinstance(ingress_result, tuple):
+            self.ingress_data_cid, ingress_data_dir = ingress_result
+        else:
+            self.ingress_data_cid = ingress_result
+            ingress_data_dir = None
+
+        self.infraFunction.service.INGRESS_DATA_HOME = self.ingress_data_cid
+        if ingress_data_dir:
+            self.infraFunction.service.INGRESS_DATA_PATH = os.path.join(
+                self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE,
+                ingress_data_dir,
+            )
+        else:
+            self.infraFunction.service.INGRESS_DATA_PATH = None
+
         self.infraFunction.service.INGRESS_JOB_STATUS = "Completed"
         self.infraFunction.service.INGRESS_EXIT_CODE = "0"
         return self.ingress_data_cid
@@ -30,9 +46,15 @@ class Processor:
             # cwd=self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE
             # v_output_dir=self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE
         )
-        wait_for_directory(self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE, check_interval=1)
+        process_input = self.infraFunction.service.INGRESS_DATA_PATH
+        if not process_input:
+            raise RuntimeError(
+                "INGRESS_DATA_PATH is unset; ingress must return (cid, data_dir) "
+                "so Ray reads only this run's ingress folder."
+            )
+        wait_for_directory(process_input, check_interval=1)
         self.infraFunction.integrated_subproc(
-            self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE,
+            process_input,
             self.infraFunction.service.INTEGRATION_HOME
         )
         wait_for_directory(self.infraFunction.service.INTEGRATION_HOME, check_interval=1)

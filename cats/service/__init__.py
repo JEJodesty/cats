@@ -52,6 +52,7 @@ class Service:
         self.CAT_HOME = None
         self.INGRESS_HOME = None
         self.INGRESS_DATA_HOME = None
+        self.INGRESS_DATA_PATH = None
         self.INGRESS_EXIT_CODE = None
         self.INGRESS_JOB_STATUS = None
         self.INTEGRATION_HOME = None
