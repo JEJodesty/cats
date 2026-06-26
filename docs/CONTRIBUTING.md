@@ -4,7 +4,7 @@ Contributions are made to this repo via Issues and Pull Requests (PRs). A few ge
 
 ### Issues
 Issues should be used to report problems with the package or discuss potential changes before a PR is created. Create a 
-new Issue using [templates](https://github.com/BlockScience/cats/issues/new/choose) to guide you through collecting and 
+new Issue using [templates](https://github.com/DynamicalSystemsGroup/cats/issues/new/choose) to guide you through collecting and 
 providing the information we need to investigate.
 
 If you find an Issue that addresses the problem you're having, please add your own reproduction information to the 
