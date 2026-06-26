@@ -12,6 +12,9 @@ version = "0.0.0"
 authors = [
   { name="Joshua E. Jodesty", email="joshua@dynamicalsystemsgroup.com"},
 ]
+maintainers = [
+  { name="Joshua E. Jodesty", email="joshua@dynamicalsystemsgroup.com"},
+]
 description = "CATs"
 readme = "README.md"
 requires-python = ">=3.10.13"
