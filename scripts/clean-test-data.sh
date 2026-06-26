@@ -15,18 +15,6 @@ clean_dir_contents() {
     shopt -u nullglob dotglob
 }
 
-clean_structure_outputs() {
-    local dir="${DATA}/input/structure/outputs"
-    [[ -d "$dir" ]] || return 0
-    local entry
-    shopt -s nullglob dotglob
-    for entry in "$dir"/*; do
-        [[ "$(basename "$entry")" == "data_egress" ]] && continue
-        rm -rf "$entry"
-    done
-    shopt -u nullglob dotglob
-}
-
 clean_dir_contents "${DATA}/cache/integration/outputs"
 clean_dir_contents "${DATA}/cache/integration"
 clean_dir_contents "${DATA}/jobs"
@@ -35,7 +23,7 @@ clean_dir_contents "${DATA}/online"
 
 rm -rf "${DATA}"/testing/cat_input_* "${DATA}"/testing/cat_output_* 2>/dev/null || true
 
-clean_structure_outputs
+clean_dir_contents "${DATA}/input/structure/outputs"
 
 rm -f \
     "${REPO_ROOT}/bom.car" \
