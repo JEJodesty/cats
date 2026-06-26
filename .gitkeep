@@ -1,2 +1,6 @@
-data/input/structure/outputs/data_egress
+data/input/process.py
+data/input/data/iris.csv
+data/input/structure/main.tf
+data/input/structure/ipfs_transport_compose.yaml
+data/input/structure/ipfs_connect_peers.sh
 data/testing
