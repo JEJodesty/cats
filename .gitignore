@@ -29,7 +29,9 @@ data/cache/
 data/deprecated/
 data/jobs/
 data/testing/cat_*
+data/input/structure/data/*
 data/input/structure/outputs/**
+data/input/structure/terraform.tfstate*
 cats/*/new.py
 offline
 data/input/.terraform/
