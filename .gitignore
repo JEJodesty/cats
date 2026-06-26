@@ -34,6 +34,7 @@ data/input/structure/outputs/**
 data/input/structure/terraform.tfstate*
 cats/*/new.py
 offline
+data/deprecated/
 data/input/.terraform/
 data/input/plant/.terraform/
 data/input/structure/.terraform
