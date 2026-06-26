@@ -161,3 +161,13 @@ components, and instructions required to construct, manufacture, or repair a pro
   * [cat image](https://tse1.mm.bing.net/th?id=OIP.xS_itpeyTImMcrcQ_YNsfQHaIu&pid=Api)
   * [ray.io logo](https://open-datastudio.io/_images/ray-logo.png)
   
+## Acknowledgments
+
+CATs was developed by the [Dynamical Systems Group (DSG)](https://github.com/DynamicalSystemsGroup) team.
+
+**Key contributions:**
+- **Network Architecture & Verified Information Exchange:** 
+  - [Michael Zargham (mzargham)](https://github.com/mzargham) 
+  - [David Sisson](https://github.com/davidfsol5)
+- **Lead Distributed Systems Engineer / Solutions Architect:** [Joshua E. Jodesty](https://github.com/JEJodesty)
+- **Testing:** Danilo
