@@ -4,8 +4,13 @@
 * **Activate Virtual Environment**
   ```bash
   cd cats
+  # python -m venv ./venv
   source ./venv/bin/activate
   # (venv) $
+  ```
+* **Session 0**
+  ```bash
+  ipfs daemon
   ```
 * **Session 1**
   ```bash
