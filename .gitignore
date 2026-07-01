@@ -10,6 +10,7 @@ __marimo__/**
 .pytest_cache
 venv
 .obsidian
+.env
 
 # --- Project ephemeral (repo root) ---
 bom.car
