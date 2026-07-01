@@ -63,6 +63,7 @@ the client-server job submission provided by Ray.
     ```
 2. **Demo:** [**Establish a CAT Mesh**](./docs/DEMO.md)
 3. **Test:** [**CAT Mesh Verification**](./docs/TEST.md)
+4. **MAC CAT of Order Composition (Experiment):** [**Multi-Agent Collaboration of Agents composing CAT Orders**](./docs/MAC.md)
 
 ### [Contribute!](docs/CONTRIBUTING.md)
 
