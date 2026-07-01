@@ -18,28 +18,28 @@ maintainers = [
 description = "CATs"
 readme = "README.md"
 requires-python = ">=3.10.13"
-dependencies = [
-    "ipfshttpclient>=0.4.13,<0.5",
-    "ray[default,data]>=2.45.0",
-    "pandas>=2.2.3",
-    "flask>=3.0.0",
-    "marimo>=0.23.0",
-    "python-dotenv>=1.0.0",
-    "langchain-core>=0.3.0",
-    "langchain>=0.3.0",
-    "langgraph>=0.2.0",
-    "langchain-openai>=0.2.0",
-    "langchain-tavily>=0.2.0",
-    "tqdm>=4.66.5",
-    "boto3>=1.34.21",
-    "pyarrow>=18.0.0",
-    "kubernetes>=30.1.0",
-    "pytest>=8.0",
-]
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "ipfshttpclient>=0.4.13,<0.5",
+    "flask>=3.0.0",
+    "boto3>=1.34.21",
+    "kubernetes>=30.1.0",
+    "python-dotenv>=1.0.0",
+    "pytest>=8.0",
+]
+
+[project.optional-dependencies]
+ops = [
+    "ray[default,data]>=2.45.0",
+    "pandas>=2.2.3",
+    "marimo>=0.23.0",
+    "tqdm>=4.66.5",
+    "pyarrow>=18.0.0",
 ]
 
 [project.urls]

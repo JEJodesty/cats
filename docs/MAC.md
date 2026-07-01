@@ -25,12 +25,15 @@ LangGraph demo with collaborating LLM agents (research + chart outline). This is
 cd cats
 python -m venv ./venv
 ```
-##### 2. Activate Virtual Environment:
+##### 2. Activate Virtual Environment and install dependencies:
 ```bash
 source ./venv/bin/activate
 # (venv) $
-pip install -e .
+pip install -e ".[ops]"
+pip install -r requirements-mac.txt
 ```
+The base install includes `python-dotenv`; `[ops]` adds Marimo; `requirements-mac.txt`
+adds LangChain/LangGraph packages used only by this experiment.
 ##### 3. Configure API keys *in the repo root* (`.env` is gitignored):
 ```bash
 OPENAI_API_KEY=sk-...

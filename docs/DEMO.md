@@ -13,11 +13,13 @@ ipfs daemon
 cd cats
 python -m venv ./venv
 ```
-##### 3. Activate Virtual Environment *in Terminal C*:
+##### 3. Activate Virtual Environment and install dependencies *in Terminal C*:
 ```bash
 source ./venv/bin/activate
 # (venv) $
+pip install -e ".[ops]"
 ```
+`[ops]` adds Marimo, Ray, and pandas for the mesh workflow; pytest is included in the base install.
 ##### 4. Deploy CAT Node *in Terminal D*:
 ```bash
 # (venv) $
