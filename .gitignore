@@ -3,6 +3,8 @@
 .idea/
 .vscode/
 .cursor/
+__marimo__/
+__marimo__/**
 *.pyc
 .ipynb_checkpoints
 .pytest_cache
