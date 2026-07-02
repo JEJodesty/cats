@@ -158,7 +158,7 @@ Collaborators can participate in data provenance supported product development b
 
 - **Design Description:** *[revised design context from June, Week 24](#june)*
   - CATs and LangGraphs integration can enable a row wise business function as a Chart Tool of Multi-Agent Collaboration (MAC) if CAT Orders act as a Transfer (Network) Function implemented as an OOP Command Pattern for which CATs Ingress and Egress sub-processes can be executed by CATs’ Content-Addressable Router (CAR).
-  - *[Design context: June, Week 24](../articles.md#june)*
+  - *[Design context: June, Week 24](https://github.com/DynamicalSystemsGroup/cats/wiki/Research-Articles#june)*
   - **Architectural Considerations:** CATs can inform business decisions given the following:
     - **Governance Plane: z(t)** - enables Stewardship of a Data Product Supply Network of CATs represented as a Directed Acyclic Graph of Data Product Supply
       - A GreyBox Model for as a feature parameterized Tensor Field with process variable (PV) as label
@@ -169,4 +169,3 @@ Collaborators can participate in data provenance supported product development b
         - **Action Plane: x(t)** - enables the Science & Engineering of Data Transformation as Computational Processing, a.k.a. CATs
           - CAT Functions can be defined as LangGraph Call Tools executed by LangGraphs Tool Node
           - CAT Factory produces CAT Executors integrated with LangGraphs Tool Executor.
-- **Status:** This experiment implements **Action/Control-plane orchestration patterns only** (multi-agent graph, routers, `ToolNode`). **CAR**, **CAT Order** composition, BOM governance, and cadCAD policy nodes are **not yet integrated**. `[cats_demo.py](../cats_demo.py)` remains the demo of the mesh as built today; `[car_demo.py](../car_demo.py)` is an early LangGraph shell toward the June 2024 MAC/CAR vision.

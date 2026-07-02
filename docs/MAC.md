@@ -1,8 +1,9 @@
 # [Multi-Agent Collaboration (MAC) for CATs Templated Demo](../car_demo.py)
 
 **Description:** LangGraph demo with collaborating LLM agents (research + chart outline). Separate from the CAT mesh in [DEMO.md](./DEMO.md)—no IPFS, Docker, or CAT node required.
-**Purpose:** *CAT Order Composition*
-**Design Context:** *[Multi-Agent Collaboration (MAC) for CATs using Content-Addressable Router (CAR) facilitated by the Architectural purpose of CATs as a Function](../articles.md#multi-agent-collaboration-mac-for-cats-using-content-addressable-router-car-facilitated-by-the-architectural-purpose-of-cats-as-a-function)*
+- **Purpose:** *CAT Order Composition*
+- **Design Context:** *[Multi-Agent Collaboration (MAC) for CATs using Content-Addressable Router (CAR) facilitated by the Architectural purpose of CATs as a Function](https://github.com/DynamicalSystemsGroup/cats/wiki/Research-Articles#multi-agent-collaboration-mac-for-cats-using-content-addressable-router-car-facilitated-by-the-architectural-purpose-of-cats-as-a-function)*
+- **Status:** This experiment implements **Action/Control-plane orchestration patterns only** (multi-agent graph, routers, `ToolNode`). **CAR**, **CAT Order** composition, BOM governance, and cadCAD policy nodes are **not yet integrated**. `[cats_demo.py](../cats_demo.py)` remains the demo of the mesh as built today; `[car_demo.py](../car_demo.py)` is an early LangGraph shell toward the June 2024 MAC/CAR vision.
 
 #### Demonstrates the following
 
