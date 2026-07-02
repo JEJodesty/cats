@@ -1,5 +1,7 @@
 # Articles
 
+# 2024
+
 ## February:
 
 ### Week 6 (2/12 - 2/16):
@@ -145,3 +147,25 @@ Collaborators can participate in data provenance supported product development b
     * Governance Plane: z(t)
       * A GreyBox Model for as a feature parameterized Tensor Field with process variable (PV) as label 
       * The business function is a CATs Control & Action Matrix - a 2 dimensional representation of 3 dimensional space
+
+# 2026
+
+## July
+
+### Week 26 (6/29 - 7/3):
+
+#### Multi-Agent Collaboration (MAC) for CATs using Content-Addressable Router (CAR) facilitated by the Architectural purpose of CATs as a Function**
+
+- **Design Description:** *[revised design context from June, Week 24](#june)*
+  - CATs and LangGraphs integration can enable a row wise business function as a Chart Tool of Multi-Agent Collaboration (MAC) if CAT Orders act as a Transfer (Network) Function implemented as an OOP Command Pattern for which CATs Ingress and Egress sub-processes can be executed by CATs’ Content-Addressable Router (CAR).
+  - *[Design context: June, Week 24](https://github.com/DynamicalSystemsGroup/cats/wiki/Research-Articles#june)*
+  - **Architectural Considerations:** CATs can inform business decisions given the following:
+    - **Governance Plane: z(t)** - enables Stewardship of a Data Product Supply Network of CATs represented as a Directed Acyclic Graph of Data Product Supply
+      - A GreyBox Model for as a feature parameterized Tensor Field with process variable (PV) as label
+      - The business function is a CATs Control & Action Matrix - a 2 dimensional representation of 3 dimensional space
+      - **Control Plane: y(t)** [aka Content-Addressable Router (CAR)] - enables Networking of what is Produced as a result of Science & Engineering CATs
+        - CAR integrated with LangGraphs Router.
+        - cadCAD (Network) Policies aka “Algorithmic Suggestions” can be deployed on LangGraphs Agent Nodes with specified Domain-Name references as Rule Asset RIDs
+        - **Action Plane: x(t)** - enables the Science & Engineering of Data Transformation as Computational Processing, a.k.a. CATs
+          - CAT Functions can be defined as LangGraph Call Tools executed by LangGraphs Tool Node
+          - CAT Factory produces CAT Executors integrated with LangGraphs Tool Executor.
