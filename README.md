@@ -61,9 +61,9 @@ the client-server job submission provided by Ray.
     python -m pip install --upgrade pip
     pip install dist/*.whl
     ```
-2. **Demo:** [**Establish a CAT Mesh**](./docs/DEMO.md)
-3. **Test:** [**CAT Mesh Verification**](./docs/TEST.md)
-4. **MAC CAT of Order Composition (Experiment):** [**Multi-Agent Collaboration of Agents composing CAT Orders**](./docs/MAC.md)
+2. **Demo: [Establish a CAT Mesh](./docs/DEMO.md)**
+3. **Test: [CAT Mesh Verification](./docs/TEST.md)**
+4. **Experiment: [Multi-Agent Collaboration Demo Template intended for CAT of Order Composition](./docs/MAC.md)**
 
 ### [Contribute!](docs/CONTRIBUTING.md)
 

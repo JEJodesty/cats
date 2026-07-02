@@ -1,4 +1,4 @@
-# [Multi-Agent Collaboration (MAC) for CATs Templated Demo](../car_demo.py)
+# [Multi-Agent Collaboration (MAC) Demo Template for CAT of Order Composition](../car_demo.py)
 
 **Description:** LangGraph demo with collaborating LLM agents (research + chart outline). Separate from the CAT mesh in [DEMO.md](./DEMO.md)—no IPFS, Docker, or CAT node required.
 - **Purpose:** *CAT Order Composition*
