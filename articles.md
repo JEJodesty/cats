@@ -48,9 +48,10 @@ through its sale or exchange.
 
 CATs' Content-Addressed Data Assets are processed, sold / exchanged / published on CAT’s Data Mesh via CAT Nodes 
 subsumed by downstream CATs’ Data Products. Data Assets consist of the following:
-* **Data Domains** - "A predefined or user-defined Model repository object that represents the functional meaning of an" 
-  attribute "based on column data or column name such as" account identification.
-* **Data Objects** - Content-Addresses of data sources used to extract metadata for analysis.
+
+- **Data Domains** - "A predefined or user-defined Model repository object that represents the functional meaning of an" 
+attribute "based on column data or column name such as" account identification.
+- **Data Objects** - Content-Addresses of data sources used to extract metadata for analysis.
 
 ## March:
 
@@ -123,49 +124,36 @@ Collaborators can participate in data provenance supported product development b
 
 #### What is the Architectural purpose of CATs as a function?
 
-* **Governance Plane: z(t)** 
-  * is for the Stewardship of a Data Product Supply Network of CATs represented as a Directed Acyclic Graph of Data Product Supply
-  * **Control Plane: y(t)** 
-    * is for the Networking of what is Produced as a result of Science & Engineering CATs
-    * **Action Plane: x(t)** 
-      * is for the Science & Engineering of Data Transformation as Computational Processing, a.k.a. CATs
+- **Governance Plane: z(t)** 
+  - is for the Stewardship of a Data Product Supply Network of CATs represented as a Directed Acyclic Graph of Data Product Supply
+  - **Control Plane: y(t)** 
+    - is for the Networking of what is Produced as a result of Science & Engineering CATs
+    - **Action Plane: x(t)** 
+      - is for the Science & Engineering of Data Transformation as Computational Processing, a.k.a. CATs
 
 #### Multi-Agent Collaboration (MAC) for CATs using Content-Addressable Router (CAR)
 
-* _Design Description_
-  * CATs and LangGraphs integration can enable a row wise business function as a Chart Tool of Multi-Agent Collaboration 
-    (MAC) if CAT Orders act as a Transfer (Network) Function implemented as an OOP Command Pattern for which CATs 
-    Ingress and Egress sub-processes can be executed by CATs’ Content-Addressable Router (CAR).
-  * Architectural Considerations: CATs can inform business decisions given the following:
-    * Action Plane: x(t)
-      * CAT Functions can be defined as LangGraph Call Tools executed by LangGraphs Tool Node 
-      * CAT Factory produces CAT Executors integrated with LangGraphs Tool Executor.
-    * Control Plane: y(t) \[aka Content-Addressable Router (CAR)\]
-      * CAR integrated with LangGraphs Router.
-      * cadCAD (Network) Policies aka “Algorithmic Suggestions” can be deployed on LangGraphs Agent Nodes with specified 
+- *Design Description*
+  - CATs and LangGraphs integration can enable a row wise business function as a Chart Tool of Multi-Agent Collaboration 
+  (MAC) if CAT Orders act as a Transfer (Network) Function implemented as an OOP Command Pattern for which CATs 
+  Ingress and Egress sub-processes can be executed by CATs’ Content-Addressable Router (CAR).
+  - Architectural Considerations: CATs can inform business decisions given the following:
+    - Action Plane: x(t)
+      - CAT Functions can be defined as LangGraph Call Tools executed by LangGraphs Tool Node 
+      - CAT Factory produces CAT Executors integrated with LangGraphs Tool Executor.
+    - Control Plane: y(t) aka Content-Addressable Router (CAR)
+      - CAR integrated with LangGraphs Router.
+      - cadCAD (Network) Policies aka “Algorithmic Suggestions” can be deployed on LangGraphs Agent Nodes with specified 
       Domain-Name references as Rule Asset RIDs
-    * Governance Plane: z(t)
-      * A GreyBox Model for as a feature parameterized Tensor Field with process variable (PV) as label 
-      * The business function is a CATs Control & Action Matrix - a 2 dimensional representation of 3 dimensional space
+    - Governance Plane: z(t)
+      - A GreyBox Model for as a feature parameterized Tensor Field with process variable (PV) as label 
+      - The business function is a CATs Control & Action Matrix - a 2 dimensional representation of 3 dimensional space
 
 # 2026
 
 ## July
 
-### Week 26 (6/29 - 7/3):
+### Week 26 (6/29 - 7/3):  
+  
 
-#### Multi-Agent Collaboration (MAC) for CATs using Content-Addressable Router (CAR) facilitated by the Architectural purpose of CATs as a Function**
 
-- **Design Description:** *[revised design context from June, Week 24](#june)*
-  - CATs and LangGraphs integration can enable a row wise business function as a Chart Tool of Multi-Agent Collaboration (MAC) if CAT Orders act as a Transfer (Network) Function implemented as an OOP Command Pattern for which CATs Ingress and Egress sub-processes can be executed by CATs’ Content-Addressable Router (CAR).
-  - *[Design context: June, Week 24](https://github.com/DynamicalSystemsGroup/cats/wiki/Research-Articles#june)*
-  - **Architectural Considerations:** CATs can inform business decisions given the following:
-    - **Governance Plane: z(t)** - enables Stewardship of a Data Product Supply Network of CATs represented as a Directed Acyclic Graph of Data Product Supply
-      - A GreyBox Model for as a feature parameterized Tensor Field with process variable (PV) as label
-      - The business function is a CATs Control & Action Matrix - a 2 dimensional representation of 3 dimensional space
-      - **Control Plane: y(t)** [aka Content-Addressable Router (CAR)] - enables Networking of what is Produced as a result of Science & Engineering CATs
-        - CAR integrated with LangGraphs Router.
-        - cadCAD (Network) Policies aka “Algorithmic Suggestions” can be deployed on LangGraphs Agent Nodes with specified Domain-Name references as Rule Asset RIDs
-        - **Action Plane: x(t)** - enables the Science & Engineering of Data Transformation as Computational Processing, a.k.a. CATs
-          - CAT Functions can be defined as LangGraph Call Tools executed by LangGraphs Tool Node
-          - CAT Factory produces CAT Executors integrated with LangGraphs Tool Executor.
