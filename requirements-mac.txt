@@ -1,7 +1,0 @@
-# Multi-Agent Collaboration experiment (car_demo.py).
-# Install after the base package: pip install -e ".[ops]" && pip install -r requirements-mac.txt
-langchain-core>=0.3.0
-langchain>=0.3.0
-langgraph>=0.2.0
-langchain-openai>=0.2.0
-langchain-tavily>=0.2.0
