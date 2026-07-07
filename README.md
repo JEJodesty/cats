@@ -25,15 +25,7 @@ evidence using CIDs.
 
 ### How do CATs enable colaborative Data Processing for Data Initiatives?
 
-CATs enables the 
-**[continuous reification of **Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** 
-by cataloging discoverable, accessible, and re-executable workloads as 
-**[Data Service Collaboration](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** 
-composable records between organizations. These records provide a reliable and efficient way to manage, share, and 
-reference data processes via **[Content-Addressing](https://en.wikipedia.org/wiki/Content-addressable_storage)** Data 
-Provenance records. **Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be 
-compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate 
-CATs provenance records within feedback loops of Data Initiatives.
+CATs enables the **[continuous reification of **Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** by cataloging discoverable, accessible, and re-executable workloads as **[Data Service Collaboration](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** composable records between organizations. These records provide a reliable and efficient way to manage, share, and reference data processes via **[Content-Addressing](https://en.wikipedia.org/wiki/Content-addressable_storage)** Data Provenance records. **Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate CATs provenance records within feedback loops of Data Initiatives.
 ![CATs Initiative Aligmment](images/CATs_bom_ag.jpeg)
 
 ### What is Content Addressing & How does CATs use it?
