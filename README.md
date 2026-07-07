@@ -5,12 +5,12 @@
 **Content-Addressable Transformers** (**CATs**) is a unified Data Service Collaboration framework for organizations 
 implemented as an edge-computing service that establish a Data Mesh as a scalable self-serviced Data Platform of 
 Data Products with Data Provenance. CATs connect collaborators between organizations on a Data Mesh via the 
-[Content-Addressed Storage (CAS)](https://en.wikipedia.org/wiki/Content-addressable_storage) of interoperable and scalable data processing to enable Data Provenance. CAT data 
-processing workloads (CATs) are deployable as parallelized and distributed processes at horizontal & vertical scale to 
+[Content-Addressed Storage (CAS)](https://en.wikipedia.org/wiki/Content-addressable_storage) of interoperable and scalable data processing to enable Data Provenance. CAT data processing workloads (CATs) are deployable as parallelized and distributed processes at horizontal & vertical scale to 
 support scalable (big) data processing microservices with Scientific Computing capabilities. CATs are also integration 
 points which enable scaled data processing portability between client-server cloud platforms and mesh (p2p) networks 
 with minimal rework or modification.
 ![CATs Chaordic Kernel](images/CATs_chaordic_kernel.jpeg)
+- **Techncal Use-Case Specification:** CATs' utilizes [Ray](https://www.ray.io/) as an execution middleware framework deployed on **[Kubernetes](https://kubernetes.io/)** for interoperable & parallelized distributed computing applications / Big Data processing with Scientific Computing enabled [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/). 
 
 ### How are CATs workloads processed as Data Provenance Records?
 
@@ -32,11 +32,9 @@ CATs enables the **[continuous reification of **Data Initiatives](https://github
 
 **Content-Addressing** is a method of uniquely identifying and retrieving data based on its content rather than its 
 location or address. CATs provides verifiable data processing and transport on a Mesh network of CATs interconnected by 
-Content-Addressing Data Provenance records with [IPFS](https://ipfs.io/) 
-**[CIDs](https://docs.ipfs.io/concepts/content-addressing/)** (Content-Identifiers) as content addresses issued by IPFS 
-**[client](https://docs.ipfs.io/install/command-line/#official-distributions)** to identify and retrieve inputs, 
-transformations, outputs, and infrastructure (as code [IaC]) for verifying transformation accuracy given CIDs.
+Content-Addressing Data Provenance records with [IPFS](https://ipfs.io/) **[CIDs](https://docs.ipfs.io/concepts/content-addressing/)** (Content-Identifiers) as content addresses issued by IPFS **[client](https://docs.ipfs.io/install/command-line/#official-distributions)** to identify and retrieve inputs, transformations, outputs, and infrastructure (as code [IaC]) for verifying transformation accuracy given CIDs.
 ![CID Example](images/cid_example.jpeg)
+- IPFS serves as CATs' Data Mesh's network layer to provide parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a **Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to the client-server job submission provided by Ray.
 
 ## Get Started!:
 
@@ -55,13 +53,6 @@ transformations, outputs, and infrastructure (as code [IaC]) for verifying trans
 5. **[Experiments](./experiments/EXP.md)**
 
 ### [Contribute!](docs/CONTRIBUTING.md)
-
-## Specification:
-
-CATs' utilizes [Ray](https://www.ray.io/) for interoperable & parallelized distributed computing frameworks deployable on **[Kubernetes](https://kubernetes.io/)** for Big Data processing with Scientific Computing. Ray is a unified compute framework that enables the development of parallel and distributed applications for scalable data transformation, Machine Learning, and AI. Ray provides CATs with interoperable computing frameworks with its [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/).
-
-Ray is deployed as an execution middleware on Kubernetes. IPFS serves as CATs' Data Mesh's network layer to provide parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and business operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a **Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to the client-server job submission provided by Ray.
-![CATs 2b](images/simple_CAT2b.jpeg)
 
 ### CATs' Architectural Quantum:
 
