@@ -58,33 +58,16 @@ transformations, outputs, and infrastructure (as code [IaC]) for verifying trans
 
 ## Specification:
 
-CATs' utilizes [Ray](https://www.ray.io/) for interoperable & parallelized distributed computing frameworks deployable 
-on **[Kubernetes](https://kubernetes.io/)** for Big Data processing with Scientific Computing. Ray is a unified compute 
-framework that enables the development of parallel and distributed applications for scalable data transformation, 
-Machine Learning, and AI. Ray provides CATs with interoperable computing frameworks with its 
-[ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as 
-[Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/).
+CATs' utilizes [Ray](https://www.ray.io/) for interoperable & parallelized distributed computing frameworks deployable on **[Kubernetes](https://kubernetes.io/)** for Big Data processing with Scientific Computing. Ray is a unified compute framework that enables the development of parallel and distributed applications for scalable data transformation, Machine Learning, and AI. Ray provides CATs with interoperable computing frameworks with its [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/).
 
-Ray is deployed as an execution middleware on Kubernetes. IPFS serves as CATs' Data Mesh's network layer to provide 
-parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and 
-business operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs 
-connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a 
-**Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to 
-the client-server job submission provided by Ray.
+Ray is deployed as an execution middleware on Kubernetes. IPFS serves as CATs' Data Mesh's network layer to provide parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and business operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a **Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to the client-server job submission provided by Ray.
 ![CATs 2b](images/simple_CAT2b.jpeg)
 
 ### CATs' Architectural Quantum:
 
-Organizations and collaborators participating will employ CATs for rapid ratification of service agreements within 
-collaborative feedback loops of **[Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative)**. 
-CATs' apply an **Architectural Quantum** Domain-Driven Design principle described in 
-**[Data Mesh of Data Products](https://martinfowler.com/articles/data-mesh-principles.html)** to reify Data Initiatives.
-(* **[Design Description](docs/DESIGN.md)**)
+Organizations and collaborators participating will employ CATs for rapid ratification of service agreements within collaborative feedback loops of **[Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative)**. CATs' apply an **Architectural Quantum** Domain-Driven Design principle described in **[Data Mesh of Data Products](https://martinfowler.com/articles/data-mesh-principles.html)** to reify Data Initiatives.(* **[Design Description](docs/DESIGN.md)**)
 
-The Action Plane is the Analytical Data Processing interface. The Action Plane orchestrates and supervises 
-how virtual resources owned by the Data Product should be managed, routed, and processed and is stored “offmesh” 
-(“offline”). It supervises the exchange of data between sub-Process components within the Data sub-Plane (Process) in 
-adherence to Data Contracting Standards of organizations participating in a Data Mesh.
+The Action Plane is the Analytical Data Processing interface. The Action Plane orchestrates and supervises how virtual resources owned by the Data Product should be managed, routed, and processed and is stored “offmesh” (“offline”). It supervises the exchange of data between sub-Process components within the Data sub-Plane (Process) in adherence to Data Contracting Standards of organizations participating in a Data Mesh.
 ![CAT Kernel](images/CATkernel.jpeg)
 
 #### Quantum Architecture Description as a [Minimal Federated Operating Model](https://www.starburst.io/blog/data-mesh-book-bulletin-principle-of-federated-computational-governance/)
@@ -111,15 +94,11 @@ on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS)
 
 ### CAT Mesh: CATs Data Mesh platform with Data Provenance
 
-**CAT Mesh** is a self-serviced Data Mesh platform with Data Provenance. **CAT Nodes** are CAT Mesh peers that enable 
-workloads to be portable between client-server cloud platforms and p2p mesh network with minimal rework or modification.
+**CAT Mesh** is a self-serviced Data Mesh platform with Data Provenance. **CAT Nodes** are CAT Mesh peers that enable workloads to be portable between client-server cloud platforms and p2p mesh network with minimal rework or modification.
 
-Multi-disciplinary and cross-functional teams can use CAT Nodes to verify and scale distributed computing workloads. 
-Workloads (CATs) executed by CAT Nodes interface cloud service model (SaaS, PaaS, IaaS) offered by providers such as 
-AWS, GCP, Azure, etc. on a Mesh Network interconnected by IPFS. 
+Multi-disciplinary and cross-functional teams can use CAT Nodes to verify and scale distributed computing workloads. Workloads (CATs) executed by CAT Nodes interface cloud service model (SaaS, PaaS, IaaS) offered by providers such as AWS, GCP, Azure, etc. on a Mesh Network interconnected by IPFS. 
 
-CAT Nodes are **Data Products** - peer-nodes on a mesh network that encapsulate components (*) to function as a service 
-providing access to a domain's analytical data as a product; * code, data & metadata, and infrastructure.
+CAT Nodes are **Data Products** - peer-nodes on a mesh network that encapsulate components (*) to function as a service providing access to a domain's analytical data as a product; * code, data & metadata, and infrastructure.
 
 **In the following image:** 
 
