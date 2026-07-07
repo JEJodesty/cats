@@ -14,12 +14,16 @@ with minimal rework or modification.
 
 ### How are CATs workloads processed as Data Provenance Records?
 
-CATs are submitted as content-addressed **Orders** of data processes (transformers) which are **Invoiced** for verification and logged as **Bills-Of-Materials (BOMs)** that serve as **Data Provenance records** that are unique identifiers of CAT workloads and their content. **BOMs** are CATs' Content-Addressed **Data Provenance records** for **verifiable data processing** with URIs for transport over a Mesh network of CATs. BOMs are also used as CAT’ input & output that contain CATs’ means of data processing.
+CATs are submitted as content-addressed **Orders** of data processes (transformers) which are **Invoiced** for verification and logged as **[Bills-Of-Materials (BOMs)](https://en.wikipedia.org/wiki/Bill_of_materials)** that serve as **Data Provenance records** that are unique identifiers of CAT workloads and their content. **BOMs** are CATs' Content-Addressed **Data Provenance records** for **verifiable data processing** with URIs for transport over a Mesh network of CATs. BOMs are also used as CAT’ input & output that contain CATs’ means of data processing between CAT Nodes.
 
 **BOMs** employ **Content Identifiers (CIDs)** for CAS to provide a means of location-agnostic data transportation / retrieval of based on its content / CAT processes for [Data Verification](https://en.wikipedia.org/wiki/Data_verification). Therefore, the implementation of CATs' as content-addressed data processes establishes and self-services a scalable Data Platform as a Data Mesh network of interoperable distributed computing workloads deployable on [Kubernetes](https://kubernetes.io/) as CATs execution paradigm.
 ![CATs BOM Activity](images/CATs_bom_activity.jpeg)
 - BOM CIDs can be used to verify the means of processing data (input, transformation / process, output, infrastructure-as-code (IaC)) they can also make CATs resilient by enabling re-execution via retrieval. CATs certifies the accuracy of data processing on data products and pipelines by enabling maintenance and reporting of [data and process lineage & provenance](https://bi-insider.com/posts/data-lineage-and-data-provenance/) as chains of 
 evidence using CIDs.
+
+### How are CATs Composed as Data Provenance Records that specify a Data Mesh Node linkages as Lineage?
+
+CAT Mesh is specified / reified by CATs executing BOMs as specifications used to chain CAT Mesh's content-addressed records into a verifiable lineage of Data Provenance. (* **[Details](docs/LineageOfProvenance.md)**)
 
 ### How do CATs enable colaborative Data Processing for Data Initiatives?
 
@@ -114,10 +118,6 @@ on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS)
   - **InfraStructure (IaaS)** supports the provisioning of dynamically scaled infrastructure for maintaining a Plant (SaaS).
     - The CAT Order is updated in alignment with event-driven functionality and operations with the resulting mutation 
     of Structure (PaaS).
-
-### CAT Composition: CAT Lineage of Data Provenance:
-- CAT Mesh is composed by CATs executing BOMs.
-![CAT Lineage](images/CATs_bom_connect.jpeg)
 
 ### CAT Mesh: CATs Data Mesh platform with Data Provenance
 
