@@ -14,7 +14,7 @@ with minimal rework or modification.
 
 ### How are CATs workloads processed as Data Provenance Records?
 
-CAT's (Data) Mesh is specified / reified by CATs executing **[Bills-Of-Materials (BOMs)](https://en.wikipedia.org/wiki/Bill_of_materials)** as specifications used to chain CAT Mesh's content-addressed records into a verifiable lineage of Data Provenance that specify a CAT Nodes linkages. (* **[Details](docs/LineageOfProvenance.md)**)
+CAT's (Data) Mesh is specified / reified by CATs executing **[Bills-Of-Materials (BOMs)](https://en.wikipedia.org/wiki/Bill_of_materials)** as specifications used to chain CAT Nodes' content-addressed records into a verifiable lineage of Data Provenance. (* **[Details](docs/LineageOfProvenance.md)**)
 
 CATs are submitted as content-addressed **Orders** of data processes (transformers) which are **Invoiced** for verification and logged as **BOMs** that serve as **Data Provenance records** that are unique identifiers of CAT workloads and their content. **BOMs** are CATs' Content-Addressed **Data Provenance records** for **verifiable data processing** with URIs for transport over a Mesh network of CATs. BOMs are also used as CAT’ input & output that contain CATs’ means of data processing between CAT Nodes.
 
