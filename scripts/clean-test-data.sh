@@ -16,7 +16,11 @@ clean_dir_contents() {
 }
 
 clean_dir_contents "${DATA}/cache/integration/outputs"
-clean_dir_contents "${DATA}/cache/integration"
+# NOTE: don't clean_dir_contents "${DATA}/cache/integration" (the outputs/
+# subdir's parent) - that would remove the (now-empty) outputs/ directory
+# entry itself, and outputs/ is bind-mounted as /outputs into the
+# always-on IPFS transport containers (see data/input/structure/main.tf).
+# Deleting it out from under those containers leaves their mount stale.
 clean_dir_contents "${DATA}/jobs"
 clean_dir_contents "${DATA}/output"
 clean_dir_contents "${DATA}/online"
