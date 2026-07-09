@@ -10,7 +10,7 @@ support scalable (big) data processing microservices with Scientific Computing c
 points which enable scaled data processing portability between client-server cloud platforms and mesh (p2p) networks 
 with minimal rework or modification.
 ![CATs Chaordic Kernel](images/CATs_chaordic_kernel.jpeg)
-- **Techncal Use-Case Specification:** CATs' utilizes [Ray](https://www.ray.io/) as an execution middleware framework deployed on **[Kubernetes](https://kubernetes.io/)** for interoperable & parallelized distributed computing applications / Big Data processing with Scientific Computing enabled [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/). 
+- **Techncal Use-Case Specification:** CATs' utilizes [Ray](https://www.ray.io/) as an execution middleware framework deployed on **[Kubernetes](https://kubernetes.io/)** for interoperable & parallelized distributed computing applications / Big Data processing with Scientific Computing enabled [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/).
 
 ### How are CATs workloads processed as Data Provenance Records?
 
@@ -40,6 +40,8 @@ Content-Addressing Data Provenance records with [IPFS](https://ipfs.io/) **[CIDs
 
 1. **Install [Dependencies](./docs/DEPS.md)** (including [uv](https://docs.astral.sh/uv/), which manages
   CATs' Python interpreter, virtual environment, and locked dependencies)
+  - Run `make deps` to install everything automatically on macOS or Linux (see the [`Makefile`](./Makefile) and
+    `make help`), or follow [`DEPS.md`](./docs/DEPS.md) to install each dependency manually.
 2. **Install CATs:**
   ```bash
     git clone git@github.com:DynamicalSystemsGroup/cats.git
@@ -47,7 +49,7 @@ Content-Addressing Data Provenance records with [IPFS](https://ipfs.io/) **[CIDs
     uv python install   # installs the Python version pinned in .python-version
     uv sync             # creates .venv and installs locked dependencies from uv.lock
   ```
-  See [`ENV.md`](./docs/ENV.md) for the full environment workflow, including the `ops` and `mac` extras.
+  - See `[ENV.md](./docs/ENV.md)` for the full environment workflow, including the `ops` and `mac` extras.
 3. **Demo: [Establish a CAT Mesh](./docs/DEMO.md)**
 4. **Test: [CAT Mesh Verification](./docs/TEST.md)**
 5. **[Experiments](./experiments/EXP.md)**
