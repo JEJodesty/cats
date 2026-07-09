@@ -1,5 +1,10 @@
 from cats.executor.function import InfraFunction, Processor
-from cats.executor.structure import InfraStructure, Plant
+from cats.executor.structure import (
+    InfraStructure,
+    Plant,
+    read_applied_structure_cid,
+    write_applied_structure_cid,
+)
 
 
 class Structure:
@@ -23,6 +28,29 @@ class Structure:
         print('Deploy Structure!')
         self.infraStructure.initialize()
         self.infraStructure.apply()
+
+    def reconcile(self, structure_cid):
+        """Materialize this CAT's Structure, skipping the destructive
+        rebuild when the incoming (content-addressed) structure_cid
+        matches what's already applied.
+
+        Structure is content-addressed like everything else in CATs.
+        Destroying and rebuilding the Plant (kind cluster + Helm
+        releases) for a Structure whose content hasn't changed is the
+        same redundant recomputation content-addressing is meant to
+        avoid elsewhere in CATs; `apply()` alone is Terraform's own
+        declarative reconciliation, and it's a fast no-op when nothing
+        changed.
+        """
+        structure_home = self.infraStructure.INPUT_STRUCTURE_HOME
+        applied_cid = read_applied_structure_cid(structure_home)
+        if structure_cid and applied_cid == structure_cid:
+            print(f'Structure {structure_cid} already applied; reconciling in place.')
+            self.deploy()
+        else:
+            self.redeploy()
+        if structure_cid:
+            write_applied_structure_cid(structure_home, structure_cid)
 
 
 class Function:

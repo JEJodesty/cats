@@ -5,10 +5,34 @@ from cats.utils import subproc_run
 
 KIND_CLUSTER_NAME = "cats"
 KIND_CLUSTER_RESOURCE = "kind_cluster.default"
+APPLIED_STRUCTURE_MARKER = '.applied-structure.cid'
+
+
+def _applied_structure_marker_path(structure_home):
+    return os.path.join(structure_home, APPLIED_STRUCTURE_MARKER)
+
+
+def read_applied_structure_cid(structure_home):
+    """Return the structure_cid this Structure's Terraform state currently
+    reflects, or None if nothing has been successfully applied yet."""
+    marker_path = _applied_structure_marker_path(structure_home)
+    if not os.path.isfile(marker_path):
+        return None
+    with open(marker_path, encoding='utf-8') as marker_file:
+        return marker_file.read().strip() or None
+
+
+def write_applied_structure_cid(structure_home, structure_cid):
+    """Record the structure_cid Terraform state now reflects, so a later
+    CAT execution with an unchanged (content-addressed) Structure can
+    reconcile in place instead of destroying and rebuilding the Plant."""
+    with open(_applied_structure_marker_path(structure_home), 'w', encoding='utf-8') as marker_file:
+        marker_file.write(structure_cid or '')
 
 
 def terraform_bin(service):
-    path = os.path.join(service.CATS_HOME, 'venv', 'bin', 'terraform')
+    # `.venv` is uv's managed venv (see docs/DEPS.md).
+    path = os.path.join(service.CATS_HOME, '.venv', 'bin', 'terraform')
     return path if os.path.isfile(path) else 'terraform'
 
 
