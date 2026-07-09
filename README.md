@@ -38,16 +38,16 @@ Content-Addressing Data Provenance records with [IPFS](https://ipfs.io/) **[CIDs
 
 ## Get Started!:
 
-1. **Install [Dependencies](./docs/DEPS.md)**
+1. **Install [Dependencies](./docs/DEPS.md)** (including [uv](https://docs.astral.sh/uv/), which manages
+  CATs' Python interpreter, virtual environment, and locked dependencies)
 2. **Install CATs:**
   ```bash
     git clone git@github.com:DynamicalSystemsGroup/cats.git
     cd cats
-    python -m venv venv # Create Virtual Environment
-    source venv/bin/activate # Activate Virtual Environment
-    python -m pip install --upgrade pip
-    pip install dist/*.whl
+    uv python install   # installs the Python version pinned in .python-version
+    uv sync             # creates .venv and installs locked dependencies from uv.lock
   ```
+  See [`ENV.md`](./docs/ENV.md) for the full environment workflow, including the `ops` and `mac` extras.
 3. **Demo: [Establish a CAT Mesh](./docs/DEMO.md)**
 4. **Test: [CAT Mesh Verification](./docs/TEST.md)**
 5. **[Experiments](./experiments/EXP.md)**

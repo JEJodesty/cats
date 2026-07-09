@@ -8,7 +8,7 @@ __marimo__/**
 *.pyc
 .ipynb_checkpoints
 .pytest_cache
-venv
+.venv
 .obsidian
 .env
 
@@ -47,3 +47,6 @@ data/input/structure/outputs/**
 data/input/structure/data/*
 data/input/structure/ipfs_cluster/
 data/input/structure/providers/
+data/input/structure/.applied-structure.cid
+data/input/structure/.host-ipfs-daemon.pid
+data/input/structure/.host-ipfs-daemon.log

@@ -1,5 +1,6 @@
 # Multi-Agent Collaboration experiment (experiments/mac/car_demo.py).
-# Install after the base package: pip install -e ".[ops]" && pip install -r experiments/mac/requirements-mac.txt
+# Not part of the cats package/uv.lock; install into the project's uv-managed .venv with:
+#   uv sync --extra ops && uv pip install -r experiments/mac/requirements-mac.txt
 langchain-core>=0.3.0
 langchain>=0.3.0
 langgraph>=0.2.0

@@ -24,25 +24,20 @@
 
 #### Steps:
 
-##### 1. [Create Virtual Environment](../../docs/ENV.md)
+##### 1. [Create the environment](../../docs/ENV.md) and install dependencies:
 
 ```bash
 # CATs working directory
 cd cats
-python -m venv ./venv
+uv sync --extra ops
+uv pip install -r experiments/mac/requirements-mac.txt
 ```
 
-##### 2. Activate Virtual Environment and install dependencies:
-
-```bash
-source ./venv/bin/activate
-# (venv) $
-pip install -e ".[ops]"
-pip install -r experiments/mac/requirements-mac.txt
-```
-
-The base install includes `python-dotenv`; `[ops]` adds Marimo; `experiments/mac/requirements-mac.txt`
-adds LangChain/LangGraph packages used only by this experiment.
+The base install includes `python-dotenv`; `--extra ops` adds Marimo. `experiments/mac/requirements-mac.txt`
+adds the LangChain/LangGraph packages used only by this experiment — it's installed with `uv pip install`
+directly into the project's `.venv` and isn't part of `pyproject.toml`/`uv.lock`, since it's experiment-only
+and not a package extra of `cats`. `uv run` (below) uses this `.venv` automatically — no manual activation
+needed.
 
 ##### 3. Configure API keys *in the repo root* (`.env` is gitignored):
 
@@ -59,8 +54,7 @@ TAVILY_API_KEY=...
 ##### 4. Run the Marimo notebook: [Demo](./car_demo.py)
 
 ```bash
-# (venv) $
-marimo edit experiments/mac/car_demo.py
+uv run marimo edit experiments/mac/car_demo.py
 ```
 
 Work through the cells top to bottom, then click **Run multi-agent demo** to invoke the graph. Each run calls OpenAI and Tavily; ensure your OpenAI account has available quota.
