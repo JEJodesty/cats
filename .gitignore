@@ -35,7 +35,6 @@ data/deprecated/
 data/testing/
 
 # data/input — unused or downloaded at runtime
-data/input/plant/
 data/input/main.tf
 data/input/order.json
 data/input/__pycache__/
