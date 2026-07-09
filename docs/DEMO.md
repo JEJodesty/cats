@@ -1,34 +1,25 @@
 ## [Establish a CAT Mesh:](../cats_demo.py)
 #### Steps:
-##### 0. Start Docker daemon *in Terminal A*:
-##### 1. Start IPFS daemon *in Terminal B*:
-```bash
-ipfs daemon
-```
-* **Optional:** 
-  * Shut down IPFS daemon: `ipfs shutdown`
-##### 2. [Create Virtual Environment](./docs/ENV.md)
+##### 0. Start Docker daemon:
+##### 1. IPFS daemon: see [`IPFS.md`](./IPFS.md)
+Both `cats/node.py` (step 3) and the Structure's `terraform apply` start the host IPFS
+daemon automatically, idempotently, if one isn't already running — so this step isn't
+required. Run it yourself only if you want its logs in their own terminal.
+##### 2. [Create the environment](./docs/ENV.md) and install dependencies *in Terminal C*:
 ```bash
 # CATs working directory
 cd cats
-python -m venv ./venv
+uv sync --extra ops
 ```
-##### 3. Activate Virtual Environment and install dependencies *in Terminal C*:
+`uv sync` creates/updates `.venv` from the locked dependencies (`uv.lock`); `--extra ops` adds Marimo, Ray, and
+pandas for the mesh workflow. `uv run` (below) uses this environment automatically — no manual activation needed.
+##### 3. Deploy CAT Node *in Terminal A*:
 ```bash
-source ./venv/bin/activate
-# (venv) $
-pip install -e ".[ops]"
+uv run python cats/node.py
 ```
-`[ops]` adds Marimo, Ray, and pandas for the mesh workflow; pytest is included in the base install.
-##### 4. Deploy CAT Node *in Terminal D*:
-```bash
-# (venv) $
-PYTHONPATH=./ python cats/node.py
-```
-##### 5. Establish Data (CAT) Mesh *in Terminal C*: [Demo](../cats_demo.py)
+##### 4. Establish Data (CAT) Mesh *in Terminal B*: [Demo](../cats_demo.py)
 Execute a CATs on a single node Mesh via Marimo Notebook.
 ```bash
-# (venv) $
-marimo edit cats_demo.py
+uv run marimo edit cats_demo.py
 ```
 Cells re-run reactively as dependencies change; work through the notebook top to bottom.

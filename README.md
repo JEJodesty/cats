@@ -5,12 +5,12 @@
 **Content-Addressable Transformers** (**CATs**) is a unified Data Service Collaboration framework for organizations 
 implemented as an edge-computing service that establish a Data Mesh as a scalable self-serviced Data Platform of 
 Data Products with Data Provenance. CATs connect collaborators between organizations on a Data Mesh via the 
-[Content-Addressed Storage (CAS)](https://en.wikipedia.org/wiki/Content-addressable_storage) of interoperable and scalable data processing to enable Data Provenance. CAT data 
-processing workloads (CATs) are deployable as parallelized and distributed processes at horizontal & vertical scale to 
+[Content-Addressed Storage (CAS)](https://en.wikipedia.org/wiki/Content-addressable_storage) of interoperable and scalable data processing to enable Data Provenance. CAT data processing workloads (CATs) are deployable as parallelized and distributed processes at horizontal & vertical scale to 
 support scalable (big) data processing microservices with Scientific Computing capabilities. CATs are also integration 
 points which enable scaled data processing portability between client-server cloud platforms and mesh (p2p) networks 
 with minimal rework or modification.
 ![CATs Chaordic Kernel](images/CATs_chaordic_kernel.jpeg)
+- **Techncal Use-Case Specification:** CATs' utilizes [Ray](https://www.ray.io/) as an execution middleware framework deployed on **[Kubernetes](https://kubernetes.io/)** for interoperable & parallelized distributed computing applications / Big Data processing with Scientific Computing enabled [ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as [Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/). 
 
 ### How are CATs workloads processed as Data Provenance Records?
 
@@ -25,74 +25,40 @@ evidence using CIDs.
 
 ### How do CATs enable colaborative Data Processing for Data Initiatives?
 
-CATs enables the 
-**[continuous reification of **Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** 
-by cataloging discoverable, accessible, and re-executable workloads as 
-**[Data Service Collaboration](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** 
-composable records between organizations. These records provide a reliable and efficient way to manage, share, and 
-reference data processes via **[Content-Addressing](https://en.wikipedia.org/wiki/Content-addressable_storage)** Data 
-Provenance records. **Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be 
-compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate 
-CATs provenance records within feedback loops of Data Initiatives.
+CATs enables the **[continuous reification of Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** by cataloging discoverable, accessible, and re-executable workloads as **[Data Service Collaboration](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative-reification)** composable records between organizations. These records provide a reliable and efficient way to manage, share, and reference data processes via **[Content-Addressing](https://en.wikipedia.org/wiki/Content-addressable_storage)** Data Provenance records. **Data Initiatives** will be naturally reified as a result of **Data Service Collaboration** on CATs. CATs will be compiled and executed as interconnecting services on a Data Mesh that grows naturally when organizations communicate CATs provenance records within feedback loops of Data Initiatives.
 ![CATs Initiative Aligmment](images/CATs_bom_ag.jpeg)
 
 ### What is Content Addressing & How does CATs use it?
 
 **Content-Addressing** is a method of uniquely identifying and retrieving data based on its content rather than its 
 location or address. CATs provides verifiable data processing and transport on a Mesh network of CATs interconnected by 
-Content-Addressing Data Provenance records with [IPFS](https://ipfs.io/) 
-**[CIDs](https://docs.ipfs.io/concepts/content-addressing/)** (Content-Identifiers) as content addresses issued by IPFS 
-**[client](https://docs.ipfs.io/install/command-line/#official-distributions)** to identify and retrieve inputs, 
-transformations, outputs, and infrastructure (as code [IaC]) for verifying transformation accuracy given CIDs.
+Content-Addressing Data Provenance records with [IPFS](https://ipfs.io/) **[CIDs](https://docs.ipfs.io/concepts/content-addressing/)** (Content-Identifiers) as content addresses issued by IPFS **[client](https://docs.ipfs.io/install/command-line/#official-distributions)** to identify and retrieve inputs, transformations, outputs, and infrastructure (as code [IaC]) for verifying transformation accuracy given CIDs.
 ![CID Example](images/cid_example.jpeg)
+- IPFS serves as CATs' Data Mesh's network layer to provide parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a **Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to the client-server job submission provided by Ray.
 
 ## Get Started!:
 
-1. **Install [Dependencies](./docs/DEPS.md)**
+1. **Install [Dependencies](./docs/DEPS.md)** (including [uv](https://docs.astral.sh/uv/), which manages
+  CATs' Python interpreter, virtual environment, and locked dependencies)
 2. **Install CATs:**
   ```bash
     git clone git@github.com:DynamicalSystemsGroup/cats.git
     cd cats
-    python -m venv venv # Create Virtual Environment
-    source venv/bin/activate # Activate Virtual Environment
-    python -m pip install --upgrade pip
-    pip install dist/*.whl
+    uv python install   # installs the Python version pinned in .python-version
+    uv sync             # creates .venv and installs locked dependencies from uv.lock
   ```
+  See [`ENV.md`](./docs/ENV.md) for the full environment workflow, including the `ops` and `mac` extras.
 3. **Demo: [Establish a CAT Mesh](./docs/DEMO.md)**
 4. **Test: [CAT Mesh Verification](./docs/TEST.md)**
 5. **[Experiments](./experiments/EXP.md)**
 
 ### [Contribute!](docs/CONTRIBUTING.md)
 
-## Specification:
-
-CATs' utilizes [Ray](https://www.ray.io/) for interoperable & parallelized distributed computing frameworks deployable 
-on **[Kubernetes](https://kubernetes.io/)** for Big Data processing with Scientific Computing. Ray is a unified compute 
-framework that enables the development of parallel and distributed applications for scalable data transformation, 
-Machine Learning, and AI. Ray provides CATs with interoperable computing frameworks with its 
-[ecosystem integrations](https://docs.ray.io/en/latest/ray-overview/ray-libraries.html) such as 
-[Apache Spark](https://spark.apache.org/), and [PyTorch](https://pytorch.org/).
-
-Ray is deployed as an execution middleware on Kubernetes. IPFS serves as CATs' Data Mesh's network layer to provide 
-parallelized data ingress and egress for IPFS data. This network portability closes the gap between data analysis and 
-business operations by connecting the network planes of the cloud service model (SaaS, PaaS, IaaS) with IPFS. CATs 
-connect these network planes by enabling the instantiation of FaaS with cloud services in AWS, GCP, Azure, etc. on a 
-**Data Mesh** network of CATs. IPFS enables this connection as p2p distributed-computing job submission in addition to 
-the client-server job submission provided by Ray.
-![CATs 2b](images/simple_CAT2b.jpeg)
-
 ### CATs' Architectural Quantum:
 
-Organizations and collaborators participating will employ CATs for rapid ratification of service agreements within 
-collaborative feedback loops of **[Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative)**. 
-CATs' apply an **Architectural Quantum** Domain-Driven Design principle described in 
-**[Data Mesh of Data Products](https://martinfowler.com/articles/data-mesh-principles.html)** to reify Data Initiatives.
-(* **[Design Description](docs/DESIGN.md)**)
+Organizations and collaborators participating will employ CATs for rapid ratification of service agreements within collaborative feedback loops of **[Data Initiatives](https://github.com/DynamicalSystemsGroup/cats?tab=readme-ov-file#continuous-data-initiative)**. CATs' apply an **Architectural Quantum** Domain-Driven Design principle described in **[Data Mesh of Data Products](https://martinfowler.com/articles/data-mesh-principles.html)** to reify Data Initiatives.(* **[Design Description](docs/DESIGN.md)**)
 
-The Action Plane is the Analytical Data Processing interface. The Action Plane orchestrates and supervises 
-how virtual resources owned by the Data Product should be managed, routed, and processed and is stored “offmesh” 
-(“offline”). It supervises the exchange of data between sub-Process components within the Data sub-Plane (Process) in 
-adherence to Data Contracting Standards of organizations participating in a Data Mesh.
+The Action Plane is the Analytical Data Processing interface. The Action Plane orchestrates and supervises how virtual resources owned by the Data Product should be managed, routed, and processed and is stored “offmesh” (“offline”). It supervises the exchange of data between sub-Process components within the Data sub-Plane (Process) in adherence to Data Contracting Standards of organizations participating in a Data Mesh.
 ![CAT Kernel](images/CATkernel.jpeg)
 
 #### Quantum Architecture Description as a [Minimal Federated Operating Model](https://www.starburst.io/blog/data-mesh-book-bulletin-principle-of-federated-computational-governance/)
@@ -119,15 +85,11 @@ on Structure (PaaS) to execute Processes orchestrated by InfraFunctions (FaaS)
 
 ### CAT Mesh: CATs Data Mesh platform with Data Provenance
 
-**CAT Mesh** is a self-serviced Data Mesh platform with Data Provenance. **CAT Nodes** are CAT Mesh peers that enable 
-workloads to be portable between client-server cloud platforms and p2p mesh network with minimal rework or modification.
+**CAT Mesh** is a self-serviced Data Mesh platform with Data Provenance. **CAT Nodes** are CAT Mesh peers that enable workloads to be portable between client-server cloud platforms and p2p mesh network with minimal rework or modification.
 
-Multi-disciplinary and cross-functional teams can use CAT Nodes to verify and scale distributed computing workloads. 
-Workloads (CATs) executed by CAT Nodes interface cloud service model (SaaS, PaaS, IaaS) offered by providers such as 
-AWS, GCP, Azure, etc. on a Mesh Network interconnected by IPFS. 
+Multi-disciplinary and cross-functional teams can use CAT Nodes to verify and scale distributed computing workloads. Workloads (CATs) executed by CAT Nodes interface cloud service model (SaaS, PaaS, IaaS) offered by providers such as AWS, GCP, Azure, etc. on a Mesh Network interconnected by IPFS. 
 
-CAT Nodes are **Data Products** - peer-nodes on a mesh network that encapsulate components (*) to function as a service 
-providing access to a domain's analytical data as a product; * code, data & metadata, and infrastructure.
+CAT Nodes are **Data Products** - peer-nodes on a mesh network that encapsulate components (*) to function as a service providing access to a domain's analytical data as a product; * code, data & metadata, and infrastructure.
 
 **In the following image:** 
 

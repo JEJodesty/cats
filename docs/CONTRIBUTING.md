@@ -22,7 +22,13 @@ In general, we follow the ["fork-and-pull"](https://github.com/susam/gitpr) Git 
 1. Fork the repository to your own Github account
 2. Clone the project to your machine
 3. Create a new branch from the `release` branch locally with a succinct but descriptive name
-4. Commit changes to new branch
+4. Set up your environment with [uv](https://docs.astral.sh/uv/) and commit changes to the new branch:
+   ```bash
+   uv sync --extra ops --group dev   # for the MAC experiment, also: uv pip install -r experiments/mac/requirements-mac.txt
+   uv run pytest -s tests/verification_test.py
+   ```
+   If you add, remove, or bump a dependency in `pyproject.toml`, run `uv lock` and commit the updated
+   `uv.lock` alongside your change so the lockfile stays reproducible for other contributors and CI.
 5. Following any formatting and testing guidelines specific to this repo
 6. Push changes to your fork
 7. Open a PR in our repository and follow the PR template so that we can efficiently review the changes.

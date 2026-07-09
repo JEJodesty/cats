@@ -1,10 +1,7 @@
-import os
-import subprocess
-import time
+import multiprocessing, os, subprocess, time, ray
 from typing import Dict
 
 import numpy as np
-import ray
 
 from cats.network.ipfs_docker import (
     IPFS_GET_TIMEOUT,
@@ -123,39 +120,75 @@ def function_1(batch: Dict[str, np.ndarray]) -> Dict[str, np.ndarray]:
     return batch
 
 
-def _ray_run(work):
-    """Start a clean local Ray session for each CAT process invocation."""
-    if ray.is_initialized():
-        ray.shutdown()
+def _run_ray_batches(input, output, batch_fn, zip_with_range):
+    """Ray Data work for a single CAT process invocation.
+
+    Runs inside an isolated subprocess started by `_ray_run`, so its Ray
+    session - and any objects/refs it creates - is fully torn down when
+    the subprocess exits.
+    """
     ray.init(ignore_reinit_error=True)
     try:
-        return work()
+        ds_in = ray.data.read_csv(input)
+        print(ds_in.schema())
+        print()
+        ds_out = ds_in.map_batches(batch_fn)
+        if zip_with_range:
+            ds_out = ds_out.materialize()
+            ds_out = ray.data.range(ds_out.count()).zip(ds_out)
+        print(ds_out.show(limit=1))
+        ds_out.write_csv(output)
+        return output
     finally:
         ray.shutdown()
 
 
-def process_0(input, output):
-    def work():
-        ds_in = ray.data.read_csv(input)
-        print(ds_in.schema())
-        print()
-        ds_out = ds_in.map_batches(function_0).materialize()
-        ds_out = ray.data.range(ds_out.count()).zip(ds_out)
-        print(ds_out.show(limit=1))
-        ds_out.write_csv(output)
-        return output
+def _ray_subprocess_entry(target, args, result_queue):
+    """Top-level, picklable entry point for the subprocess spawned by
+    `_ray_run` (required since `multiprocessing`'s "spawn" context can
+    only launch picklable, module-level callables)."""
+    try:
+        result_queue.put(('ok', target(*args)))
+    except BaseException as exc:
+        try:
+            result_queue.put(('error', exc))
+        except Exception:
+            # exc may not itself be picklable; fall back to a plain
+            # message so the parent still observes the failure.
+            result_queue.put(('error', RuntimeError(f'{type(exc).__name__}: {exc}')))
 
-    return _ray_run(work)
+
+def _ray_run(target, *args):
+    """Run `target(*args)` in a fresh subprocess with its own isolated
+    Ray session.
+
+    Repeatedly calling `ray.shutdown()`/`ray.init()` within the same
+    long-lived process (the CAT node) doesn't fully release Ray's
+    internal session state, which eventually surfaces as "trying to
+    access Ray objects whose owner is unknown" errors on later CAT
+    process invocations. Running each invocation in its own subprocess
+    avoids this entirely, since process exit forces complete teardown.
+    """
+    ctx = multiprocessing.get_context('spawn')
+    result_queue = ctx.Queue()
+    proc = ctx.Process(target=_ray_subprocess_entry, args=(target, args, result_queue))
+    proc.start()
+    proc.join()
+
+    if result_queue.empty():
+        raise RuntimeError(
+            f'Ray worker subprocess exited unexpectedly '
+            f'(exit code {proc.exitcode}) without returning a result.'
+        )
+    status, payload = result_queue.get()
+    if status == 'error':
+        raise payload
+    return payload
+
+
+def process_0(input, output):
+    return _ray_run(_run_ray_batches, input, output, function_0, True)
 
 
 def process_1(input, output):
-    def work():
-        ds_in = ray.data.read_csv(input)
-        print(ds_in.schema())
-        print()
-        ds_out = ds_in.map_batches(function_1)
-        print(ds_out.show(limit=1))
-        ds_out.write_csv(output)
-        return output
-
-    return _ray_run(work)
+    return _ray_run(_run_ray_batches, input, output, function_1, False)
