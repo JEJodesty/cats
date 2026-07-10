@@ -2,9 +2,17 @@ import os
 import re
 
 from cats.utils import subproc_run
+from cats.network.ipfs_docker import MIGRATION_CONTAINER, INTEGRATION_CONTAINER
 
 KIND_CLUSTER_NAME = "cats"
 KIND_CLUSTER_RESOURCE = "kind_cluster.default"
+# Resources in main.tf that depend on kind_cluster.default and thus can't
+# be reconciled (or even refreshed) once its cluster is gone from the host.
+KIND_DEPENDENT_RESOURCES = (
+    "helm_release.ray-cluster",
+    "helm_release.kuberay-operator",
+)
+DOCKER_COMPOSE_IPFS_TRANSPORT_RESOURCE = "shell_script.docker_compose_ipfs_transport"
 APPLIED_STRUCTURE_MARKER = '.applied-structure.cid'
 
 
@@ -128,6 +136,13 @@ def _kind_cluster_names():
     return {line.strip() for line in proc.stdout.splitlines() if line.strip()}
 
 
+def _docker_container_running(container):
+    proc = subproc_run(
+        f"docker ps --format '{{{{.Names}}}}' | grep -qx '{container}'"
+    )
+    return proc.returncode == 0
+
+
 def cleanup_orphan_kind_cluster(service, structure_home):
     """Remove a leftover kind cluster when it exists on the host but not in state."""
     clusters = _kind_cluster_names()
@@ -146,6 +161,81 @@ def cleanup_orphan_kind_cluster(service, structure_home):
     if proc.returncode != 0:
         raise RuntimeError(
             f'Failed to delete orphan kind cluster "{KIND_CLUSTER_NAME}": {proc.stderr.strip()}'
+        )
+    if proc.stdout.strip():
+        print(proc.stdout.strip())
+
+
+def cleanup_stale_kind_cluster_state(service, structure_home):
+    """Remove state entries for the kind cluster (and Helm releases that
+    depend on it) when Terraform state believes the cluster still exists
+    but the host does not have it - e.g. after a Docker Desktop restart or
+    reset wiped its containers out from under Terraform. Left alone, the
+    next `apply` fails during its automatic refresh with something like
+    "could not locate any control plane nodes for cluster named 'cats'"
+    before it ever gets a chance to recreate anything."""
+    state = _terraform_state_resources(service, structure_home)
+    if KIND_CLUSTER_RESOURCE not in state:
+        return
+
+    clusters = _kind_cluster_names()
+    if KIND_CLUSTER_NAME in clusters:
+        return
+
+    stale_resources = [
+        resource for resource in (*KIND_DEPENDENT_RESOURCES, KIND_CLUSTER_RESOURCE)
+        if resource in state
+    ]
+    print(
+        f'Terraform state has "{KIND_CLUSTER_RESOURCE}" but no kind cluster named '
+        f'"{KIND_CLUSTER_NAME}" exists on the host; removing stale state for: '
+        f'{", ".join(stale_resources)}'
+    )
+    proc = subproc_run(
+        f'{terraform_bin(service)} state rm {" ".join(stale_resources)}',
+        cwd=structure_home,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f'Failed to remove stale Terraform state for "{KIND_CLUSTER_NAME}": '
+            f'{proc.stderr.strip()}'
+        )
+    if proc.stdout.strip():
+        print(proc.stdout.strip())
+
+
+def cleanup_stale_docker_compose_ipfs_transport_state(service, structure_home):
+    """Remove the state entry for the IPFS transport Docker Compose stack
+    when Terraform state believes it's already up but its containers are
+    gone from the host - e.g. after a Docker Desktop restart or reset.
+
+    Unlike `shell_script.host_ipfs_daemon`, this resource's `create` script
+    isn't idempotent/self-probing, and the `scottwinkler/shell` provider
+    has no `read` command to detect this drift on its own - so once this
+    resource is in state, plain `apply` never notices the containers are
+    missing and never re-runs `create`. Left alone, `ingress`/`egress`
+    then fail against a nonexistent container (e.g. "No such container:
+    structure-ipfs_migration-1") the next time a CAT executes."""
+    state = _terraform_state_resources(service, structure_home)
+    if DOCKER_COMPOSE_IPFS_TRANSPORT_RESOURCE not in state:
+        return
+
+    if _docker_container_running(MIGRATION_CONTAINER) and _docker_container_running(INTEGRATION_CONTAINER):
+        return
+
+    print(
+        f'Terraform state has "{DOCKER_COMPOSE_IPFS_TRANSPORT_RESOURCE}" but its '
+        f'containers ("{MIGRATION_CONTAINER}", "{INTEGRATION_CONTAINER}") are not '
+        f'running on the host; removing stale state so apply recreates them'
+    )
+    proc = subproc_run(
+        f'{terraform_bin(service)} state rm {DOCKER_COMPOSE_IPFS_TRANSPORT_RESOURCE}',
+        cwd=structure_home,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f'Failed to remove stale Terraform state for '
+            f'"{DOCKER_COMPOSE_IPFS_TRANSPORT_RESOURCE}": {proc.stderr.strip()}'
         )
     if proc.stdout.strip():
         print(proc.stdout.strip())
@@ -209,6 +299,8 @@ class InfraStructure:
         configure_terraform_data_dir(self.INPUT_STRUCTURE_HOME)
         ensure_integration_cache_env(self.service)
         cleanup_orphan_kind_cluster(self.service, self.INPUT_STRUCTURE_HOME)
+        cleanup_stale_kind_cluster_state(self.service, self.INPUT_STRUCTURE_HOME)
+        cleanup_stale_docker_compose_ipfs_transport_state(self.service, self.INPUT_STRUCTURE_HOME)
         self.service.executeCMD(
             f'{terraform_bin(self.service)} apply --auto-approve',
             cwd=self.INPUT_STRUCTURE_HOME
