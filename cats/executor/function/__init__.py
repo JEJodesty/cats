@@ -16,20 +16,20 @@ class Processor:
         ingress_result = self.infraFunction.ingress_subproc(
             input_dir_cid=self.ingress_input_data_cid
         )
-        if isinstance(ingress_result, tuple):
-            self.ingress_data_cid, ingress_data_dir = ingress_result
-        else:
-            self.ingress_data_cid = ingress_result
-            ingress_data_dir = None
+        if not isinstance(ingress_result, tuple):
+            # ingress_subproc failed and returned its error message as a
+            # plain string instead of the expected (cid, data_dir) tuple.
+            # Raise it here, with the real reason, rather than leaving
+            # INGRESS_DATA_PATH unset for Integration() to fail on later
+            # with a generic "unset" error that hides the actual cause.
+            raise RuntimeError(f"Ingress failed: {ingress_result}")
+        self.ingress_data_cid, ingress_data_dir = ingress_result
 
         self.infraFunction.service.INGRESS_DATA_HOME = self.ingress_data_cid
-        if ingress_data_dir:
-            self.infraFunction.service.INGRESS_DATA_PATH = os.path.join(
-                self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE,
-                ingress_data_dir,
-            )
-        else:
-            self.infraFunction.service.INGRESS_DATA_PATH = None
+        self.infraFunction.service.INGRESS_DATA_PATH = os.path.join(
+            self.infraFunction.service.INTEGRATION_INPUT_DATA_CACHE,
+            ingress_data_dir,
+        )
 
         self.infraFunction.service.INGRESS_JOB_STATUS = "Completed"
         self.infraFunction.service.INGRESS_EXIT_CODE = "0"
