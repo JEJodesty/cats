@@ -17,10 +17,10 @@
 3. **Session 2:**
   a. *List Tests* without running them:
   ```bash
-  pytest --collect-only tests/verification_test.py
+  uv run pytest --collect-only tests/verification_test.py
   ```
   b. **Run All Tests**
   ```bash
-  pytest -s tests/verification_test.py
+  uv run pytest -s tests/verification_test.py
   ```
     - `pytest` also invokes this script via `tests/conftest.py` at session start and through a session autouse fixture.
