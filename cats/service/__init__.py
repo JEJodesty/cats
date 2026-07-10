@@ -38,7 +38,6 @@ class Service:
         self.OUTPUT_HOME = self.meshClient.OUTPUT_HOME = self.DATA_HOME + '/output'
         self.OUTPUT_DATA_HOME = self.meshClient.OUTPUT_DATA_HOME = self.OUTPUT_HOME + '/data'
         self.INPUT_STRUCTURE_HOME = self.meshClient.INPUT_STRUCTURE_HOME = self.INPUT_HOME + '/structure'
-        # self.INPUT_STRUCTURE_HOME = self.meshClient.INPUT_STRUCTURE_HOME = self.INPUT_HOME + '/plant'
         self.INPUT_DATA_HOME = self.meshClient.INPUT_DATA_HOME = self.INPUT_HOME + '/data'
         self.INTEGRATION_INPUT_CACHE = self.meshClient.INTEGRATION_INPUT_CACHE = \
             f"{self.CACHE_HOME}/integration"
